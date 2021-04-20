@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.entity;
+package com.sns.zuzuclub.domain.comment;
 
 import java.util.List;
 
@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.sns.zuzuclub.domain.AuditEntity;
+import com.sns.zuzuclub.domain.post.Post;
+import com.sns.zuzuclub.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 

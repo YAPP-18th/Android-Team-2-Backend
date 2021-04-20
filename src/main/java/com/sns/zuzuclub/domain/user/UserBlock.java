@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.entity;
+package com.sns.zuzuclub.domain.user;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +16,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "blockfriend")
 @Getter
-public class BlockFrined {
+public class UserBlock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class BlockFrined {
 	private User targetUser;
 
     @Builder
-    public BlockFrined(Long blockFriend, User user, User targetUser) {
+    public UserBlock(Long blockFriend, User user, User targetUser) {
         this.blockFriend = blockFriend;
         this.user = user;
         this.targetUser = targetUser;

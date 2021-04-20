@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.entity;
+package com.sns.zuzuclub.domain.post;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,10 @@ import javax.persistence.Table;
 
 import com.sns.zuzuclub.constant.PostEmotion;
 
+import com.sns.zuzuclub.domain.AuditEntity;
+import com.sns.zuzuclub.domain.stock.Stock;
+import com.sns.zuzuclub.domain.user.User;
+import com.sns.zuzuclub.domain.comment.Comment;
 import lombok.Builder;
 import lombok.Getter;
 

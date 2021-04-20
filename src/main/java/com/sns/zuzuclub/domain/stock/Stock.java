@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.entity;
+package com.sns.zuzuclub.domain.stock;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,9 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.sns.zuzuclub.domain.user.UserStockScrap;
 import lombok.Getter;
 
 @Entity
@@ -26,6 +26,6 @@ public class Stock {
 
     @ManyToOne
     @JoinColumn(name = "stock_scrap_id")
-    private UserStockScrap stockScrap; 
+    private UserStockScrap stockScrap;
     
 }

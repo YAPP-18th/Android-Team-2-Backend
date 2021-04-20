@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.entity;
+package com.sns.zuzuclub.domain.user;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.sns.zuzuclub.domain.AuditEntity;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,7 +17,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "following")
 @Getter
-public class Following extends AuditEntity {
+public class UserFollow extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +33,7 @@ public class Following extends AuditEntity {
 	private User targetUser;
 
     @Builder
-    public Following(Long followingId, User user, User targetUser) {
+    public UserFollow(Long followingId, User user, User targetUser) {
         this.followingId = followingId;
         this.user = user;
         this.targetUser = targetUser;

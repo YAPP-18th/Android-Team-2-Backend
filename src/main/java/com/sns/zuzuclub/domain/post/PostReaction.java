@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.entity;
+package com.sns.zuzuclub.domain.post;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import com.sns.zuzuclub.constant.PostReacionType;
 
+import com.sns.zuzuclub.domain.AuditEntity;
+import com.sns.zuzuclub.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 

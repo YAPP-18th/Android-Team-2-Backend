@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.config.security;
+package com.sns.zuzuclub.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

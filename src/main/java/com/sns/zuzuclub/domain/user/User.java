@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.entity;
+package com.sns.zuzuclub.domain.user;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.sns.zuzuclub.domain.AuditEntity;
 import lombok.Builder;
 import lombok.Getter;
 
