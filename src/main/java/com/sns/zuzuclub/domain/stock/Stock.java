@@ -1,5 +1,7 @@
 package com.sns.zuzuclub.domain.stock;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,25 +9,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.sns.zuzuclub.domain.user.UserStockScrap;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "stock")
 @Getter
+@NoArgsConstructor
+@Entity
 public class Stock {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stock_id")
-    private Long stockId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String name;
+  private String stockName;
 
-    @ManyToOne
-    @JoinColumn(name = "stock_scrap_id")
-    private UserStockScrap stockScrap;
-    
+  @OneToMany(mappedBy = "stock")
+  private List<StockPost> stockPostList = new ArrayList<>();
 }

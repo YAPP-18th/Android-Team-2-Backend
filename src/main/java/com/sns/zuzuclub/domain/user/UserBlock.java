@@ -11,31 +11,21 @@ import javax.persistence.Table;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
-@Entity
-@Table(name = "blockfriend")
 @Getter
+@NoArgsConstructor
+@Entity
 public class UserBlock {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "blockfriend_id")
-    private Long blockFriend;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-	@JoinColumn(name = "user")
-    private User user;
+  @ManyToOne
+  private User userHistory;
 
-    @ManyToOne
-	@JoinColumn(name = "target_ser")
-	private User targetUser;
-
-    @Builder
-    public UserBlock(Long blockFriend, User user, User targetUser) {
-        this.blockFriend = blockFriend;
-        this.user = user;
-        this.targetUser = targetUser;
-    }
-
+  @ManyToOne
+  private User targetUser;
 }

@@ -5,36 +5,34 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.sns.zuzuclub.domain.AuditEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "user")
 @Getter
+@NoArgsConstructor
+@Entity
 public class User extends AuditEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "nickname", nullable = false, length = 20)
-    private String nickName;
+  @Column(nullable = false, length = 20)
+  private String nickname;
 
-    @Column(name = "introduction", nullable = true, length = 360)
-    private String introduction;
+  @Column(length = 360)
+  private String introduction;
 
-    @Column(name = "profileimage", nullable = true)
-    private String profileImage;
+  private String profileImageUrl; // 기본 값을 여기다가 초기화 해주면 좋을 것 같은데 흠
 
-    @Builder
-    public User(Long userId, String nickName, String introduction, String profileImage) {
-        this.userId = userId;
-        this.nickName = nickName;
-        this.introduction = introduction;
-        this.profileImage = profileImage;
-    }
+  @OneToOne
+  private UserHistory userHistory;
+
+  @OneToOne
+  private UserSecurity userSecurity;
 }

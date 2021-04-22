@@ -15,28 +15,20 @@ import javax.persistence.Table;
 import com.sns.zuzuclub.domain.stock.Stock;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "stock_scrap")
 @Getter
+@NoArgsConstructor
+@Entity
 public class UserStockScrap {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stock_scrap_id")
-    private Long userStockScrapId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne
+  private UserHistory userHistory;
 
-    @OneToMany(mappedBy = "stockScrap")
-    private List<Stock> stock;
-
-    @Builder
-    public UserStockScrap(Long userStockScrapId, User user, List<Stock> stock) {
-        this.userStockScrapId = userStockScrapId;
-        this.user = user;
-        this.stock = stock;
-    }
+  @ManyToOne
+  private Stock stock;
 }

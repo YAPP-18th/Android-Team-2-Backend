@@ -12,31 +12,21 @@ import javax.persistence.Table;
 import com.sns.zuzuclub.domain.AuditEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
-@Entity
-@Table(name = "following")
 @Getter
+@NoArgsConstructor
+@Entity
 public class UserFollow extends AuditEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "follow_id")
-    private Long followingId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-	@JoinColumn(name = "user")
-    private User user;
+  @ManyToOne
+  private UserHistory userHistory;
 
-    @ManyToOne
-	@JoinColumn(name = "target_user")
-	private User targetUser;
-
-    @Builder
-    public UserFollow(Long followingId, User user, User targetUser) {
-        this.followingId = followingId;
-        this.user = user;
-        this.targetUser = targetUser;
-    }
-    
+  @ManyToOne
+  private User targetUser;
 }

@@ -7,19 +7,21 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AuditEntity implements Serializable {
+public abstract class AuditEntity implements Serializable {
 
-    @CreatedDate
-    @Column(name = "reg_date", nullable = false)
-    private LocalDateTime regDate;
+  @CreatedDate
+  @Column(nullable = false)
+  private LocalDateTime regDate;
 
-    @LastModifiedDate
-    @Column(name = "mod_date", nullable = false)
-    private LocalDateTime modDate;
+  @LastModifiedDate
+  @Column(nullable = false)
+  private LocalDateTime modDate;
 }

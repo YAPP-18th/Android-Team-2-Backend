@@ -1,7 +1,10 @@
 package com.sns.zuzuclub.domain.post;
 
+import com.sns.zuzuclub.constant.PostReactionType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -9,41 +12,28 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.sns.zuzuclub.constant.PostReacionType;
-
 import com.sns.zuzuclub.domain.AuditEntity;
 import com.sns.zuzuclub.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
-@Entity
-@Table(name = "post_reaction")
 @Getter
+@NoArgsConstructor
+@Entity
 public class PostReaction extends AuditEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_reaction_id")
-    private Long postReactionId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne
+  private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
+  @ManyToOne
+  private Post post;
 
-    @Column(name = "reaction_type")
-    private PostReacionType reactionType;
-
-    @Builder
-    public PostReaction(Long postReactionId, User user, Post post, PostReacionType reactionType) {
-        this.postReactionId = postReactionId;
-        this.user = user;
-        this.post = post;
-        this.reactionType = reactionType;
-    }    
-
+  @Enumerated(EnumType.STRING)
+  private PostReactionType reactionType;
 }

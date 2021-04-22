@@ -1,5 +1,5 @@
 package com.sns.zuzuclub.constant;
 
-public enum UserAlarmType {
-    
+public enum NotificationType {
+
 }
