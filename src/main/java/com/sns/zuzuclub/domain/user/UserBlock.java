@@ -1,15 +1,13 @@
 package com.sns.zuzuclub.domain.user;
 
-import javax.persistence.Column;
+import com.sns.zuzuclub.domain.AuditEntity;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,15 +15,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class UserBlock {
+public class UserBlock extends AuditEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  private User userHistory;
+  /*
+  - fromUser 가 toUser 를 차단함
+   */
 
-  @ManyToOne
-  private User targetUser;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private User fromUser;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private User toUser;
 }

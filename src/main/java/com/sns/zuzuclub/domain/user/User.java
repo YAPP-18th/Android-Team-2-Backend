@@ -1,15 +1,20 @@
 package com.sns.zuzuclub.domain.user;
 
-import javax.persistence.Column;
+import com.sns.zuzuclub.domain.alarm.Notification;
+import com.sns.zuzuclub.domain.comment.Comment;
+import com.sns.zuzuclub.domain.post.Post;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 import com.sns.zuzuclub.domain.AuditEntity;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,17 +27,39 @@ public class User extends AuditEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, length = 20)
-  private String nickname;
+  @OneToOne(mappedBy = "user")
+  private UserInfo userInfo;
 
-  @Column(length = 360)
-  private String introduction;
-
-  private String profileImageUrl; // 기본 값을 여기다가 초기화 해주면 좋을 것 같은데 흠
-
-  @OneToOne
-  private UserHistory userHistory;
-
-  @OneToOne
+  @OneToOne(mappedBy = "user")
   private UserSecurity userSecurity;
+
+  // 내가 팔로우 하는 사람
+  @OneToMany(mappedBy = "fromUser")
+  private Set<UserFollow> following;
+
+  // 나를 팔로우 하는 사람
+  @OneToMany(mappedBy = "toUser")
+  private Set<UserFollow> followers;
+
+  // 내가 차단 하는 사람
+  @OneToMany(mappedBy = "fromUser")
+  private Set<UserBlock> blocker;
+
+  @OneToMany(mappedBy = "user")
+  private List<Post> postList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user")
+  private List<Comment> commentList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user")
+  private List<Notification> notificationList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user")
+  private List<UserStockScrap> userStockScrapList = new ArrayList<>();
+
+  private int postCount;
+  private int commentCount;
+  private int userStockScrapCount;
+  private int followerCount;
+  private int followingCount;
 }

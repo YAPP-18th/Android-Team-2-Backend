@@ -1,10 +1,11 @@
 package com.sns.zuzuclub.domain.alarm;
 
 import com.sns.zuzuclub.constant.NotificationType;
-import com.sns.zuzuclub.domain.user.UserHistory;
+import com.sns.zuzuclub.domain.user.User;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,8 +22,8 @@ public class Notification {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  private UserHistory userHistory;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private User user;
 
   @Enumerated(EnumType.STRING)
   private NotificationType notificationType;

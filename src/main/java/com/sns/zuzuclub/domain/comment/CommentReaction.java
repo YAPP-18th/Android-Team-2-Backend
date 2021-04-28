@@ -1,16 +1,18 @@
 package com.sns.zuzuclub.domain.comment;
 
 import com.sns.zuzuclub.constant.CommentReactionType;
+import com.sns.zuzuclub.domain.user.User;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import com.sns.zuzuclub.domain.AuditEntity;
-import com.sns.zuzuclub.domain.user.User;
+import com.sns.zuzuclub.domain.user.UserInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,10 +26,10 @@ public class CommentReaction extends AuditEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Comment comment;
 
   @Enumerated(EnumType.STRING)

@@ -1,10 +1,11 @@
 package com.sns.zuzuclub.domain.comment;
 
-import com.sns.zuzuclub.domain.user.UserHistory;
+import com.sns.zuzuclub.domain.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,15 +27,15 @@ public class Comment extends AuditEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  private UserHistory userHistory;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private User user;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Post post;
 
   private String content;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Comment parentComment;
 
   @OneToMany(mappedBy = "parentComment")
