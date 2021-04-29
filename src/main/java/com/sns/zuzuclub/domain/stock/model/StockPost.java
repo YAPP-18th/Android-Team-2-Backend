@@ -1,33 +1,27 @@
-package com.sns.zuzuclub.domain.user;
+package com.sns.zuzuclub.domain.stock.model;
 
-import com.sns.zuzuclub.domain.AuditEntity;
+import com.sns.zuzuclub.domain.post.model.Post;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class UserBlock extends AuditEntity {
+public class StockPost {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  /*
-  - fromUser 가 toUser 를 차단함
-   */
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Stock stock;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private User fromUser;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User toUser;
+  private Post post;
 }

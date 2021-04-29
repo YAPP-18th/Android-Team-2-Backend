@@ -1,6 +1,6 @@
-package com.sns.zuzuclub.domain.comment;
+package com.sns.zuzuclub.domain.comment.model;
 
-import com.sns.zuzuclub.domain.user.User;
+import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.sns.zuzuclub.domain.AuditEntity;
-import com.sns.zuzuclub.domain.post.Post;
+import com.sns.zuzuclub.global.AuditEntity;
+import com.sns.zuzuclub.domain.post.model.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

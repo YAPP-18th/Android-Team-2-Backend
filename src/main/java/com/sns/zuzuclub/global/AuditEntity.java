@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.domain;
+package com.sns.zuzuclub.global;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

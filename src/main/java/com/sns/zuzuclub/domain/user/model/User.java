@@ -1,20 +1,19 @@
-package com.sns.zuzuclub.domain.user;
+package com.sns.zuzuclub.domain.user.model;
 
-import com.sns.zuzuclub.domain.alarm.Notification;
-import com.sns.zuzuclub.domain.comment.Comment;
-import com.sns.zuzuclub.domain.post.Post;
+import com.sns.zuzuclub.domain.alarm.model.Notification;
+import com.sns.zuzuclub.domain.comment.model.Comment;
+import com.sns.zuzuclub.domain.post.model.Post;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.sns.zuzuclub.domain.AuditEntity;
+import com.sns.zuzuclub.global.AuditEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -1,7 +1,7 @@
-package com.sns.zuzuclub.domain.post;
+package com.sns.zuzuclub.domain.post.model;
 
-import com.sns.zuzuclub.domain.stock.StockPost;
-import com.sns.zuzuclub.domain.user.User;
+import com.sns.zuzuclub.domain.stock.model.StockPost;
+import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +17,8 @@ import javax.persistence.OneToMany;
 
 import com.sns.zuzuclub.constant.PostEmotionType;
 
-import com.sns.zuzuclub.domain.AuditEntity;
-import com.sns.zuzuclub.domain.comment.Comment;
+import com.sns.zuzuclub.global.AuditEntity;
+import com.sns.zuzuclub.domain.comment.model.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

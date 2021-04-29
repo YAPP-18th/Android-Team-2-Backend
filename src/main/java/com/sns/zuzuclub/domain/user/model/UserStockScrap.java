@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.domain.user;
+package com.sns.zuzuclub.domain.user.model;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.sns.zuzuclub.domain.stock.Stock;
+import com.sns.zuzuclub.domain.stock.model.Stock;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

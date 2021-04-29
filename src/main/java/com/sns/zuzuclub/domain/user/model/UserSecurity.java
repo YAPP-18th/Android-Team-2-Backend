@@ -1,10 +1,8 @@
-package com.sns.zuzuclub.domain.user;
+package com.sns.zuzuclub.domain.user.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
@@ -12,7 +10,7 @@ import javax.persistence.OneToOne;
 import com.sns.zuzuclub.constant.SocialProvider;
 import com.sns.zuzuclub.constant.UserRole;
 
-import com.sns.zuzuclub.domain.AuditEntity;
+import com.sns.zuzuclub.global.AuditEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
