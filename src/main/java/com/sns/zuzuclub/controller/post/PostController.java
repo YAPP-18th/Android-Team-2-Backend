@@ -16,8 +16,8 @@ public class PostController {
     return "post";
   }
 
-  @GetMapping("/var/{some}")
+  @GetMapping("/post/var/{some}")
   public SingleResult<String> getVar(@PathVariable String some, @RequestParam String param) {
-    return ResponseForm.getSingleResult(some+param, "성공띠");
+    return ResponseForm.getSingleResult(some + param, "성공띠");
   }
 }
