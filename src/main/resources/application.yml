@@ -1,6 +1,17 @@
+#spring:
+#  profiles:
+#    active: local
+#    group:
+#      local: jwt
+#      prod: jwt
 spring:
-  profiles:
-    active: local
-    group:
-      local: jwt
-      prod: jwt
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zuzuclub?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: wodms329
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    show-sql: true

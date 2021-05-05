@@ -19,36 +19,42 @@ import com.sns.zuzuclub.constant.PostEmotionType;
 
 import com.sns.zuzuclub.global.AuditEntity;
 import com.sns.zuzuclub.domain.comment.model.Comment;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Entity
 public class Post extends AuditEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
-  private String content;
+    private String content;
 
-  @Enumerated(EnumType.STRING)
-  private PostEmotionType postEmotionType;
+    @Enumerated(EnumType.STRING)
+    private PostEmotionType postEmotionType;
 
-  @OneToMany(mappedBy = "post")
-  private List<StockPost> stockPostList = new ArrayList<>();
+    @OneToMany(mappedBy = "post")
+    private List<StockPost> stockPostList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post")
-  private List<Comment> commentList = new ArrayList<>();
+    @OneToMany(mappedBy = "post")
+    private List<Comment> commentList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post")
-  private List<PostReaction> postReactionList = new ArrayList<>();
+    @OneToMany(mappedBy = "post")
+    private List<PostReaction> postReactionList = new ArrayList<>();
 
-  private String postImageUrl;
-  private int commentCount = 0;
-  private int postReactionCount = 0;
+    private String postImageUrl;
+    private int commentCount = 0;
+    private int postReactionCount = 0;
+
 }
