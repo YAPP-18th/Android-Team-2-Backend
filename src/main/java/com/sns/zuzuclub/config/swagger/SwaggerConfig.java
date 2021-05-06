@@ -46,4 +46,15 @@ public class SwaggerConfig {
         .paths(PathSelectors.ant("/post/**"))
         .build();
   }
+
+  @Bean
+  public Docket getLoginAndSignupAPI() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .groupName("Login / Signup")
+        .apiInfo(apiInfo("로그인 및 회원가입"))
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.sns.zuzuclub.controller"))
+        .paths(PathSelectors.ant("/jwt/**"))
+        .build();
+  }
 }
