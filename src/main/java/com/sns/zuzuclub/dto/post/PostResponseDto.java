@@ -18,7 +18,8 @@ import lombok.Setter;
 public class PostResponseDto {
 
     private Long id;
-    private UserInfo user;
+    private String nickName;
+//    private UserInfo user;
     private String content;
     private PostEmotionType postEmotionType;
     private List<StockPost> stockPostList = new ArrayList<>();

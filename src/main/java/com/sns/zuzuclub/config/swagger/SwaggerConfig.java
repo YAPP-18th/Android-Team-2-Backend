@@ -47,4 +47,16 @@ public class SwaggerConfig {
 //            .paths(PathSelectors.ant("/post/**"))
             .build();
     }
+
+    @Bean
+    public Docket getCommentAPI() {
+        return new Docket(DocumentationType.SWAGGER_2)
+            .useDefaultResponseMessages(false)
+            .groupName("COMMENT_API")
+            .apiInfo(apiInfo("댓글과 관련된 기능입니다."))
+            .select()
+            .apis(RequestHandlerSelectors.basePackage("com.sns.zuzuclub.controller.comment"))
+            .paths(PathSelectors.ant("/comment/**"))
+            .build();
+    }
 }

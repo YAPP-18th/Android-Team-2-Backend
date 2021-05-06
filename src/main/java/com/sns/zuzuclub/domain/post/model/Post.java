@@ -2,6 +2,7 @@ package com.sns.zuzuclub.domain.post.model;
 
 import com.sns.zuzuclub.domain.stock.model.StockPost;
 import com.sns.zuzuclub.domain.user.model.User;
+import com.sns.zuzuclub.domain.user.model.UserInfo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Post extends AuditEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private UserInfo user;
 
     private String content;
 
