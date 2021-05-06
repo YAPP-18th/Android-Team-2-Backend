@@ -104,4 +104,14 @@ public class JwtTokenProvider {
     }
     return false;
   }
+
+  public long calculateDaysLeft(String jwtRefreshToken){
+
+    Date exp = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtRefreshToken).getBody().getExpiration();
+    Date now = new Date();
+
+    long calDate = exp.getTime() - now.getTime();
+
+    return calDate / (24 * 60 * 60 * 1000);
+  }
 }

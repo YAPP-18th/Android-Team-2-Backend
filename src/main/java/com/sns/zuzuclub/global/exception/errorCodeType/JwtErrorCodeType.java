@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum JwtErrorCodeType {
 
-  JWT_TOKEN_ERROR(421, "JWT 토큰 필요"),
+  JWT_TOKEN_ERROR(421, "JWT 토큰 에러"),
   UNAUTHORIZED_JWT(422, "JWT 토큰에 유효하지 않은 권한"),
   EXPIRED_JWT_TOKEN(423, "만료된 JWT 토큰"),
   UNSUPPORTED_JWT_TOKEN(424, "지원되지 않는 JWT 토큰"),
