@@ -4,7 +4,6 @@ import com.sns.zuzuclub.constant.SocialTokenProviderType;
 import com.sns.zuzuclub.constant.UserRoleType;
 import com.sns.zuzuclub.controller.login.dto.LoginRequestDto;
 import com.sns.zuzuclub.controller.login.dto.LoginResponseDto;
-import com.sns.zuzuclub.controller.login.dto.ReissueJwtTokenRequestDto;
 import com.sns.zuzuclub.controller.login.dto.ReissueJwtTokenResponseDto;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserSecurity;
@@ -14,7 +13,6 @@ import com.sns.zuzuclub.domain.user.repository.UserSecurityRepository;
 
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
 import com.sns.zuzuclub.global.exception.CustomException;
-import com.sns.zuzuclub.global.exception.errorCodeType.JwtErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import com.sns.zuzuclub.util.social.SocialTokenProviderFactory;
 import lombok.RequiredArgsConstructor;
@@ -40,14 +38,13 @@ public class LoginService {
 
     String socialId = socialTokenProviderFactory.getTokenProvider(provider)
                                                 .getSocialId(socialToken);
-    UserSecurity userSecurityEntity = getUserSecurity(provider, socialId);
+    UserSecurity userSecurityEntity = userSecurityRepository.findBySocialTokenProviderTypeAndSocialId(provider, socialId);
 
     if (userSecurityEntity == null) {
       // 소셜로그인 X, 회원정보입력 X
       User newUserEntity = userRepository.save(new User());
 
-      String jwtAccessToken = jwtTokenProvider.createJwtAccessToken(newUserEntity.getId(),
-          UserRoleType.USER);
+      String jwtAccessToken = jwtTokenProvider.createJwtAccessToken(newUserEntity.getId(), UserRoleType.USER);
       String jwtRefreshToken = jwtTokenProvider.createJwtRefreshToken(newUserEntity.getId());
 
       UserSecurity newUserSecurityEntity = UserSecurity.builder()
@@ -67,8 +64,7 @@ public class LoginService {
     }
 
     if (existUserInfo(userSecurityEntity)) {
-      // 소셜로그인 완료, 회원가입 완료
-      // Ex) 다른 기기 로그인
+      // 소셜로그인 완료, 회원가입 완료  / Ex) 다른 기기 로그인
       needUserInfo = false;
     }
 
@@ -82,35 +78,31 @@ public class LoginService {
                            .build();
   }
 
-  private UserSecurity getUserSecurity(SocialTokenProviderType provider, String socialId) {
-    return userSecurityRepository.findBySocialTokenProviderTypeAndSocialId(provider, socialId);
-  }
-
   private boolean existUserInfo(UserSecurity userSecurityEntity) {
     return userInfoRepository.findById(userSecurityEntity.getId())
                              .isPresent();
   }
 
-  public ReissueJwtTokenResponseDto reissueJwtToken(ReissueJwtTokenRequestDto reissueJwtTokenRequestDto) {
+  public ReissueJwtTokenResponseDto reissueJwtToken(String jwtRefreshToken) {
 
-    String jwtRefreshToken = reissueJwtTokenRequestDto.getJwtRefreshToken();
     String reissuedJwtAccessToken = "";
     boolean hasRefreshToken = false;
     String reissuedJwtRefreshToken = "";
 
-    if (!jwtTokenProvider.isValidatedToken(jwtRefreshToken)) {
-      throw new CustomException(UserErrorCodeType.INVALID_REFRESH_TOKEN);
-    }
+    jwtTokenProvider.isValidatedToken(jwtRefreshToken);
 
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtRefreshToken));
     UserSecurity userSecurityEntity = userSecurityRepository.findByUserId(userId)
                                                             .orElseThrow(() -> new CustomException(UserErrorCodeType.INVALID_USER));
+
+    userSecurityEntity.isSameToken(jwtRefreshToken);
 
     reissuedJwtAccessToken = jwtTokenProvider.createJwtAccessToken(userSecurityEntity.getId(), userSecurityEntity.getUserRoleType());
 
     if (jwtTokenProvider.calculateDaysLeft(jwtRefreshToken) < 3){
       hasRefreshToken = true;
       reissuedJwtRefreshToken = jwtTokenProvider.createJwtRefreshToken(userSecurityEntity.getId());
+      userSecurityEntity.updateJwtRefreshToken(reissuedJwtRefreshToken);
     }
 
     return ReissueJwtTokenResponseDto.builder()

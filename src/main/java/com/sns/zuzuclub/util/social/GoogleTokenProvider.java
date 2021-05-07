@@ -1,8 +1,6 @@
 package com.sns.zuzuclub.util.social;
 
 import com.sns.zuzuclub.constant.SocialTokenProviderType;
-
-
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.SocialLoginErrorCodeType;
 import org.json.JSONObject;
@@ -15,11 +13,15 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class NaverTokenProvider implements SocialTokenProvider{
+public class GoogleTokenProvider implements SocialTokenProvider{
+
+  //  @Value("")
+  //  private String client_Id;
+  // 구글 파서로 리팩토링 필요
 
   @Override
   public String getProviderName() {
-    return SocialTokenProviderType.NAVER.toString();
+    return SocialTokenProviderType.GOOGLE.toString();
   }
 
   @Override
@@ -27,7 +29,7 @@ public class NaverTokenProvider implements SocialTokenProvider{
 
     ResponseEntity<String> responseHttpEntity = requestUserInfo(socialToken);
     String response = responseHttpEntity.getBody();
-    return String.valueOf(new JSONObject(response).getJSONObject("response").getString("id"));
+    return String.valueOf(new JSONObject(response).getString("id"));
   }
 
   @Override
@@ -38,7 +40,7 @@ public class NaverTokenProvider implements SocialTokenProvider{
 
     HttpEntity<String> requestEntity = new HttpEntity<>(headers);
     try {
-      return rest.exchange("https://openapi.naver.com/v1/nid/me", HttpMethod.GET, requestEntity, String.class);
+      return rest.exchange("https://www.googleapis.com/oauth2/v2/userinfo", HttpMethod.GET, requestEntity, String.class);
     } catch (RestClientException e) {
       throw new CustomException(SocialLoginErrorCodeType.FAILED_SOCIAL_TOKEN_VALIDATION_CHECK);
     }

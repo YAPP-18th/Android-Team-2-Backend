@@ -9,7 +9,8 @@ public enum JwtErrorCodeType {
   UNAUTHORIZED_JWT(422, "JWT 토큰에 유효하지 않은 권한"),
   EXPIRED_JWT_TOKEN(423, "만료된 JWT 토큰"),
   UNSUPPORTED_JWT_TOKEN(424, "지원되지 않는 JWT 토큰"),
-  MALFORMED_JWT_TOKEN(425, "잘못된 JWT 토큰");
+  MALFORMED_JWT_TOKEN(425, "잘못된 JWT 토큰"),
+  NOT_MATCH_FROM_USER_ID(426, "Refresh Token 정보가 일치하지 않습니다.");
 
   private final int errorCode;
   private final String message;

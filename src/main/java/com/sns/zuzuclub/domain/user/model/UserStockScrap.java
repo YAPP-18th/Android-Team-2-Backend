@@ -25,4 +25,21 @@ public class UserStockScrap {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Stock stock;
+
+  public UserStockScrap(User user, Stock stock) {
+    updateUser(user);
+    updateStock(stock);
+  }
+
+  public void updateUser(User user){
+    if(this.user != null){
+      this.user.getUserStockScrapList().remove(this);
+    }
+    this.user = user;
+    user.getUserStockScrapList().add(this);
+  }
+
+  public void updateStock(Stock stock){
+    this.stock = stock;
+  }
 }

@@ -1,6 +1,8 @@
 package com.sns.zuzuclub.domain.user.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sns.zuzuclub.global.exception.CustomException;
+import com.sns.zuzuclub.global.exception.errorCodeType.JwtErrorCodeType;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Column;
@@ -102,5 +104,15 @@ public class UserSecurity extends AuditEntity implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  public void updateJwtRefreshToken(String reissuedJwtRefreshToken){
+    this.jwtRefreshToken = reissuedJwtRefreshToken;
+  }
+
+  public void isSameToken(String targetJwtRefreshToken){
+    if(!this.jwtRefreshToken.equals(targetJwtRefreshToken)){
+      throw new CustomException(JwtErrorCodeType.NOT_MATCH_FROM_USER_ID);
+    }
   }
 }

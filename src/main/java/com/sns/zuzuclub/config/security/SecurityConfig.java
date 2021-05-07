@@ -2,7 +2,6 @@ package com.sns.zuzuclub.config.security;
 
 import com.sns.zuzuclub.constant.UserRoleType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -49,8 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public void configure(WebSecurity web) {
     web
         .ignoring()
-        .antMatchers("/v2/api-docs/**", "/swagger-resources/**",
-            "/swagger-ui.html/**", "/webjars/**", "/swagger/**");
+        .antMatchers("/v2/api-docs", "/swagger-resources/**",
+            "/swagger-ui.html", "/webjars/**", "/swagger/**");
 
   }
 }

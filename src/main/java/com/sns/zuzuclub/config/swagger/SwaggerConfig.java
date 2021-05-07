@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
@@ -15,46 +14,40 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-  private final String basePackage = "com.sns.zuzuclub.controller";
+  private static final String CONTROLLER_PACKAGE_NAME = "com.sns.zuzuclub.controller";
+  private static final String LOGIN_PACKAGE = CONTROLLER_PACKAGE_NAME + ".login";
+  private static final String SIGNUP_PACKAGE = CONTROLLER_PACKAGE_NAME + ".signup";
+  private static final String DEFAULT_TITLE = "ZUZU CLUB PROJECT - ";
+
+  private String groupName;
+
+  @Bean
+  public Docket loginApiDocket() {
+    groupName = "LOGIN";
+    return getDocket(groupName, LOGIN_PACKAGE);
+  }
+
+  @Bean
+  public Docket signupApiDocket() {
+    groupName = "SIGNUP";
+    return getDocket(groupName, SIGNUP_PACKAGE);
+  }
+
+  private Docket getDocket(String groupName, String basePackage) {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .useDefaultResponseMessages(false)
+        .groupName(groupName)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage(basePackage))
+        .build()
+        .apiInfo(apiInfo(DEFAULT_TITLE + groupName));
+  }
 
   private ApiInfo apiInfo(String description) {
     return new ApiInfoBuilder()
         .title("ZUZU CLUB API for Android Ants!")
         .description(description)
         .version("1.0")
-        .build();
-  }
-
-  @Bean
-  public Docket getUserAPI() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .groupName("USER API")
-        .apiInfo(apiInfo("회원과 관련된 기능입니다."))
-        .select()
-        .apis(RequestHandlerSelectors.basePackage(basePackage))
-        .paths(PathSelectors.ant("/user/**"))
-        .build();
-  }
-
-  @Bean
-  public Docket getPostAPI() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .groupName("POST API")
-        .apiInfo(apiInfo("포스트와 관련된 기능입니다."))
-        .select()
-        .apis(RequestHandlerSelectors.basePackage("com.sns.zuzuclub.controller"))
-        .paths(PathSelectors.ant("/post/**"))
-        .build();
-  }
-
-  @Bean
-  public Docket getLoginAndSignupAPI() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .groupName("Login / Signup")
-        .apiInfo(apiInfo("로그인 및 회원가입"))
-        .select()
-        .apis(RequestHandlerSelectors.basePackage("com.sns.zuzuclub.controller"))
-        .paths(PathSelectors.ant("/jwt/**"))
         .build();
   }
 }
