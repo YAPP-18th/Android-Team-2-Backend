@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.dto.comment;
+package com.sns.zuzuclub.controller.comment.dto;
 
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.comment.model.CommentReaction;

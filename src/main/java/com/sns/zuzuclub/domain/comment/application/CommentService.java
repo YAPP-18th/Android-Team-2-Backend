@@ -1,13 +1,9 @@
-package com.sns.zuzuclub.service.comment;
+package com.sns.zuzuclub.domain.comment.application;
 
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.dto.comment.ChildCommentDto;
-import com.sns.zuzuclub.dto.comment.CommentRequestDto;
-import com.sns.zuzuclub.dto.comment.CommentResponseDto;
-import com.sns.zuzuclub.dto.post.PostResponseDto;
-import com.sns.zuzuclub.repository.comment.CommentRepository;
-import com.sns.zuzuclub.repository.post.PostRepository;
+import com.sns.zuzuclub.domain.post.repository.PostRepository;
+import com.sns.zuzuclub.controller.comment.dto.CommentResponseDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.utils;
+package com.sns.zuzuclub.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

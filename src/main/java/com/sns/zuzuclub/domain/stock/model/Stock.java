@@ -23,5 +23,5 @@ public class Stock {
   private String stockName;
 
   @OneToMany(mappedBy = "stock")
-  private List<StockPost> stockPostList = new ArrayList<>();
+  private List<PostedStock> postedStockList = new ArrayList<>();
 }
