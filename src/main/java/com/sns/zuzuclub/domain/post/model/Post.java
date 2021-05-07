@@ -1,6 +1,6 @@
 package com.sns.zuzuclub.domain.post.model;
 
-import com.sns.zuzuclub.domain.stock.model.StockPost;
+import com.sns.zuzuclub.domain.stock.model.PostedStock;
 import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +19,13 @@ import com.sns.zuzuclub.constant.PostEmotionType;
 
 import com.sns.zuzuclub.global.AuditEntity;
 import com.sns.zuzuclub.domain.comment.model.Comment;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+
 @NoArgsConstructor
+@Getter
 @Entity
 public class Post extends AuditEntity {
 
@@ -40,7 +42,7 @@ public class Post extends AuditEntity {
   private PostEmotionType postEmotionType;
 
   @OneToMany(mappedBy = "post")
-  private List<StockPost> stockPostList = new ArrayList<>();
+  private List<PostedStock> postedStockList = new ArrayList<>();
 
   @OneToMany(mappedBy = "post")
   private List<Comment> commentList = new ArrayList<>();
@@ -51,4 +53,10 @@ public class Post extends AuditEntity {
   private String postImageUrl;
   private int commentCount = 0;
   private int postReactionCount = 0;
+
+    @Builder
+    public Post(User user, String content) {
+        this.user = user;
+        this.content = content;
+    }
 }

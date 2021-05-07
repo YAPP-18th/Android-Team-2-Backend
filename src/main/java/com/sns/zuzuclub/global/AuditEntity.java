@@ -19,9 +19,9 @@ public abstract class AuditEntity implements Serializable {
 
   @CreatedDate
   @Column(nullable = false)
-  private LocalDateTime regDate;
+  private LocalDateTime createdAt;
 
   @LastModifiedDate
   @Column(nullable = false)
-  private LocalDateTime modDate;
+  private LocalDateTime updatedAt;
 }

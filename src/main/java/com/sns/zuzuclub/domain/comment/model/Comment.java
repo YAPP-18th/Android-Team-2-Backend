@@ -1,6 +1,8 @@
 package com.sns.zuzuclub.domain.comment.model;
 
-import com.sns.zuzuclub.domain.user.model.User;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sns.zuzuclub.domain.user.model.UserInfo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +16,15 @@ import javax.persistence.OneToMany;
 
 import com.sns.zuzuclub.global.AuditEntity;
 import com.sns.zuzuclub.domain.post.model.Post;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
+@Builder
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Comment extends AuditEntity {
 
@@ -28,9 +33,10 @@ public class Comment extends AuditEntity {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private User user;
+  private UserInfo user;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
   private Post post;
 
   private String content;

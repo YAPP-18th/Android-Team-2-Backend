@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class StockPost {
+public class PostedStock {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
