@@ -1,33 +1,54 @@
 package com.sns.zuzuclub.controller.comment.dto;
 
 import com.sns.zuzuclub.domain.comment.model.Comment;
-import com.sns.zuzuclub.domain.comment.model.CommentReaction;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserInfo;
-import java.util.ArrayList;
+import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
+import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import java.util.stream.Collectors;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
 public class CommentResponseDto {
+    @ApiModelProperty(value = "댓글id", example = "")
+    private Long commentId;
 
-    private UserInfo user;
-    private Post post;
+    @ApiModelProperty(value = "작성자 닉네임", example = "")
+    private String nickname;
+
+    @ApiModelProperty(value = "작성자 프사", example = "")
+    private String profileImageUrl;
+
+    @ApiModelProperty(value = "댓글 내용", example = "")
     private String content;
-    private Comment parentComment;
-    private List<Comment> childComment = new ArrayList<>();
-    private List<CommentReaction> commentReaction = new ArrayList<>();
-    private int commentReactionCount = 0;
 
+    @ApiModelProperty(value = "부모 댓글id", example = "")
+    private Long parentCommentId;
+
+    @ApiModelProperty(value = "작성일(수정필요)", example = "")
+    private LocalDateTime createdAt;
+
+    @ApiModelProperty(value = "댓글 반응 수", example = "")
+    private int commentReactionCount;
+
+
+    public CommentResponseDto(UserInfoRepository userInfoRepository, Comment comment) {
+        UserInfo writerUserInfo = comment.getWriterUserInfo(userInfoRepository);
+        this.commentId = comment.getId();
+        this.nickname = writerUserInfo.getNickname();
+        this.profileImageUrl = writerUserInfo.getProfileImageUrl();
+        this.content = comment.getContent();
+        this.parentCommentId = comment.getParentCommentId();
+        this.createdAt = comment.getCreatedAt();
+        this.commentReactionCount = comment.getCommentReactionCount();
+    }
+
+    public static List<CommentResponseDto> toListFrom(UserInfoRepository userInfoRepository, Post post){
+        return post.getCommentList()
+                   .stream()
+                   .map(comment -> new CommentResponseDto(userInfoRepository, comment))
+                   .collect(Collectors.toList());
+    }
 }

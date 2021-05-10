@@ -1,5 +1,8 @@
 package com.sns.zuzuclub.constant;
 
+import lombok.Getter;
+
+@Getter
 public enum PostEmotionType {
 
   UP(1),

@@ -1,7 +1,12 @@
 package com.sns.zuzuclub.controller.profile.dto;
 
+import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
+import com.sns.zuzuclub.domain.user.helper.UserHelper;
+import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserInfo;
+import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -29,27 +34,21 @@ public class ProfileResponseDto {
   @ApiModelProperty(value = "작성글 수")
   private int postCount;
 
-  @Builder
-  public ProfileResponseDto(String nickname, String profileImageUrl, String introduction,
-      int userStockScrapCount, int followerCount, int followingCount, int postCount) {
-    this.nickname = nickname;
-    this.profileImageUrl = profileImageUrl;
-    this.introduction = introduction;
-    this.userStockScrapCount = userStockScrapCount;
-    this.followerCount = followerCount;
-    this.followingCount = followingCount;
-    this.postCount = postCount;
-  }
+  @ApiModelProperty(value = "작성한 게시글 리스트")
+  private List<PostResponseDto>  postResponseDtoList;
 
-  public static ProfileResponseDto fromEntity(UserInfo userInfo){
-    return ProfileResponseDto.builder()
-                             .nickname(userInfo.getNickname())
-                             .profileImageUrl(userInfo.getProfileImageUrl())
-                             .introduction(userInfo.getIntroduction())
-                             .userStockScrapCount(userInfo.getUser().getUserStockScrapCount())
-                             .followerCount(userInfo.getUser().getFollowerCount())
-                             .followingCount(userInfo.getUser().getFollowingCount())
-                             .postCount(userInfo.getUser().getPostCount())
-                             .build();
+
+  public ProfileResponseDto(UserInfoRepository userInfoRepository, UserInfo userInfo) {
+    this.nickname = userInfo.getNickname();
+    this.profileImageUrl = userInfo.getProfileImageUrl();
+    this.introduction = userInfo.getIntroduction();
+
+    User user = userInfo.getUser();
+    this.userStockScrapCount = user.getUserStockScrapCount();
+    this.followerCount = user.getFollowerCount();
+    this.followingCount = user.getFollowingCount();
+    this.postCount = user.getPostCount();
+
+    this.postResponseDtoList = PostResponseDto.toListFrom(userInfoRepository, user.getPostList());
   }
 }

@@ -10,7 +10,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -35,6 +37,25 @@ public class ProfileController {
   @GetMapping("/profile")
   public SingleResult<ProfileResponseDto> getUserProfile(@RequestHeader(value = "Authorization") String jwtToken){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+    ProfileResponseDto profileResponseDto = profileService.getUserProfile(userId);
+    return ResponseForm.getSingleResult(profileResponseDto, "프로필 페이지");
+  }
+
+
+  @ApiOperation(
+      value = "임의의 사용자 프로필",
+      notes = "<h3>\n"
+          + "PathVariable 로 전달되는 userId를 갖는 유저의 프로필을 반환합니다."
+          + "</h3>"
+  )
+//  // 각 메서드에 responseMessage를
+//  @ApiResponses({
+//      @ApiResponse(code = 200, message = "회원 목록 OK!!!"),
+//      @ApiResponse(code = 404, message = "서버 문제 발생!!!"),
+//      @ApiResponse(code = 500, message = "페이지를 찾을 수 없어!!!")
+//  })
+  @GetMapping("/profile/{userId}")
+  public SingleResult<ProfileResponseDto> getUserProfile(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long userId){
     ProfileResponseDto profileResponseDto = profileService.getUserProfile(userId);
     return ResponseForm.getSingleResult(profileResponseDto, "프로필 페이지");
   }

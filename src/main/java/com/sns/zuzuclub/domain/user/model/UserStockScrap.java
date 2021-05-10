@@ -27,16 +27,19 @@ public class UserStockScrap {
   private Stock stock;
 
   public UserStockScrap(User user, Stock stock) {
+    this();
     updateUser(user);
     updateStock(stock);
   }
 
   public void updateUser(User user){
     if(this.user != null){
+      this.user.decreaseUserStockScrapCount();
       this.user.getUserStockScrapList().remove(this);
     }
     this.user = user;
     user.getUserStockScrapList().add(this);
+    user.increaseUserStockScrapCount();
   }
 
   public void updateStock(Stock stock){

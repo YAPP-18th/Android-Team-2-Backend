@@ -8,6 +8,7 @@ import com.sns.zuzuclub.global.response.MultipleResult;
 import com.sns.zuzuclub.global.response.ResponseForm;
 import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +34,7 @@ public class SignupController {
           + "</h3>"
   )
   @PostMapping("/nickname")
-  public SingleResult<Boolean> hasDuplicateNickname(
-      @RequestHeader(value = "Authorization") String jwtToken, @RequestBody String nickname) {
+  public SingleResult<Boolean> hasDuplicateNickname(@RequestHeader(value = "Authorization") String jwtToken, @ApiParam(value = "닉네임", type = "String", required = true) @RequestBody String nickname) {
     Boolean hasDuplicateNickname = signupService.hasDuplicateNickname(nickname);
     return ResponseForm.getSingleResult(hasDuplicateNickname, "닉네임 중복 검사");
   }
@@ -46,8 +46,7 @@ public class SignupController {
           + "</h3>"
   )
   @GetMapping("/stock")
-  public MultipleResult<StockListResponseDto> getStockList(
-      @RequestHeader(value = "Authorization") String jwtToken) {
+  public MultipleResult<StockListResponseDto> getStockList(@RequestHeader(value = "Authorization") String jwtToken) {
     List<StockListResponseDto> stockListResponseDtoList = signupService.getStockList();
     return ResponseForm.getMultipleResult(stockListResponseDtoList, "관심 종목 목록 불러오기");
   }
@@ -61,11 +60,10 @@ public class SignupController {
           + "</h3>"
   )
   @PostMapping("/user")
-  public SingleResult<String> registerUser(@RequestHeader(value = "Authorization") String jwtToken,
-      @RequestBody SignupRequestDto signupRequestDto) {
+  public SingleResult<String> registerUser(@RequestHeader(value = "Authorization") String jwtToken, @RequestBody SignupRequestDto signupRequestDto) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     String nickname = signupService.registerUser(userId, signupRequestDto);
-    return ResponseForm.getSingleResult(nickname, "닉네임 중복 검사 성공(false 가 중복없음)");
+    return ResponseForm.getSingleResult(nickname, "회원정보 등록");
   }
 
 }

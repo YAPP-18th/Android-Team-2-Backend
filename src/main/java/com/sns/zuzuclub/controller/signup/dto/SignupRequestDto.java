@@ -15,15 +15,14 @@ public class SignupRequestDto {
   @ApiModelProperty(value = "소개", example = "와타시잼민이")
   private String introduction;
 
-  @ApiModelProperty(value = "관심 종목 id 리스트", example = "1, 2, 3, 4")
-  private List<Long> likeStockIdList;
+  @ApiModelProperty(value = "관심 종목 id 리스트")
+  private List<Long> scrapStockIdList;
 
-  public UserInfo createUserInfoEntity(User user){
+  public UserInfo toUserInfoEntity(User user){
     return UserInfo.builder()
                    .user(user)
                    .nickname(nickname)
                    .introduction(introduction)
-                   .profileImageUrl(null)
                    .build();
   }
 }

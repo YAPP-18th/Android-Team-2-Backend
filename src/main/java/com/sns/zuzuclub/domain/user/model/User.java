@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -65,4 +66,35 @@ public class User extends AuditEntity {
   private int userStockScrapCount = 0;
   private int followerCount = 0;
   private int followingCount = 0;
+
+  public void increaseUserStockScrapCount(){
+    this.userStockScrapCount += 1;
+  }
+
+  public void decreaseUserStockScrapCount(){
+    this.userStockScrapCount -= 1;
+  }
+
+  public void increasePostCount(){
+    this.postCount += 1;
+  }
+
+  public void decreasePostCount(){
+    this.postCount -= 1;
+  }
+
+  public void increaseCommentCount(){
+    this.commentCount += 1;
+  }
+
+  public void decreasCommentCount(){
+    this.commentCount -= 1;
+  }
+
+  // 내가 팔로우하는 유저 리스트 리턴
+  public List<User> getMyFollowingUserList(){
+    return following.stream()
+                    .map(UserFollow::getToUser)
+                    .collect(Collectors.toList());
+  }
 }
