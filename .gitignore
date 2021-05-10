@@ -37,4 +37,10 @@ out/
 ### VS Code ###
 .vscode/
 
+### jwt ###
+application-jwt.yml
+application-local.yml
+application-prod.yml
 
+### sql ###
+import.sql
