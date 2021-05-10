@@ -5,15 +5,14 @@ import com.sns.zuzuclub.constant.UserRoleType;
 import com.sns.zuzuclub.controller.login.dto.LoginRequestDto;
 import com.sns.zuzuclub.controller.login.dto.LoginResponseDto;
 import com.sns.zuzuclub.controller.login.dto.ReissueJwtTokenResponseDto;
+import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserSecurity;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.domain.user.repository.UserSecurityRepository;
 
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
-import com.sns.zuzuclub.global.exception.CustomException;
-import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
+import com.sns.zuzuclub.domain.user.service.UserInfoService;
 import com.sns.zuzuclub.util.social.SocialTokenProviderFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,16 +22,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class LoginService {
 
+  private final UserInfoService userInfoService;
+
   private final UserRepository userRepository;
   private final UserSecurityRepository userSecurityRepository;
-  private final UserInfoRepository userInfoRepository;
   private final SocialTokenProviderFactory socialTokenProviderFactory;
   private final JwtTokenProvider jwtTokenProvider;
 
   @Transactional
   public LoginResponseDto login(LoginRequestDto loginRequestDto) {
 
-    boolean needUserInfo = true;
+
     String socialToken = loginRequestDto.getSocialToken();
     SocialTokenProviderType provider = loginRequestDto.getProvider();
 
@@ -59,55 +59,47 @@ public class LoginService {
       return LoginResponseDto.builder()
                              .jwtAccessToken(jwtAccessToken)
                              .jwtRefreshToken(jwtRefreshToken)
-                             .needUserInfo(needUserInfo)
+                             .needUserInfo(true)
                              .build();
-    }
-
-    if (existUserInfo(userSecurityEntity)) {
-      // 소셜로그인 완료, 회원가입 완료  / Ex) 다른 기기 로그인
-      needUserInfo = false;
     }
 
     String jwtAccessToken = jwtTokenProvider.createJwtAccessToken(userSecurityEntity.getId(), UserRoleType.USER);
     String jwtRefreshToken = jwtTokenProvider.createJwtRefreshToken(userSecurityEntity.getId());
 
+    if (userInfoService.exist(userSecurityEntity.getId())) {
+      // 소셜로그인 완료, 회원가입 완료  / Ex) 다른 기기 로그인
+      return LoginResponseDto.builder()
+                             .jwtAccessToken(jwtAccessToken)
+                             .jwtRefreshToken(jwtRefreshToken)
+                             .needUserInfo(false)
+                             .build();
+    }
     return LoginResponseDto.builder()
                            .jwtAccessToken(jwtAccessToken)
                            .jwtRefreshToken(jwtRefreshToken)
-                           .needUserInfo(needUserInfo)
+                           .needUserInfo(true)
                            .build();
   }
 
-  private boolean existUserInfo(UserSecurity userSecurityEntity) {
-    return userInfoRepository.findById(userSecurityEntity.getId())
-                             .isPresent();
-  }
-
+  @Transactional
   public ReissueJwtTokenResponseDto reissueJwtToken(String jwtRefreshToken) {
-
-    String reissuedJwtAccessToken = "";
-    boolean hasRefreshToken = false;
-    String reissuedJwtRefreshToken = "";
 
     jwtTokenProvider.isValidatedToken(jwtRefreshToken);
 
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtRefreshToken));
-    UserSecurity userSecurityEntity = userSecurityRepository.findByUserId(userId)
-                                                            .orElseThrow(() -> new CustomException(UserErrorCodeType.INVALID_USER));
-
+    UserSecurity userSecurityEntity = UserHelper.findUserSecurityById(userSecurityRepository, userId);
     userSecurityEntity.isSameToken(jwtRefreshToken);
 
-    reissuedJwtAccessToken = jwtTokenProvider.createJwtAccessToken(userSecurityEntity.getId(), userSecurityEntity.getUserRoleType());
+    String reissuedJwtAccessToken = jwtTokenProvider.createJwtAccessToken(userSecurityEntity.getId(), userSecurityEntity.getUserRoleType());
+    String reissuedJwtRefreshToken = jwtRefreshToken;
 
     if (jwtTokenProvider.calculateDaysLeft(jwtRefreshToken) < 3){
-      hasRefreshToken = true;
       reissuedJwtRefreshToken = jwtTokenProvider.createJwtRefreshToken(userSecurityEntity.getId());
       userSecurityEntity.updateJwtRefreshToken(reissuedJwtRefreshToken);
     }
 
     return ReissueJwtTokenResponseDto.builder()
                                      .jwtAccessToken(reissuedJwtAccessToken)
-                                     .hasRefreshToken(hasRefreshToken)
                                      .jwtRefreshToken(reissuedJwtRefreshToken)
                                      .build();
   }

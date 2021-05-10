@@ -22,7 +22,7 @@ public class UserFollow extends AuditEntity {
   private Long id;
 
 /*
-  - fromUser 가 toUser를 차단함
+  - fromUser 가 toUser를 팔로우함
    */
 
   @ManyToOne(fetch = FetchType.LAZY)

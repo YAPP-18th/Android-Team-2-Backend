@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserSecurityRepository extends JpaRepository<UserSecurity, Long> {
   UserSecurity findBySocialTokenProviderTypeAndSocialId(SocialTokenProviderType socialTokenProviderType, String socialId);
-  Optional<UserSecurity> findByUserId(Long userId);
 }

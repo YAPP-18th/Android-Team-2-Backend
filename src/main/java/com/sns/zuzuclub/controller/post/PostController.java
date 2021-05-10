@@ -1,8 +1,10 @@
 package com.sns.zuzuclub.controller.post;
 
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
+import com.sns.zuzuclub.constant.FeedType;
 import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
+import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.application.FeedService;
 import com.sns.zuzuclub.global.response.MultipleResult;
@@ -42,33 +44,32 @@ public class PostController {
     }
 
     @ApiOperation(
-        value = "피드 - 모든 게시글 불러오기",
+        value = "피드 불러오기 - ALL, HOT, FRIENDS",
         notes = "<h3>\n"
-            + "- 피드의 ALL 게시글 불러옵니다.\n"
+            + "- 피드의 각 타입별 게시글을 불러옵니다.\n"
+            + "  - ALL : 싸그리깡그리모조리모두다불태워버려\n"
+            + "  - HOT : 일주일동안, 게시글에 달린 반응이 많은 순서대로\n"
+            + "  - FRIENDS : 팔로워들의 게시글들을 최신순으로 불러옵니다.\n"
             + "- page는 0부터 시작해서, 20개씩 최신순으로 불러옵니다.\n"
             + "</h3>"
     )
     @GetMapping("/posts")
-    public MultipleResult<PostResponseDto> getAllPost(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam int page){
-        List<PostResponseDto> postResponseDtoList = feedService.getAllPost(page);
+    public MultipleResult<PostResponseDto> getFeed(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam FeedType feedType, @RequestParam int page){
+        Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+        List<PostResponseDto> postResponseDtoList = feedService.getFeed(userId, feedType, page);
         return ResponseForm.getMultipleResult(postResponseDtoList,"모든 게시글 가져오기 / page = " + page);
     }
 
-
-    @PostMapping("/post")
-    @ApiOperation(value = "게시물 전체 조회", notes = "특정 게시물의 댓글을 조회하는 기능")
-    public PostRequestDto savePost(PostRequestDto postRequestDto) {
-        feedService.save(postRequestDto);
-        return postRequestDto;
-    }
-
-
-
-
+    @ApiOperation(
+        value = "피드 - 게시글 상세",
+        notes = "<h3>\n"
+        + "- 게시글 상세정보를 불러옵니다.\n"
+        + "- page는 0부터 시작해서, 20개씩 최신순으로 불러옵니다.\n"
+        + "</h3>"
+    )
     @GetMapping("/posts/{postId}")
-    @ApiOperation(value = "게시물 디테일 조회", notes = "특정 게시물을 조회하는 기능")
-    public PostResponseDto getDetailPost(@PathVariable("postId") Long postId) {
-        PostResponseDto post = feedService.findById(postId);
-        return post;
+    public SingleResult<PostDetailResponseDto> getPostDetail(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId){
+        PostDetailResponseDto postDetailResponseDto = feedService.getPostDetail(postId);
+        return ResponseForm.getSingleResult(postDetailResponseDto,"게시글 상세 가져오기" );
     }
 }
