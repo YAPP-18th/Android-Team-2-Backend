@@ -9,10 +9,6 @@ import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;
 import com.sns.zuzuclub.domain.post.service.PostService;
-import com.sns.zuzuclub.domain.stock.model.PostedStock;
-import com.sns.zuzuclub.domain.stock.model.Stock;
-import com.sns.zuzuclub.domain.stock.repository.PostedStockRepository;
-import com.sns.zuzuclub.domain.stock.repository.StockRepository;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
@@ -21,13 +17,13 @@ import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
@@ -38,14 +34,14 @@ public class FeedService {
   private final UserRepository userRepository;
   private final UserInfoRepository userInfoRepository;
   private final PostRepository postRepository;
-  private final StockRepository stockRepository;
 
 
   @Transactional
-  public CreatePostResponseDto createPost(Long userId, CreatePostRequestDto createPostRequestDto) {
+  public CreatePostResponseDto createPost(Long userId, CreatePostRequestDto createPostRequestDto,
+      MultipartFile multipartFile) {
 
     User userEntity = UserHelper.findUserById(userRepository, userId);
-    Post newPostEntity = postService.createPost(userEntity, createPostRequestDto);
+    Post newPostEntity = postService.createPost(userEntity, createPostRequestDto, multipartFile);
 
     // 이미지 업로드 미완성
     return new CreatePostResponseDto(newPostEntity);
