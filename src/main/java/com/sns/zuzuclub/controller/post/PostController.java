@@ -14,12 +14,16 @@ import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -37,9 +41,13 @@ public class PostController {
             + "</h3>"
     )
     @PostMapping("/post")
-    public SingleResult<CreatePostResponseDto> createPost(@RequestHeader(value = "Authorization") String jwtToken, @RequestBody CreatePostRequestDto createPostRequestDto) {
+    public SingleResult<CreatePostResponseDto> createPost(
+        @RequestHeader(value = "Authorization") String jwtToken,
+        @RequestParam(value = "multipartFile") MultipartFile multipartFile,
+        @ModelAttribute CreatePostRequestDto createPostRequestDto)
+    {
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-        CreatePostResponseDto createPostResponseDto = feedService.createPost(userId, createPostRequestDto);
+        CreatePostResponseDto createPostResponseDto = feedService.createPost(userId, createPostRequestDto, multipartFile);
         return ResponseForm.getSingleResult(createPostResponseDto,"게시물 작성");
     }
 
