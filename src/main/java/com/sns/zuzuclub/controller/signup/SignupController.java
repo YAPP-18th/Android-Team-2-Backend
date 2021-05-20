@@ -2,7 +2,7 @@ package com.sns.zuzuclub.controller.signup;
 
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
 import com.sns.zuzuclub.controller.signup.dto.SignupRequestDto;
-import com.sns.zuzuclub.controller.signup.dto.StockListResponseDto;
+import com.sns.zuzuclub.controller.signup.dto.SearchStockResponseDto;
 import com.sns.zuzuclub.domain.user.application.SignupService;
 import com.sns.zuzuclub.global.response.MultipleResult;
 import com.sns.zuzuclub.global.response.ResponseForm;
@@ -46,8 +46,8 @@ public class SignupController {
           + "</h3>"
   )
   @GetMapping("/stock")
-  public MultipleResult<StockListResponseDto> getStockList(@RequestHeader(value = "Authorization") String jwtToken) {
-    List<StockListResponseDto> stockListResponseDtoList = signupService.getStockList();
+  public MultipleResult<SearchStockResponseDto> getStockList() {
+    List<SearchStockResponseDto> stockListResponseDtoList = signupService.getStockList();
     return ResponseForm.getMultipleResult(stockListResponseDtoList, "관심 종목 목록 불러오기");
   }
 

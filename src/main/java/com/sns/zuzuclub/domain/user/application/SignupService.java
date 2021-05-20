@@ -3,8 +3,10 @@ package com.sns.zuzuclub.domain.user.application;
 
 
 import com.sns.zuzuclub.controller.signup.dto.SignupRequestDto;
-import com.sns.zuzuclub.controller.signup.dto.StockListResponseDto;
+import com.sns.zuzuclub.controller.signup.dto.SearchStockResponseDto;
+import com.sns.zuzuclub.domain.stock.model.SignupStock;
 import com.sns.zuzuclub.domain.stock.model.Stock;
+import com.sns.zuzuclub.domain.stock.repository.SignupStockRepository;
 import com.sns.zuzuclub.domain.stock.repository.StockRepository;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
@@ -15,6 +17,7 @@ import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.domain.user.repository.UserStockScrapRepository;
 import com.sns.zuzuclub.domain.user.service.UserInfoService;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,16 +31,22 @@ public class SignupService {
 
   private final UserRepository userRepository;
   private final UserInfoRepository userInfoRepository;
-  private final StockRepository stockRepository;
   private final UserStockScrapRepository userStockScrapRepository;
+  private final StockRepository stockRepository;
+  private final SignupStockRepository signupStockRepository;
+
 
   public Boolean hasDuplicateNickname(String nickname) {
     return userInfoService.hasDuplicatedNickname(nickname);
   }
 
-  public List<StockListResponseDto> getStockList() {
-    // 여기는 무슨 기준으로 정렬하지 ?
-    return null;
+  public List<SearchStockResponseDto> getStockList() {
+    // 이거 정규화 하려고 이렇게 한건데, 너무 DB 생각만하고 객체는 무시하고 하는거같은데...?
+    List<SignupStock> signupStockList = signupStockRepository.findAll();
+    List<Stock> stockList = signupStockList.stream()
+                                           .map(SignupStock::getStock)
+                                           .collect(Collectors.toList());
+    return SearchStockResponseDto.toListFrom(stockList);
   }
 
   @Transactional
