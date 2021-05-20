@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
@@ -14,17 +15,39 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-  private static final String CONTROLLER_PACKAGE_NAME = "com.sns.zuzuclub.controller";
-  private static final String LOGIN_PACKAGE = CONTROLLER_PACKAGE_NAME + ".login";
-  private static final String SIGNUP_PACKAGE = CONTROLLER_PACKAGE_NAME + ".signup";
   private static final String DEFAULT_TITLE = "ZUZU CLUB PROJECT - ";
+  private static final String CONTROLLER_PACKAGE_NAME = "com.sns.zuzuclub.controller";
+  private static final String COMMENT_PACAKGE = CONTROLLER_PACKAGE_NAME + ".comment";
+  private static final String LOGIN_PACKAGE = CONTROLLER_PACKAGE_NAME + ".login";
+  private static final String POST_PACKAGE = CONTROLLER_PACKAGE_NAME + ".post";
+  private static final String PROFILE_PACKAGE = CONTROLLER_PACKAGE_NAME + ".profile";
+  private static final String SIGNUP_PACKAGE = CONTROLLER_PACKAGE_NAME + ".signup";
 
   private String groupName;
+
+
+  @Bean
+  public Docket commentApiDocket() {
+    groupName = "COMMENT";
+    return getDocket(groupName, COMMENT_PACAKGE);
+  }
 
   @Bean
   public Docket loginApiDocket() {
     groupName = "LOGIN";
     return getDocket(groupName, LOGIN_PACKAGE);
+  }
+
+  @Bean
+  public Docket postApiDocket() {
+    groupName = "POST";
+    return getDocket(groupName, POST_PACKAGE);
+  }
+
+  @Bean
+  public Docket profileApiDocket() {
+    groupName = "PROFILE";
+    return getDocket(groupName, PROFILE_PACKAGE);
   }
 
   @Bean

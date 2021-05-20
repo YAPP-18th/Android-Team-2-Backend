@@ -91,11 +91,8 @@ public class JwtTokenProvider {
 
     // ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException;
     try {
-      if (Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody().getSubject().equals("ACCESS_TOKEN")){
+      Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken);
         return true;
-      }else {
-        throw new CustomException(JwtErrorCodeType.MALFORMED_JWT_TOKEN);
-      }
     } catch (ExpiredJwtException e) {
       logger.info(JwtErrorCodeType.EXPIRED_JWT_TOKEN.getMessage(), new CustomException(JwtErrorCodeType.EXPIRED_JWT_TOKEN));
     } catch (UnsupportedJwtException e) {

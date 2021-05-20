@@ -37,7 +37,11 @@ out/
 ### VS Code ###
 .vscode/
 
-### jwt ###
+### profile ###
 application-jwt.yml
 application-local.yml
 application-prod.yml
+application-aws.yml
+
+### sql ###
+import.sql

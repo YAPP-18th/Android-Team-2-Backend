@@ -39,8 +39,10 @@ public class LoginController {
   @ApiOperation(
       value = "JWT - ACCESS, REFRESH 토큰 재발급",
       notes = "<h3>\n"
-          + "- AccessToken이 만료되면, RefeshToken을 이용해서 재발급 받습니다.\n"
-          + "- RefreshToken의 유효기간이 3일 보다 적게 남았으면, RefreshToken도 재발급합니다."
+          + "- AccessToken 이 만료되면, RefeshToken을 이용해서 재발급 받습니다.\n"
+          + "- AccessToken 은 항상 새로운 값이 리턴됩니다.\n"
+          + "- RefreshToken 의 유효기간이 3일 보다 적게 남았으면, RefreshToken 도 재발급합니다.\n"
+          + "- RefreshToken 의 유효기간이 3일 보다 많이 남았으면, 보냈던 것과 같은 RefreshToken 값이 리턴됩니다."
           + "</h3>"
   )
   @PostMapping("/jwt/refresh")

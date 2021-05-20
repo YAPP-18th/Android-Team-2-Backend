@@ -1,8 +1,11 @@
 package com.sns.zuzuclub.domain.user.application;
 
 import com.sns.zuzuclub.controller.profile.dto.ProfileResponseDto;
+import com.sns.zuzuclub.domain.user.helper.UserHelper;
+import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserInfo;
 import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
+import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +18,7 @@ public class ProfileService {
   private final UserInfoRepository userInfoRepository;
 
   public ProfileResponseDto getUserProfile(Long userId) {
-    UserInfo userInfoEntity = userInfoRepository.findById(userId)
-                                                .orElseThrow(() -> new CustomException(UserErrorCodeType.INVALID_USER));
-    return ProfileResponseDto.fromEntity(userInfoEntity);
+    UserInfo userInfo = UserHelper.findUserInfoById(userInfoRepository, userId);
+    return new ProfileResponseDto(userInfoRepository, userInfo);
   }
 }
