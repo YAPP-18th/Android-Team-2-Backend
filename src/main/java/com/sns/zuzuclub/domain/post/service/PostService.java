@@ -1,5 +1,6 @@
 package com.sns.zuzuclub.domain.post.service;
 
+import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;
@@ -10,6 +11,8 @@ import com.sns.zuzuclub.domain.stock.repository.StockRepository;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.util.S3Uploader;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,5 +44,29 @@ public class PostService {
                                                         .collect(Collectors.toList());
     postedStockRepository.saveAll(postedStockList);
     return newPostEntity;
+  }
+
+  public Entry<PostEmotionType, Integer> getMaxCountPostEmotionTypeEntry(List<Post> postList) {
+
+    Map<PostEmotionType, Integer> postEmotionTypeIntegerMap = calculatePostEmotionTypeCount(postList);
+
+    return postEmotionTypeIntegerMap.entrySet()
+                                    .stream()
+                                    .max(Entry.comparingByValue())
+                                    .get();
+  }
+
+  public Map<PostEmotionType, Integer> calculatePostEmotionTypeCount(List<Post> postList) {
+
+    Map<PostEmotionType, Integer> postEmotionTypeIntegerMap = PostEmotionType.getPostEmotionTypeWithCountMap();
+
+    postList.forEach(post -> {
+      PostEmotionType postEmotionType = post.getPostEmotionType();
+      if (postEmotionType != null) {
+        postEmotionTypeIntegerMap.computeIfPresent(postEmotionType, (emotion, count) -> count++);
+      }
+    });
+
+    return postEmotionTypeIntegerMap;
   }
 }
