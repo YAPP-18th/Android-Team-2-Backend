@@ -3,7 +3,6 @@ package com.sns.zuzuclub.controller.post.dto;
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.controller.comment.dto.CommentResponseDto;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.UserInfo;
 import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import io.swagger.annotations.ApiModelProperty;
@@ -47,20 +46,25 @@ public class PostDetailResponseDto {
   @ApiModelProperty(value = "내 게시물인지 여부", example = "")
   private boolean isMine = false;
 
+  @ApiModelProperty(value = "반응했는지 여부", example = "")
+  private boolean hasUserPostReaction = false;
 
   @Builder
   public PostDetailResponseDto(UserInfoRepository userInfoRepository, Post post, Long userId) {
     UserInfo postWriterUserInfo = post.getWriterUserInfo(userInfoRepository);
     this.isMine = userId.equals(postWriterUserInfo.getId());
-    this.postId = post.getId();
+    this.hasUserPostReaction = post.hasUserPostReaction(userId);
+
     this.profileImageUrl = postWriterUserInfo.getProfileImageUrl();
     this.nickname = postWriterUserInfo.getNickname();
+
+    this.postId = post.getId();
     this.postEmotionType = post.getPostEmotionType();
     this.postImageUrl = post.getPostImageUrl();
     this.postedStockDtoList = PostedStockDto.toListFrom(post);
     this.content = post.getContent();
     this.postReactionCount = post.getPostReactionCount();
     this.commentCount = post.getCommentCount();
-    this.commentResponseDtoList = CommentResponseDto.toListFrom(userInfoRepository, post);
+    this.commentResponseDtoList = CommentResponseDto.toListFrom(userInfoRepository, post, userId);
   }
 }

@@ -9,12 +9,14 @@ import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.application.FeedService;
+import com.sns.zuzuclub.global.response.CommonResult;
 import com.sns.zuzuclub.global.response.MultipleResult;
 import com.sns.zuzuclub.global.response.ResponseForm;
 import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -92,5 +94,18 @@ public class PostController {
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
         CreatePostReactionResponseDto createPostReactionResponseDto  = feedService.createPostReaction(postId, postReactionType, userId);
         return ResponseForm.getSingleResult(createPostReactionResponseDto,"게시글 상세 - 반응하기" );
+    }
+
+    @ApiOperation(
+        value = "피드 - 게시글 상세 - 반응취소",
+        notes = "<h3>\n"
+            + "- 게시글에 반응을 취소합니다.\n"
+            + "</h3>"
+    )
+    @DeleteMapping("/posts/{postId}")
+    public CommonResult deletePostReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId){
+        Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+        feedService.deletePostReaction(postId, userId);
+        return ResponseForm.getSuccessResult("게시글 상세 - 반응취소" );
     }
 }

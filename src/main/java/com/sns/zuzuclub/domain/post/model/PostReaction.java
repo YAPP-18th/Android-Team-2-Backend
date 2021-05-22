@@ -50,4 +50,11 @@ public class PostReaction extends AuditEntity {
     post.getPostReactionList().add(this);
     post.increasePostReactionCount();
   }
+
+  public void deletePost(){
+    this.post.decreasePostReactionCount();
+    this.post.getPostReactionList().remove(this);
+    this.post = null;
+  }
+
 }

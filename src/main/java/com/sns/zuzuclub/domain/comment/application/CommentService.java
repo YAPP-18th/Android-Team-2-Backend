@@ -40,6 +40,7 @@ public class CommentService {
     return new CreateCommentResponseDto(newComment);
   }
 
+  @Transactional
   public CreateCommentReactionResponseDto createCommentReaction(Long userId, Long commentId, CommentReactionType commentReactionType) {
     User user = UserHelper.findUserById(userRepository, userId);
     Comment comment = CommentHelper.findCommentById(commentRepository, commentId);
