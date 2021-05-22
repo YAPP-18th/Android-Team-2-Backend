@@ -9,5 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
   List<Post> findByCreatedAtAfter(LocalDateTime createdAt, Pageable pageable);
+  List<Post> findAllByCreatedAtAfter(LocalDateTime createdAt);
   List<Post> findAllByUserIn(List<User> userList, Pageable pageable);
 }

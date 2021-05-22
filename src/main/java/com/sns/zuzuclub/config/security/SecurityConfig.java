@@ -1,5 +1,6 @@
 package com.sns.zuzuclub.config.security;
 
+import com.sns.zuzuclub.constant.UserRoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -30,8 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/jwt/**").permitAll()
         .antMatchers("/exception/**").permitAll()
-        .anyRequest().permitAll()
-//        .anyRequest().hasRole(UserRoleType.USER.name())
+        .anyRequest().hasRole(UserRoleType.USER.name())
 
         .and()
         .exceptionHandling()

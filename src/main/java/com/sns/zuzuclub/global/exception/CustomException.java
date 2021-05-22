@@ -1,6 +1,7 @@
 package com.sns.zuzuclub.global.exception;
 
 import com.sns.zuzuclub.global.exception.errorCodeType.CommentErrorCodeType;
+import com.sns.zuzuclub.global.exception.errorCodeType.HomeErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.ImageUploadErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.SocialLoginErrorCodeType;
@@ -11,7 +12,7 @@ import lombok.Getter;
 @Getter
 public class CustomException extends RuntimeException{
 
-  // enum 을 야매 상속(인터페이스 활용)으롷 리팩토링
+  // TODO enum 을 야매 상속(인터페이스 활용)으롷 리팩토링
 
   private final int errorCode;
 
@@ -46,6 +47,12 @@ public class CustomException extends RuntimeException{
   }
 
   public CustomException(ImageUploadErrorCodeType errorCodeType)
+  {
+    super(errorCodeType.getMessage());
+    this.errorCode = errorCodeType.getErrorCode();
+  }
+
+  public CustomException(HomeErrorCodeType errorCodeType)
   {
     super(errorCodeType.getMessage());
     this.errorCode = errorCodeType.getErrorCode();
