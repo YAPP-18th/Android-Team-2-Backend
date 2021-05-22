@@ -1,7 +1,6 @@
 package com.sns.zuzuclub.controller.profile.dto;
 
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
-import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserInfo;
 import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
