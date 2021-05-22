@@ -1,12 +1,16 @@
 package com.sns.zuzuclub.domain.post.application;
 
 import com.sns.zuzuclub.constant.FeedType;
+import com.sns.zuzuclub.constant.PostReactionType;
+import com.sns.zuzuclub.controller.post.dto.CreatePostReactionResponseDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
+import com.sns.zuzuclub.domain.post.model.PostReaction;
+import com.sns.zuzuclub.domain.post.repository.PostReactionRepository;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;
 import com.sns.zuzuclub.domain.post.service.PostService;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
@@ -34,6 +38,7 @@ public class FeedService {
   private final UserRepository userRepository;
   private final UserInfoRepository userInfoRepository;
   private final PostRepository postRepository;
+  private final PostReactionRepository postReactionRepository;
 
 
   @Transactional
@@ -92,5 +97,13 @@ public class FeedService {
     Post postEntity = PostHelper.findPostById(postRepository, postId);
     return new PostDetailResponseDto(userInfoRepository, postEntity, userId);
     // TODO : 피드 목록에서 자기꺼확인여부 생성자 분리해야함 + 리포지토리 빼내려면 User를 합치는게 나을듯
+  }
+
+  public CreatePostReactionResponseDto createPostReaction(Long postId, PostReactionType postReactionType, Long userId) {
+    User user = UserHelper.findUserById(userRepository, userId);
+    Post post = PostHelper.findPostById(postRepository, postId);
+    PostReaction postReaction = new PostReaction(user, post, postReactionType);
+    postReactionRepository.save(postReaction);
+    return new CreatePostReactionResponseDto(postReaction);
   }
 }

@@ -33,4 +33,21 @@ public class PostReaction extends AuditEntity {
 
   @Enumerated(EnumType.STRING)
   private PostReactionType reactionType;
+
+  public PostReaction(User user, Post post, PostReactionType postReactionType) {
+    this();
+    this.user = user;
+    this.updatePost(post);
+    this.reactionType = postReactionType;
+  }
+
+  public void updatePost(Post post) {
+    if (this.post != null){
+      this.post.decreasePostReactionCount();
+      this.post.getPostReactionList().remove(this);
+    }
+    this.post = post;
+    post.getPostReactionList().add(this);
+    post.increasePostReactionCount();
+  }
 }

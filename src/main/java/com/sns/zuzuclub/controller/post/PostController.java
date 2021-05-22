@@ -2,6 +2,8 @@ package com.sns.zuzuclub.controller.post;
 
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
 import com.sns.zuzuclub.constant.FeedType;
+import com.sns.zuzuclub.constant.PostReactionType;
+import com.sns.zuzuclub.controller.post.dto.CreatePostReactionResponseDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
@@ -17,11 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -80,5 +79,18 @@ public class PostController {
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
         PostDetailResponseDto postDetailResponseDto = feedService.getPostDetail(postId, userId);
         return ResponseForm.getSingleResult(postDetailResponseDto,"게시글 상세 가져오기" );
+    }
+
+    @ApiOperation(
+        value = "피드 - 게시글 상세 - 반응하기",
+        notes = "<h3>\n"
+            + "- 게시글에 반응 합니다.\n"
+            + "</h3>"
+    )
+    @PostMapping("/posts/{postId}/{postReactionType}")
+    public SingleResult<CreatePostReactionResponseDto> createPostReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId, @PathVariable PostReactionType postReactionType){
+        Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+        CreatePostReactionResponseDto createPostReactionResponseDto  = feedService.createPostReaction(postId, postReactionType, userId);
+        return ResponseForm.getSingleResult(createPostReactionResponseDto,"게시글 상세 - 반응하기" );
     }
 }
