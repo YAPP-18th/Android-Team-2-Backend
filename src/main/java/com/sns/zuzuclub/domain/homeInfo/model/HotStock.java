@@ -3,7 +3,6 @@ package com.sns.zuzuclub.domain.homeInfo.model;
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.stock.model.Stock;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,9 +30,9 @@ public class HotStock {
   @Enumerated(EnumType.STRING)
   private PostEmotionType postEmotionType;
 
-  private int rank;
+  private int ranking;
 
   public void updateStock(List<Entry<Stock, Integer>> newHotStockList){
-    this.stock = newHotStockList.get(this.rank - 1).getKey();
+    this.stock = newHotStockList.get(this.ranking - 1).getKey();
   }
 }

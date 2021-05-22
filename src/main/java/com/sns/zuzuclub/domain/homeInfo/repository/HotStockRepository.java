@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface HotStockRepository extends JpaRepository<HotStock, Long> {
 
   List<HotStock> findAllByPostEmotionType(PostEmotionType postEmotionType);
+  List<HotStock> findAllByRankingIs(int rank);
 
 }
