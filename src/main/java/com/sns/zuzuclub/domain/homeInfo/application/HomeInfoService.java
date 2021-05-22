@@ -1,6 +1,8 @@
 package com.sns.zuzuclub.domain.homeInfo.application;
 
+import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.controller.home.dto.HomeResponseDto;
+import com.sns.zuzuclub.controller.home.dto.HotStockDto;
 import com.sns.zuzuclub.domain.homeInfo.model.HotStock;
 import com.sns.zuzuclub.domain.homeInfo.model.Weather;
 import com.sns.zuzuclub.domain.homeInfo.repository.HotStockRepository;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class HomeService {
+public class HomeInfoService {
 
   private final WeatherRepository weatherRepository;
   private final HotStockRepository hotStockRepository;
@@ -29,5 +31,10 @@ public class HomeService {
     List<HotStock> hotStockList = hotStockRepository.findAllByRankingIs(1);
     List<UserStockScrap> userStockScrapList = userStockScrapRepository.findTop6ByUser_Id(userId);
     return new HomeResponseDto(weather, hotStockList, userStockScrapList);
+  }
+
+  public List<HotStockDto> getHotStockRanking(PostEmotionType postEmotionType) {
+    List<HotStock> hotStockList = hotStockRepository.findAllByPostEmotionType(postEmotionType);
+    return HotStockDto.toListFrom(hotStockList);
   }
 }
