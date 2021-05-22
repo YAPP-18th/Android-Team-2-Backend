@@ -3,7 +3,7 @@ package com.sns.zuzuclub.domain.user.application;
 
 
 import com.sns.zuzuclub.controller.signup.dto.SignupRequestDto;
-import com.sns.zuzuclub.controller.signup.dto.SearchStockResponseDto;
+import com.sns.zuzuclub.controller.signup.dto.StockResponseDto;
 import com.sns.zuzuclub.domain.stock.model.SignupStock;
 import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.stock.repository.SignupStockRepository;
@@ -40,13 +40,13 @@ public class SignupService {
     return userInfoService.hasDuplicatedNickname(nickname);
   }
 
-  public List<SearchStockResponseDto> getStockList() {
+  public List<StockResponseDto> getStockList() {
     // 이거 정규화 하려고 이렇게 한건데, 너무 DB 생각만하고 객체는 무시하고 하는거같은데...?
     List<SignupStock> signupStockList = signupStockRepository.findAll();
     List<Stock> stockList = signupStockList.stream()
                                            .map(SignupStock::getStock)
                                            .collect(Collectors.toList());
-    return SearchStockResponseDto.toListFrom(stockList);
+    return StockResponseDto.toListFrom(stockList);
   }
 
   @Transactional
