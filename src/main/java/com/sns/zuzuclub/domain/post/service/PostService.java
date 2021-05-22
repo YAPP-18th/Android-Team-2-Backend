@@ -46,9 +46,9 @@ public class PostService {
     return newPostEntity;
   }
 
-  public Entry<PostEmotionType, Integer> getMaxCountPostEmotionTypeEntry(List<Post> postList) {
+  public Entry<PostEmotionType, Integer> getMostPostedPostEmotionType(List<Post> postList) {
 
-    Map<PostEmotionType, Integer> postEmotionTypeIntegerMap = calculatePostEmotionTypeCount(postList);
+    Map<PostEmotionType, Integer> postEmotionTypeIntegerMap = getPostEmotionTypeWithPostedCount(postList);
 
     return postEmotionTypeIntegerMap.entrySet()
                                     .stream()
@@ -56,17 +56,17 @@ public class PostService {
                                     .get();
   }
 
-  public Map<PostEmotionType, Integer> calculatePostEmotionTypeCount(List<Post> postList) {
+  public Map<PostEmotionType, Integer> getPostEmotionTypeWithPostedCount(List<Post> postList) {
 
-    Map<PostEmotionType, Integer> postEmotionTypeIntegerMap = PostEmotionType.getPostEmotionTypeWithCountMap();
+    Map<PostEmotionType, Integer> postEmotionTypeWithCountMap = PostEmotionType.getPostEmotionTypeWithCountMap();
 
     postList.forEach(post -> {
       PostEmotionType postEmotionType = post.getPostEmotionType();
       if (postEmotionType != null) {
-        postEmotionTypeIntegerMap.computeIfPresent(postEmotionType, (emotion, count) -> count++);
+        postEmotionTypeWithCountMap.compute(postEmotionType, (emotion, count) -> count++);
       }
     });
 
-    return postEmotionTypeIntegerMap;
+    return postEmotionTypeWithCountMap;
   }
 }
