@@ -44,10 +44,14 @@ public class PostDetailResponseDto {
   @ApiModelProperty(value = "댓글들", example = "")
   private List<CommentResponseDto> commentResponseDtoList;
 
+  @ApiModelProperty(value = "내 게시물인지 여부", example = "")
+  private boolean isMine = false;
+
 
   @Builder
-  public PostDetailResponseDto(UserInfoRepository userInfoRepository, Post post) {
+  public PostDetailResponseDto(UserInfoRepository userInfoRepository, Post post, Long userId) {
     UserInfo postWriterUserInfo = post.getWriterUserInfo(userInfoRepository);
+    this.isMine = userId.equals(postWriterUserInfo.getId());
     this.postId = post.getId();
     this.profileImageUrl = postWriterUserInfo.getProfileImageUrl();
     this.nickname = postWriterUserInfo.getNickname();

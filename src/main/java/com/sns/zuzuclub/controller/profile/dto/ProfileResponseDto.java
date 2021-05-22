@@ -48,6 +48,6 @@ public class ProfileResponseDto {
     this.followingCount = user.getFollowingCount();
     this.postCount = user.getPostCount();
 
-    this.postResponseDtoList = PostResponseDto.toListFrom(userInfoRepository, user.getPostList());
+    this.postResponseDtoList = PostResponseDto.toListFrom(userInfoRepository, user.getPostList(), userInfo.getId());
   }
 }

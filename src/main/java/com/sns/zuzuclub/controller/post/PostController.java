@@ -77,7 +77,8 @@ public class PostController {
     )
     @GetMapping("/posts/{postId}")
     public SingleResult<PostDetailResponseDto> getPostDetail(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId){
-        PostDetailResponseDto postDetailResponseDto = feedService.getPostDetail(postId);
+        Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+        PostDetailResponseDto postDetailResponseDto = feedService.getPostDetail(postId, userId);
         return ResponseForm.getSingleResult(postDetailResponseDto,"게시글 상세 가져오기" );
     }
 }

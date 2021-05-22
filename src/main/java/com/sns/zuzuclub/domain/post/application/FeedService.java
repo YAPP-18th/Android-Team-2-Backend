@@ -65,14 +65,14 @@ public class FeedService {
   public List<PostResponseDto> getAllPost(Long userId, int page) {
     Pageable pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
     List<Post> postList = postRepository.findAll(pageable).getContent();
-    return PostResponseDto.toListFrom(userInfoRepository, postList);
+    return PostResponseDto.toListFrom(userInfoRepository, postList, userId);
   }
 
   public List<PostResponseDto> getHotPost(Long userId, int page) {
     Pageable pageable = PageRequest.of(page, 20, Sort.by("postReactionCount").descending());
     LocalDateTime from = LocalDateTime.now().minusDays(7); // 7일 전
     List<Post> postList = postRepository.findByCreatedAtAfter(from, pageable);
-    return PostResponseDto.toListFrom(userInfoRepository, postList);
+    return PostResponseDto.toListFrom(userInfoRepository, postList, userId);
   }
 
   public List<PostResponseDto> getFriendsPost(Long userId, int page) {
@@ -83,11 +83,14 @@ public class FeedService {
     Pageable pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
     List<Post> postList = postRepository.findAllByUserIn(followingUserList, pageable);
 
-    return PostResponseDto.toListFrom(userInfoRepository, postList);
+    return PostResponseDto.toListFrom(userInfoRepository, postList, userId);
+
+    // TODO : 피드 목록에서 자기꺼확인여부 생성자 분리해야함 + 리포지토리 빼내려면 User를 합치는게 나을듯
   }
 
-  public PostDetailResponseDto getPostDetail(Long postId) {
+  public PostDetailResponseDto getPostDetail(Long postId, Long userId) {
     Post postEntity = PostHelper.findPostById(postRepository, postId);
-    return new PostDetailResponseDto(userInfoRepository, postEntity);
+    return new PostDetailResponseDto(userInfoRepository, postEntity, userId);
+    // TODO : 피드 목록에서 자기꺼확인여부 생성자 분리해야함 + 리포지토리 빼내려면 User를 합치는게 나을듯
   }
 }
