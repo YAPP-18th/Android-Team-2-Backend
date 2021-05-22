@@ -4,6 +4,7 @@ import com.sns.zuzuclub.config.security.JwtTokenProvider;
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.controller.home.dto.HomeResponseDto;
 import com.sns.zuzuclub.controller.home.dto.HotStockDto;
+import com.sns.zuzuclub.controller.home.dto.UserStockScrapDto;
 import com.sns.zuzuclub.domain.homeInfo.application.HomeInfoService;
 import com.sns.zuzuclub.global.response.MultipleResult;
 import com.sns.zuzuclub.global.response.ResponseForm;
@@ -49,6 +50,19 @@ public class HomeController {
   public MultipleResult<HotStockDto> getHotStockRanking(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam PostEmotionType postEmotionType){
     List<HotStockDto> hotStockDtoList = homeInfoService.getHotStockRanking(postEmotionType);
     return ResponseForm.getMultipleResult(hotStockDtoList, "HOT종목 랭킹보기");
+  }
+
+  @ApiOperation(
+      value = "홈 화면 - 나의 관심 종목 더보기",
+      notes = "<h3>\n"
+          + "- 나의 관심 종목 더보기 \n"
+          + "</h3>"
+  )
+  @GetMapping("/home")
+  public MultipleResult<UserStockScrapDto> getUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken){
+    Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+    List<UserStockScrapDto> userStockScrapDtoList = homeInfoService.getUserStockScrap(userId);
+    return ResponseForm.getMultipleResult(userStockScrapDtoList, "나의 관심 종목 더보기");
   }
 
 }
