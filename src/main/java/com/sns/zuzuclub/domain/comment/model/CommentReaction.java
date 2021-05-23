@@ -33,4 +33,27 @@ public class CommentReaction extends AuditEntity {
 
   @Enumerated(EnumType.STRING)
   private CommentReactionType commentReactionType;
+
+  public CommentReaction(User user, Comment comment, CommentReactionType commentReactionType) {
+    this();
+    this.user = user;
+    this.commentReactionType = commentReactionType;
+    updateComment(comment);
+  }
+
+  public void updateComment(Comment comment) {
+    if(this.comment != null){
+      this.comment.decreaseCommentReactionCount();
+      this.comment.getCommentReactionList().remove(this);
+    }
+    this.comment = comment;
+    comment.getCommentReactionList().add(this);
+    comment.increaseCommentReactionCount();
+  }
+
+  public void deleteComment(){
+    this.comment.decreaseCommentReactionCount();
+    this.comment.getCommentReactionList().remove(this);
+    this.comment = null;
+  }
 }

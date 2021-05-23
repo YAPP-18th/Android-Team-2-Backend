@@ -33,8 +33,11 @@ public class CommentResponseDto {
     @ApiModelProperty(value = "댓글 반응 수", example = "")
     private int commentReactionCount;
 
+    @ApiModelProperty(value = "내가 댓글 반응 작성했는지", example = "")
+    private boolean hasUserCommentReaction;
 
-    public CommentResponseDto(UserInfoRepository userInfoRepository, Comment comment) {
+
+    public CommentResponseDto(UserInfoRepository userInfoRepository, Comment comment, Long userId) {
         UserInfo writerUserInfo = comment.getWriterUserInfo(userInfoRepository);
         this.commentId = comment.getId();
         this.nickname = writerUserInfo.getNickname();
@@ -43,12 +46,13 @@ public class CommentResponseDto {
         this.parentCommentId = comment.getParentCommentId();
         this.createdAt = comment.getCreatedAt();
         this.commentReactionCount = comment.getCommentReactionCount();
+        this.hasUserCommentReaction = comment.hasUserCommentReaction(userId);
     }
 
-    public static List<CommentResponseDto> toListFrom(UserInfoRepository userInfoRepository, Post post){
+    public static List<CommentResponseDto> toListFrom(UserInfoRepository userInfoRepository, Post post, Long userId){
         return post.getCommentList()
                    .stream()
-                   .map(comment -> new CommentResponseDto(userInfoRepository, comment))
+                   .map(comment -> new CommentResponseDto(userInfoRepository, comment, userId))
                    .collect(Collectors.toList());
     }
 }

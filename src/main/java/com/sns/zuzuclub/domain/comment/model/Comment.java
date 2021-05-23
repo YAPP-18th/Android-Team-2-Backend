@@ -102,4 +102,18 @@ public class Comment extends AuditEntity {
   public UserInfo getWriterUserInfo(UserInfoRepository userInfoRepository){
     return UserHelper.findUserInfoById(userInfoRepository, this.user.getId());
   }
+
+  public void increaseCommentReactionCount() { this.commentReactionCount += 1; }
+
+  public void decreaseCommentReactionCount() {
+    this.commentReactionCount -= 1;
+  }
+
+  public boolean hasUserCommentReaction(Long userId){
+    return this.getCommentReactionList()
+               .stream()
+               .anyMatch(commentReaction -> commentReaction.getUser()
+                                                           .getId()
+                                                           .equals(userId));
+  }
 }
