@@ -50,4 +50,10 @@ public class CommentReaction extends AuditEntity {
     comment.getCommentReactionList().add(this);
     comment.increaseCommentReactionCount();
   }
+
+  public void deleteComment(){
+    this.comment.decreaseCommentReactionCount();
+    this.comment.getCommentReactionList().remove(this);
+    this.comment = null;
+  }
 }

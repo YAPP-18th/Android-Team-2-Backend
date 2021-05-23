@@ -7,10 +7,12 @@ import com.sns.zuzuclub.controller.comment.dto.CreateCommentReactionResponseDto;
 import com.sns.zuzuclub.controller.comment.dto.CreateCommentRequestDto;
 import com.sns.zuzuclub.controller.comment.dto.CreateCommentResponseDto;
 import com.sns.zuzuclub.domain.comment.application.CommentService;
+import com.sns.zuzuclub.global.response.CommonResult;
 import com.sns.zuzuclub.global.response.ResponseForm;
 import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +51,19 @@ public class CommentController {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     CreateCommentReactionResponseDto createCommentReactionResponseDto = commentService.createCommentReaction(userId, commentId, commentReactionType);
     return ResponseForm.getSingleResult(createCommentReactionResponseDto, "댓글 반응 작성");
+  }
+
+  @ApiOperation(
+      value = "댓글 반응 취소",
+      notes = "<h3>\n"
+          + "- 댓글에 반응을 취소합니다.\n"
+          + "</h3>"
+  )
+  @DeleteMapping("/comments/{commentId}")
+  public CommonResult deleteCommentReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long commentId){
+    Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+    commentService.deleteCommentReaction(userId, commentId);
+    return ResponseForm.getSuccessResult("댓글 반응 취소");
   }
 
 }

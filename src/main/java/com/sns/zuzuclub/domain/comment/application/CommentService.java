@@ -9,12 +9,15 @@ import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.comment.model.CommentReaction;
 import com.sns.zuzuclub.domain.comment.repository.CommentReactionRepository;
 import com.sns.zuzuclub.domain.comment.repository.CommentRepository;
+import com.sns.zuzuclub.domain.comment.service.CommentReactionService;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
+import com.sns.zuzuclub.global.exception.CustomException;
+import com.sns.zuzuclub.global.exception.errorCodeType.CommentErrorCodeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommentService {
 
+  private final CommentReactionService commentReactionService;
+
   private final UserRepository userRepository;
   private final PostRepository postRepository;
   private final CommentRepository commentRepository;
   private final CommentReactionRepository commentReactionRepository;
-
-
 
   @Transactional
   public CreateCommentResponseDto createComment(Long userId, Long postId, CreateCommentRequestDto createCommentRequestDto) {
@@ -48,4 +51,10 @@ public class CommentService {
     return new CreateCommentReactionResponseDto(commentReactionRepository.save(commentReaction));
   }
 
+  @Transactional
+  public void deleteCommentReaction(Long userId, Long commentId) {
+    CommentReaction commentReaction = commentReactionRepository.findByUserIdAndCommentId(userId, commentId)
+                                                               .orElseThrow(() -> new CustomException(CommentErrorCodeType.INVALID_COMMENT_REACTION));
+    commentReactionService.deleteCommentReaction(commentReaction);
+  }
 }

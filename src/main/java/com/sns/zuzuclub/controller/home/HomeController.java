@@ -46,7 +46,7 @@ public class HomeController {
           + "- 감정별 , 언급이 가장 많은 종목 \n"
           + "</h3>"
   )
-  @GetMapping("/home")
+  @GetMapping("/home/rank")
   public MultipleResult<HotStockDto> getHotStockRanking(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam PostEmotionType postEmotionType){
     List<HotStockDto> hotStockDtoList = homeInfoService.getHotStockRanking(postEmotionType);
     return ResponseForm.getMultipleResult(hotStockDtoList, "HOT종목 랭킹보기");
@@ -58,7 +58,7 @@ public class HomeController {
           + "- 나의 관심 종목 더보기 \n"
           + "</h3>"
   )
-  @GetMapping("/home")
+  @GetMapping("/home/scrap")
   public MultipleResult<UserStockScrapDto> getUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     List<UserStockScrapDto> userStockScrapDtoList = homeInfoService.getUserStockScrap(userId);
