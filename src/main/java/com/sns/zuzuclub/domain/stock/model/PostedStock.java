@@ -1,6 +1,7 @@
 package com.sns.zuzuclub.domain.stock.model;
 
 import com.sns.zuzuclub.domain.post.model.Post;
+import com.sns.zuzuclub.global.AuditEntity;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class PostedStock {
+public class PostedStock extends AuditEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

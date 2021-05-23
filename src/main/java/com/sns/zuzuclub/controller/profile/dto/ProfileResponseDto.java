@@ -1,13 +1,11 @@
 package com.sns.zuzuclub.controller.profile.dto;
 
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
-import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserInfo;
 import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -37,8 +35,13 @@ public class ProfileResponseDto {
   @ApiModelProperty(value = "작성한 게시글 리스트")
   private List<PostResponseDto>  postResponseDtoList;
 
+  @ApiModelProperty(value = "작성한 게시글 리스트")
+  private boolean isLoginUserProfile;
 
-  public ProfileResponseDto(UserInfoRepository userInfoRepository, UserInfo userInfo) {
+  public ProfileResponseDto(UserInfoRepository userInfoRepository, UserInfo userInfo, boolean isLoginUserProfile) {
+
+    this.isLoginUserProfile = isLoginUserProfile;
+
     this.nickname = userInfo.getNickname();
     this.profileImageUrl = userInfo.getProfileImageUrl();
     this.introduction = userInfo.getIntroduction();
@@ -49,6 +52,6 @@ public class ProfileResponseDto {
     this.followingCount = user.getFollowingCount();
     this.postCount = user.getPostCount();
 
-    this.postResponseDtoList = PostResponseDto.toListFrom(userInfoRepository, user.getPostList());
+    this.postResponseDtoList = PostResponseDto.toListFrom(userInfoRepository, user.getPostList(), userInfo.getId());
   }
 }

@@ -90,4 +90,19 @@ public class Post extends AuditEntity {
   public void decreaseCommentCount(){
     this.commentCount -= 1;
   }
+
+  public void increasePostReactionCount(){
+    this.postReactionCount += 1;
+  }
+
+  public void decreasePostReactionCount(){
+    this.postReactionCount -= 1;
+  }
+
+  public boolean hasUserPostReaction(Long userId){
+    return this.postReactionList.stream()
+                                .anyMatch(postReaction -> postReaction.getUser()
+                                                                      .getId()
+                                                                      .equals(userId));
+  }
 }
