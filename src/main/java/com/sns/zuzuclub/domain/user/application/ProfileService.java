@@ -17,8 +17,9 @@ public class ProfileService {
 
   private final UserInfoRepository userInfoRepository;
 
-  public ProfileResponseDto getUserProfile(Long userId) {
+  public ProfileResponseDto getUserProfile(Long loginUserId,Long userId) {
     UserInfo userInfo = UserHelper.findUserInfoById(userInfoRepository, userId);
-    return new ProfileResponseDto(userInfoRepository, userInfo);
+    boolean isLoginUserProfile = loginUserId.equals(userId);
+    return new ProfileResponseDto(userInfoRepository, userInfo, isLoginUserProfile);
   }
 }
