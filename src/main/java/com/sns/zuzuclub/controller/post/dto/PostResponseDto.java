@@ -2,7 +2,6 @@ package com.sns.zuzuclub.controller.post.dto;
 
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.UserInfo;
 import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import io.swagger.annotations.ApiModelProperty;
@@ -65,7 +64,7 @@ public class PostResponseDto {
         this.commentCount = post.getCommentCount();
         this.postReactionCount = post.getPostReactionCount();
 
-        this.postedStockDtoList = PostedStockDto.toListFrom(post);
+        this.postedStockDtoList = PostedStockDto.listOf(post);
     }
 
     public static List<PostResponseDto> toListFrom(UserInfoRepository userInfoRepository, List<Post> postList, Long userId){

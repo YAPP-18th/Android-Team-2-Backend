@@ -30,7 +30,7 @@ public class CreatePostResponseDto {
     this.postId = post.getId();
     this.content = post.getContent();
     this.postEmotionType = post.getPostEmotionType();
-    this.postedStockDtoList = PostedStockDto.toListFrom(post);
+    this.postedStockDtoList = PostedStockDto.listOf(post);
     this.postImageUrl = post.getPostImageUrl();
   }
 }
