@@ -47,10 +47,10 @@ public class StockController {
           + "</h3>"
   )
   @PostMapping
-  public CommonResult createScrapStock(@RequestHeader(value = "Authorization") String jwtToken,
+  public CommonResult createUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken,
                                        @ApiParam(value = "주식종목 Id", type = "Long", required = true) @PathVariable Long stockId) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-    stockService.createScrapStock(userId, stockId);
+    stockService.createUserStockScrap(userId, stockId);
     return ResponseForm.getSuccessResult("주식 종목 - 관심 종목 추가");
   }
 
@@ -61,10 +61,10 @@ public class StockController {
           + "</h3>"
   )
   @DeleteMapping
-  public CommonResult deleteScrapStock(@RequestHeader(value = "Authorization") String jwtToken,
+  public CommonResult deleteUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken,
                                          @ApiParam(value = "주식종목 Id", type = "Long", required = true) @PathVariable Long stockId) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-    stockService.deleteScrapStock(userId, stockId);
+    stockService.deleteUserStockScrap(userId, stockId);
     return ResponseForm.getSuccessResult("주식 종목 - 관심 종목 취소");
   }
 }

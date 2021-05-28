@@ -10,6 +10,7 @@ import com.sns.zuzuclub.domain.stock.repository.SignupStockRepository;
 import com.sns.zuzuclub.domain.stock.repository.StockRepository;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
+import com.sns.zuzuclub.domain.user.model.UserStockScrap;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +49,8 @@ public class SignupService {
     user.registerIntroduction(signupRequestDto.getIntroduction());
 
     List<Stock> stockList = stockRepository.findAllById(signupRequestDto.getScrapStockIdList());
-    stockList.forEach(user::registerScrapStock);
+    UserStockScrap.toListFrom(user, stockList);
+    // 영속성 전이
 
     return user.getNickname();
   }
