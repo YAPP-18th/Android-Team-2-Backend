@@ -25,7 +25,7 @@ public class PostedStockDto {
     postedStockName = stock.getStockName();
   }
 
-  public static List<PostedStockDto> toListFrom(Post post){
+  public static List<PostedStockDto> listOf(Post post){
     return post.getPostedStockList()
                .stream()
                .map(PostedStockDto::new)

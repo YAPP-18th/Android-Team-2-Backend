@@ -2,7 +2,7 @@ package com.sns.zuzuclub.controller.search;
 
 
 import com.sns.zuzuclub.controller.search.dto.SearchUserResponseDto;
-import com.sns.zuzuclub.controller.signup.dto.SearchStockResponseDto;
+import com.sns.zuzuclub.controller.signup.dto.StockResponseDto;
 import com.sns.zuzuclub.domain.stock.application.SearchStockService;
 import com.sns.zuzuclub.domain.user.application.SearchUserService;
 import com.sns.zuzuclub.global.response.MultipleResult;
@@ -54,9 +54,9 @@ public class searchController {
 //      @ApiResponse(code = 500, message = "페이지를 찾을 수 없어!!!")
 //  })
   @GetMapping("/stocks")
-  public MultipleResult<SearchStockResponseDto> searchStock(@RequestParam String stockName){
-    List<SearchStockResponseDto> searchStockResponseDtoList =  searchStockService.searchStockByStockName(stockName);
-    return ResponseForm.getMultipleResult(searchStockResponseDtoList, "종목명 검색");
+  public MultipleResult<StockResponseDto> searchStock(@RequestParam String stockName){
+    List<StockResponseDto> stockResponseDtoList =  searchStockService.searchStockByStockName(stockName);
+    return ResponseForm.getMultipleResult(stockResponseDtoList, "종목명 검색");
   }
 
 }

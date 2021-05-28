@@ -3,12 +3,9 @@ package com.sns.zuzuclub.controller.post.dto;
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.controller.comment.dto.CommentResponseDto;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.domain.user.helper.UserHelper;
-import com.sns.zuzuclub.domain.user.model.UserInfo;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
+import com.sns.zuzuclub.domain.user.model.User;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -44,19 +41,30 @@ public class PostDetailResponseDto {
   @ApiModelProperty(value = "댓글들", example = "")
   private List<CommentResponseDto> commentResponseDtoList;
 
+  @ApiModelProperty(value = "내 게시물인지 여부", example = "")
+  private boolean isMine;
 
-  @Builder
-  public PostDetailResponseDto(UserInfoRepository userInfoRepository, Post post) {
-    UserInfo postWriterUserInfo = post.getWriterUserInfo(userInfoRepository);
+  @ApiModelProperty(value = "반응했는지 여부", example = "")
+  private boolean hasUserPostReaction;
+
+
+  public PostDetailResponseDto(Post post, Long loginUserId) {
+
+    User writer = post.getUser();
+
+    this.isMine = loginUserId.equals(writer.getId());
+    this.hasUserPostReaction = post.hasUserPostReaction(loginUserId);
+
+    this.profileImageUrl = writer.getProfileImageUrl();
+    this.nickname = writer.getNickname();
+
     this.postId = post.getId();
-    this.profileImageUrl = postWriterUserInfo.getProfileImageUrl();
-    this.nickname = postWriterUserInfo.getNickname();
     this.postEmotionType = post.getPostEmotionType();
     this.postImageUrl = post.getPostImageUrl();
-    this.postedStockDtoList = PostedStockDto.toListFrom(post);
+    this.postedStockDtoList = PostedStockDto.listOf(post);
     this.content = post.getContent();
     this.postReactionCount = post.getPostReactionCount();
     this.commentCount = post.getCommentCount();
-    this.commentResponseDtoList = CommentResponseDto.toListFrom(userInfoRepository, post);
+    this.commentResponseDtoList = CommentResponseDto.toListFrom(post, loginUserId);
   }
 }

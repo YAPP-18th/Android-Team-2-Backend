@@ -1,18 +1,28 @@
 package com.sns.zuzuclub.constant;
 
+import java.util.EnumMap;
+import java.util.Map;
 import lombok.Getter;
 
 @Getter
 public enum PostEmotionType {
 
-  UP(1),
-  DOWN(2),
-  EXPECT(3),
-  UNSTABLE(4);
+  UP("SUNNY"),
+  DOWN("RAINY"),
+  EXPECT("WINDY"),
+  UNSTABLE("CLOUDY");
 
-  private final int value;
+  private final String weather;
 
-  private PostEmotionType(int value) {
-    this.value = value;
+  PostEmotionType(String weather) {
+    this.weather = weather;
+  }
+
+  public static Map<PostEmotionType, Integer> getPostEmotionTypeWithCountMap(){
+    Map<PostEmotionType, Integer> postEmotionTypeIntegerMap = new EnumMap<>(PostEmotionType.class);
+    for (PostEmotionType postEmotionType : PostEmotionType.values()) {
+      postEmotionTypeIntegerMap.put(postEmotionType, 0);
+    }
+    return postEmotionTypeIntegerMap;
   }
 }

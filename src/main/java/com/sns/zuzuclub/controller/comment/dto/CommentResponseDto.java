@@ -2,8 +2,7 @@ package com.sns.zuzuclub.controller.comment.dto;
 
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.domain.user.model.UserInfo;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
+import com.sns.zuzuclub.domain.user.model.User;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,22 +32,25 @@ public class CommentResponseDto {
     @ApiModelProperty(value = "댓글 반응 수", example = "")
     private int commentReactionCount;
 
+    @ApiModelProperty(value = "내가 댓글 반응 작성했는지", example = "")
+    private boolean hasUserCommentReaction;
 
-    public CommentResponseDto(UserInfoRepository userInfoRepository, Comment comment) {
-        UserInfo writerUserInfo = comment.getWriterUserInfo(userInfoRepository);
+    public CommentResponseDto(Comment comment, Long loginUserId) {
+        User writer = comment.getUser();
         this.commentId = comment.getId();
-        this.nickname = writerUserInfo.getNickname();
-        this.profileImageUrl = writerUserInfo.getProfileImageUrl();
+        this.nickname = writer.getNickname();
+        this.profileImageUrl = writer.getProfileImageUrl();
         this.content = comment.getContent();
         this.parentCommentId = comment.getParentCommentId();
         this.createdAt = comment.getCreatedAt();
         this.commentReactionCount = comment.getCommentReactionCount();
+        this.hasUserCommentReaction = comment.hasUserCommentReaction(loginUserId);
     }
 
-    public static List<CommentResponseDto> toListFrom(UserInfoRepository userInfoRepository, Post post){
+    public static List<CommentResponseDto> toListFrom(Post post, Long loginUserId){
         return post.getCommentList()
                    .stream()
-                   .map(comment -> new CommentResponseDto(userInfoRepository, comment))
+                   .map(comment -> new CommentResponseDto(comment, loginUserId))
                    .collect(Collectors.toList());
     }
 }

@@ -1,8 +1,8 @@
 package com.sns.zuzuclub.domain.user.application;
 
 import com.sns.zuzuclub.controller.search.dto.SearchUserResponseDto;
-import com.sns.zuzuclub.domain.user.model.UserInfo;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
+import com.sns.zuzuclub.domain.user.model.User;
+import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SearchUserService {
 
-  private final UserInfoRepository userInfoRepository;
+  private final UserRepository userRepository;
 
   public List<SearchUserResponseDto> searchByNickname(String nickname) {
-    List<UserInfo> userInfoList = userInfoRepository.findAllByNicknameContaining(nickname);
-    return SearchUserResponseDto.toListFrom(userInfoList);
+    List<User> userList = userRepository.findAllByNicknameStartingWith(nickname);
+    return SearchUserResponseDto.toListOf(userList);
   }
 }
