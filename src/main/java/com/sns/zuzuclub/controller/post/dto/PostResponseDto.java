@@ -46,13 +46,13 @@ public class PostResponseDto {
     List<PostedStockDto> postedStockDtoList;
 
     @ApiModelProperty(value = "내 게시물인지 여부", example = "")
-    private boolean isMine = false;
+    private boolean isUserPost;
 
     public PostResponseDto(UserInfoRepository userInfoRepository, Post post, Long userId) {
 
         UserInfo writerUserInfo = post.getWriterUserInfo(userInfoRepository);
 
-        this.isMine = userId.equals(writerUserInfo.getId());
+        this.isUserPost = userId.equals(writerUserInfo.getId());
         this.userId = writerUserInfo.getId();
         this.profileImageUrl = writerUserInfo.getProfileImageUrl();
         this.nickname = writerUserInfo.getNickname();
@@ -67,7 +67,7 @@ public class PostResponseDto {
         this.postedStockDtoList = PostedStockDto.listOf(post);
     }
 
-    public static List<PostResponseDto> toListFrom(UserInfoRepository userInfoRepository, List<Post> postList, Long userId){
+    public static List<PostResponseDto> ListFrom(UserInfoRepository userInfoRepository, List<Post> postList, Long userId){
         return postList.stream()
                        .map(post -> new PostResponseDto(userInfoRepository, post, userId))
                        .collect(Collectors.toList());
