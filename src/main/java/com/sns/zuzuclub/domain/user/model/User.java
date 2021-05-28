@@ -4,6 +4,8 @@ import com.sns.zuzuclub.domain.alarm.model.Notification;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.stock.model.Stock;
+import com.sns.zuzuclub.global.exception.CustomException;
+import com.sns.zuzuclub.global.exception.errorCodeType.StockErrorCodeType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,23 +42,25 @@ public class User extends AuditEntity {
   private String profileImageUrl; // 기본 값을 여기다가 초기화 해주면 좋을 것 같은데 흠
 
   // 내가 팔로우 하는 사람
-  @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "fromUser")
   private Set<UserFollow> following = new HashSet<>();
 
   // 나를 팔로우 하는 사람
-  @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "toUser")
   private Set<UserFollow> followers = new HashSet<>();
 
   // 내가 차단 하는 사람
-  @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "fromUser")
   private Set<UserBlock> blocker = new HashSet<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user")
   @OrderBy
+  // TODO 얘는 delete 할 때 영속성 전이하면, commnet 주인한테 문제 생김
   private List<Post> postList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user")
   @OrderBy
+  // TODO 얘는 delete 할 때 영속성 전이하면, post에서 잘못된 값 읽힘
   private List<Comment> commentList = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -83,10 +87,6 @@ public class User extends AuditEntity {
 
   public void registerIntroduction(String Introduction){
     this.introduction = Introduction;
-  }
-
-  public void registerScrapStock(Stock stock){
-    new UserStockScrap(this, stock);
   }
 
   public void increaseUserStockScrapCount(){

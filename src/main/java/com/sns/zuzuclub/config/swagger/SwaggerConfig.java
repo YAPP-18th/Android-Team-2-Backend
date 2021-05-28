@@ -25,6 +25,7 @@ public class SwaggerConfig {
   private static final String PROFILE_PACKAGE = CONTROLLER_PACKAGE_NAME + ".profile";
   private static final String SEARCH_PACKAGE = CONTROLLER_PACKAGE_NAME + ".search";
   private static final String SIGNUP_PACKAGE = CONTROLLER_PACKAGE_NAME + ".signup";
+  private static final String STOCK_PACKAGE = CONTROLLER_PACKAGE_NAME + ".stock";
 
   private String groupName;
 
@@ -76,6 +77,12 @@ public class SwaggerConfig {
   public Docket signupApiDocket() {
     groupName = "SIGNUP";
     return getDocket(groupName, SIGNUP_PACKAGE);
+  }
+
+  @Bean
+  public Docket stockApiDocket() {
+    groupName = "STOCK";
+    return getDocket(groupName, STOCK_PACKAGE);
   }
 
   private Docket getDocket(String groupName, String basePackage) {
