@@ -4,7 +4,6 @@ import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.user.model.User;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import java.util.List;
 import lombok.Getter;
 
@@ -18,7 +17,7 @@ public class StockResponseDto {
   private boolean isScraped;
   private List<PostResponseDto> postResponseDtoList;
 
-  public StockResponseDto(User user, Stock stock, UserInfoRepository userInfoRepository) {
+  public StockResponseDto(User user, Stock stock) {
     this.stockId = stock.getId();
     this.stockName = stock.getStockName();
     this.todayEmotion = stock.getStockName();
@@ -26,6 +25,6 @@ public class StockResponseDto {
     this.isScraped = user.isScrapedStock(stock);
 
     List<Post> postList = stock.getPostList();
-    this.postResponseDtoList = PostResponseDto.ListFrom(userInfoRepository, postList, user.getId());
+    this.postResponseDtoList = PostResponseDto.ListFrom(postList, user.getId());
   }
 }

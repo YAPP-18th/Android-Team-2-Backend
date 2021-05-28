@@ -1,12 +1,8 @@
 package com.sns.zuzuclub.domain.post.model;
 
-import com.sns.zuzuclub.controller.post.dto.PostedStockDto;
 import com.sns.zuzuclub.domain.stock.model.PostedStock;
 import com.sns.zuzuclub.domain.stock.model.Stock;
-import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
-import com.sns.zuzuclub.domain.user.model.UserInfo;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,10 +79,6 @@ public class Post extends AuditEntity {
     stockList.forEach(stock -> new PostedStock(stock, this));
   }
 
-  public UserInfo getWriterUserInfo(UserInfoRepository userInfoRepository){
-    return UserHelper.findUserInfoById(userInfoRepository, getUser().getId());
-  }
-
   public void increaseCommentCount(){
     this.commentCount += 1;
   }
@@ -103,10 +95,10 @@ public class Post extends AuditEntity {
     this.postReactionCount -= 1;
   }
 
-  public boolean hasUserPostReaction(Long userId){
+  public boolean hasUserPostReaction(Long loginUserId){
     return this.postReactionList.stream()
                                 .anyMatch(postReaction -> postReaction.getUser()
                                                                       .getId()
-                                                                      .equals(userId));
+                                                                      .equals(loginUserId));
   }
 }

@@ -17,7 +17,6 @@ import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.stock.repository.StockRepository;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
@@ -37,7 +36,6 @@ public class FeedService {
   private final PostReactionService postReactionService;
 
   private final UserRepository userRepository;
-  private final UserInfoRepository userInfoRepository;
   private final PostRepository postRepository;
   private final PostReactionRepository postReactionRepository;
   private final StockRepository stockRepository;
@@ -73,14 +71,14 @@ public class FeedService {
   public List<PostResponseDto> getAllPost(Long userId, int page) {
     Pageable pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
     List<Post> postList = postRepository.findAll(pageable).getContent();
-    return PostResponseDto.ListFrom(userInfoRepository, postList, userId);
+    return PostResponseDto.ListFrom(postList, userId);
   }
 
   public List<PostResponseDto> getHotPost(Long userId, int page) {
     Pageable pageable = PageRequest.of(page, 20, Sort.by("postReactionCount").descending());
     LocalDateTime from = LocalDateTime.now().minusDays(7); // 7일 전
     List<Post> postList = postRepository.findByCreatedAtAfter(from, pageable);
-    return PostResponseDto.ListFrom(userInfoRepository, postList, userId);
+    return PostResponseDto.ListFrom(postList, userId);
   }
 
   public List<PostResponseDto> getFriendsPost(Long userId, int page) {
@@ -90,14 +88,14 @@ public class FeedService {
 
     Pageable pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
     List<Post> postList = postRepository.findAllByUserIn(followingUserList, pageable);
-    return PostResponseDto.ListFrom(userInfoRepository, postList, userId);
+    return PostResponseDto.ListFrom(postList, userId);
 
     // TODO : 피드 목록에서 자기꺼확인여부 생성자 분리해야함 + 리포지토리 빼내려면 User를 합치는게 나을듯
   }
 
-  public PostDetailResponseDto getPostDetail(Long postId, Long userId) {
+  public PostDetailResponseDto getPostDetail(Long postId, Long loginUserId) {
     Post postEntity = PostHelper.findPostById(postRepository, postId);
-    return new PostDetailResponseDto(userInfoRepository, postEntity, userId);
+    return new PostDetailResponseDto(postEntity, loginUserId);
     // TODO : 피드 목록에서 자기꺼확인여부 생성자 분리해야함 + 리포지토리 빼내려면 User를 합치는게 나을듯
   }
 
