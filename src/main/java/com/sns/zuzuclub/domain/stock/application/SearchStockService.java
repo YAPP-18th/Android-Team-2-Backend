@@ -14,7 +14,7 @@ public class SearchStockService {
   private final StockRepository stockRepository;
 
   public List<StockResponseDto> searchStockByStockName(String stockName) {
-    List<Stock> stockList = stockRepository.findAllByStockNameContaining(stockName);
+    List<Stock> stockList = stockRepository.findAllByStockNameStartsWith(stockName);
     return StockResponseDto.toListFrom(stockList);
   }
 }
