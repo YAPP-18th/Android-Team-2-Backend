@@ -13,7 +13,9 @@ import com.sns.zuzuclub.domain.post.model.PostReaction;
 import com.sns.zuzuclub.domain.post.repository.PostReactionRepository;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;
 import com.sns.zuzuclub.domain.post.service.PostReactionService;
+import com.sns.zuzuclub.domain.stock.model.PostedStock;
 import com.sns.zuzuclub.domain.stock.model.Stock;
+import com.sns.zuzuclub.domain.stock.repository.PostedStockRepository;
 import com.sns.zuzuclub.domain.stock.repository.StockRepository;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
@@ -22,6 +24,7 @@ import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +39,7 @@ public class FeedService {
   private final PostReactionService postReactionService;
 
   private final UserRepository userRepository;
+  private final PostedStockRepository postedStockRepository;
   private final PostRepository postRepository;
   private final PostReactionRepository postReactionRepository;
   private final StockRepository stockRepository;
@@ -48,9 +52,12 @@ public class FeedService {
     Post newPostEntity = createPostRequestDto.toPostEntity(userEntity);
 
     List<Stock> requestStockList = stockRepository.findAllById(createPostRequestDto.getRequestStockIdList());
-    newPostEntity.setPostedStock(requestStockList);
-
-    return new CreatePostResponseDto(postRepository.save(newPostEntity));
+    List<PostedStock> postedStockList = requestStockList.stream()
+                                                        .map(stock -> new PostedStock(stock, newPostEntity))
+                                                        .collect(Collectors.toList());
+    postedStockRepository.saveAll(postedStockList);
+    postRepository.save(newPostEntity);
+    return new CreatePostResponseDto(newPostEntity);
   }
 
   public List<PostResponseDto> getFeed(Long userId, FeedType feedType, int page) {

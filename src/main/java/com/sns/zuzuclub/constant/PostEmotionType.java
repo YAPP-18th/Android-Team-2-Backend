@@ -18,7 +18,7 @@ public enum PostEmotionType {
     this.weather = weather;
   }
 
-  public static Map<PostEmotionType, Integer> getPostEmotionTypeWithCountMap(){
+  public static Map<PostEmotionType, Integer> initPostEmotionTypeWithCountMap(){
     Map<PostEmotionType, Integer> postEmotionTypeIntegerMap = new EnumMap<>(PostEmotionType.class);
     for (PostEmotionType postEmotionType : PostEmotionType.values()) {
       postEmotionTypeIntegerMap.put(postEmotionType, 0);
