@@ -10,12 +10,7 @@ import com.sns.zuzuclub.domain.stock.repository.SignupStockRepository;
 import com.sns.zuzuclub.domain.stock.repository.StockRepository;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
-import com.sns.zuzuclub.domain.user.model.UserInfo;
-import com.sns.zuzuclub.domain.user.model.UserStockScrap;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
-import com.sns.zuzuclub.domain.user.repository.UserStockScrapRepository;
-import com.sns.zuzuclub.domain.user.service.UserInfoService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -27,17 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SignupService {
 
-  private final UserInfoService userInfoService;
-
   private final UserRepository userRepository;
-  private final UserInfoRepository userInfoRepository;
-  private final UserStockScrapRepository userStockScrapRepository;
   private final StockRepository stockRepository;
   private final SignupStockRepository signupStockRepository;
 
 
   public Boolean hasDuplicateNickname(String nickname) {
-    return userInfoService.hasDuplicatedNickname(nickname);
+    return userRepository.existsByNickname(nickname);
   }
 
   public List<StockResponseDto> getStockList() {
@@ -52,17 +43,13 @@ public class SignupService {
   @Transactional
   public String registerUser(Long userId, SignupRequestDto signupRequestDto) {
 
-    User userEntity = UserHelper.findUserById(userRepository, userId);
-    UserInfo newUserInfo = signupRequestDto.toUserInfoEntity(userEntity);
-    userInfoRepository.save(newUserInfo);
+    User user = UserHelper.findUserById(userRepository, userId);
+    user.registerNickname(signupRequestDto.getNickname());
+    user.registerIntroduction(signupRequestDto.getIntroduction());
 
-    List<Long> scrapStockIdList = signupRequestDto.getScrapStockIdList();
-    List<Stock> scrapStockList = stockRepository.findAllById(scrapStockIdList);
+    List<Stock> stockList = stockRepository.findAllById(signupRequestDto.getScrapStockIdList());
+    stockList.forEach(user::registerScrapStock);
 
-    scrapStockList.forEach(
-        stock -> userStockScrapRepository.save(new UserStockScrap(userEntity, stock))
-    );
-
-    return newUserInfo.getNickname();
+    return user.getNickname();
   }
 }

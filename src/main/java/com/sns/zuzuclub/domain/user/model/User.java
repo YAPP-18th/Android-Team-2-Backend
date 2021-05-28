@@ -4,21 +4,21 @@ import com.sns.zuzuclub.domain.alarm.model.Notification;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.stock.model.Stock;
-import com.sns.zuzuclub.domain.user.repository.UserStockScrapRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.sns.zuzuclub.global.AuditEntity;
+import javax.persistence.OrderBy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,36 +31,40 @@ public class User extends AuditEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-//  @OneToOne(mappedBy = "user")
-//  @Column(nullable = false)
-//  private UserInfo userInfo;
-//
-//  @OneToOne(mappedBy = "user")
-//  @Column(nullable = false)
-//  private UserSecurity userSecurity;
+  @Column(nullable = false, length = 20)
+  private String nickname;
+
+  @Column(length = 360)
+  private String introduction;
+
+  private String profileImageUrl; // 기본 값을 여기다가 초기화 해주면 좋을 것 같은데 흠
 
   // 내가 팔로우 하는 사람
-  @OneToMany(mappedBy = "fromUser")
+  @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<UserFollow> following = new HashSet<>();
 
   // 나를 팔로우 하는 사람
-  @OneToMany(mappedBy = "toUser")
+  @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<UserFollow> followers = new HashSet<>();
 
   // 내가 차단 하는 사람
-  @OneToMany(mappedBy = "fromUser")
+  @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<UserBlock> blocker = new HashSet<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy
   private List<Post> postList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy
   private List<Comment> commentList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy
   private List<Notification> notificationList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy
   private List<UserStockScrap> userStockScrapList = new ArrayList<>();
 
   private int postCount = 0;
@@ -68,6 +72,22 @@ public class User extends AuditEntity {
   private int userStockScrapCount = 0;
   private int followerCount = 0;
   private int followingCount = 0;
+
+  public boolean hasUserInfo(){
+    return this.nickname != null;
+  }
+
+  public void registerNickname(String nickname){
+    this.nickname = nickname;
+  }
+
+  public void registerIntroduction(String Introduction){
+    this.introduction = Introduction;
+  }
+
+  public void registerScrapStock(Stock stock){
+    new UserStockScrap(this, stock);
+  }
 
   public void increaseUserStockScrapCount(){
     this.userStockScrapCount += 1;
