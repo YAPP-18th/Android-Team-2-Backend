@@ -43,13 +43,13 @@ public class Post extends AuditEntity {
   @Enumerated(EnumType.STRING)
   private PostEmotionType postEmotionType;
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "post") // cascade 불가
   private List<PostedStock> postedStockList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "post") // cascade 불가
   private List<Comment> commentList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "post") // cascade 불가
   private List<PostReaction> postReactionList = new ArrayList<>();
 
   private String postImageUrl;
@@ -73,10 +73,6 @@ public class Post extends AuditEntity {
     this.user = user;
     user.getPostList().add(this);
     user.increasePostCount();
-  }
-
-  public void setPostedStock(List<Stock> stockList){
-    stockList.forEach(stock -> new PostedStock(stock, this));
   }
 
   public void increaseCommentCount(){
