@@ -6,6 +6,7 @@ import com.sns.zuzuclub.global.exception.errorCodeType.ImageUploadErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.SocialLoginErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.JwtErrorCodeType;
+import com.sns.zuzuclub.global.exception.errorCodeType.StockErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import lombok.Getter;
 
@@ -53,6 +54,12 @@ public class CustomException extends RuntimeException{
   }
 
   public CustomException(HomeErrorCodeType errorCodeType)
+  {
+    super(errorCodeType.getMessage());
+    this.errorCode = errorCodeType.getErrorCode();
+  }
+
+  public CustomException(StockErrorCodeType errorCodeType)
   {
     super(errorCodeType.getMessage());
     this.errorCode = errorCodeType.getErrorCode();
