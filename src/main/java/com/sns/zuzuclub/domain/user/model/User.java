@@ -3,6 +3,8 @@ package com.sns.zuzuclub.domain.user.model;
 import com.sns.zuzuclub.domain.alarm.model.Notification;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
+import com.sns.zuzuclub.domain.stock.model.Stock;
+import com.sns.zuzuclub.domain.user.repository.UserStockScrapRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -96,5 +98,11 @@ public class User extends AuditEntity {
     return following.stream()
                     .map(UserFollow::getToUser)
                     .collect(Collectors.toList());
+  }
+
+  public boolean isScrapedStock(Stock stock){
+    return userStockScrapList.stream()
+                             .anyMatch(userStockScrap -> userStockScrap.getStock()
+                                                                       .equals(stock));
   }
 }
