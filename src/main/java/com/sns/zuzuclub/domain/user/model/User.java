@@ -6,6 +6,7 @@ import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.StockErrorCodeType;
+import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,12 +35,12 @@ public class User extends AuditEntity {
   private Long id;
 
   @Column(nullable = false, length = 20)
-  private String nickname;
+  private String nickname = "";
 
   @Column(length = 360)
-  private String introduction;
+  private String introduction = "";
 
-  private String profileImageUrl; // 기본 값을 여기다가 초기화 해주면 좋을 것 같은데 흠
+  private String profileImageUrl = ""; // 기본 값을 여기다가 초기화 해주면 좋을 것 같은데 흠
 
   // 내가 팔로우 하는 사람
   @OneToMany(mappedBy = "fromUser")
@@ -78,10 +79,13 @@ public class User extends AuditEntity {
   private int followingCount = 0;
 
   public boolean hasUserInfo(){
-    return this.nickname != null;
+    return !this.nickname.isEmpty();
   }
 
   public void registerNickname(String nickname){
+    if(nickname.isEmpty()){
+      throw new CustomException(UserErrorCodeType.EMPTY_NICKNAME);
+    }
     this.nickname = nickname;
   }
 

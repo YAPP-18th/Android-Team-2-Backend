@@ -46,7 +46,7 @@ public class SignupController {
           + "</h3>"
   )
   @GetMapping("/stock")
-  public MultipleResult<StockResponseDto> getStockList() {
+  public MultipleResult<StockResponseDto> getStockList(@RequestHeader(value = "Authorization") String jwtToken) {
     List<StockResponseDto> stockListResponseDtoList = signupService.getStockList();
     return ResponseForm.getMultipleResult(stockListResponseDtoList, "관심 종목 목록 불러오기");
   }

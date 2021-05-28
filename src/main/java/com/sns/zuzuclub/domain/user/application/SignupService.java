@@ -12,6 +12,8 @@ import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserStockScrap;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
+import com.sns.zuzuclub.global.exception.CustomException;
+import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,10 @@ public class SignupService {
 
   @Transactional
   public String registerUser(Long userId, SignupRequestDto signupRequestDto) {
+
+    if (hasDuplicateNickname(signupRequestDto.getNickname())){
+      throw new CustomException(UserErrorCodeType.DUPLICATE_NICKNAME);
+    }
 
     User user = UserHelper.findUserById(userRepository, userId);
     user.registerNickname(signupRequestDto.getNickname());

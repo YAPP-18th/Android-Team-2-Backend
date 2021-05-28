@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,7 @@ public class searchController {
 //      @ApiResponse(code = 500, message = "페이지를 찾을 수 없어!!!")
 //  })
   @GetMapping("/users")
-  public MultipleResult<SearchUserResponseDto> searchUser(@RequestParam String nickname){
+  public MultipleResult<SearchUserResponseDto> searchUser(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam String nickname){
     List<SearchUserResponseDto> searchUserResponseDtoList = searchUserService.searchByNickname(nickname);
     return ResponseForm.getMultipleResult(searchUserResponseDtoList, "닉네임 검색");
   }
@@ -54,7 +55,7 @@ public class searchController {
 //      @ApiResponse(code = 500, message = "페이지를 찾을 수 없어!!!")
 //  })
   @GetMapping("/stocks")
-  public MultipleResult<StockResponseDto> searchStock(@RequestParam String stockName){
+  public MultipleResult<StockResponseDto> searchStock(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam String stockName){
     List<StockResponseDto> stockResponseDtoList =  searchStockService.searchStockByStockName(stockName);
     return ResponseForm.getMultipleResult(stockResponseDtoList, "종목명 검색");
   }
