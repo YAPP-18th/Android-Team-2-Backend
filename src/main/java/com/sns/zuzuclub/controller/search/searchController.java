@@ -26,7 +26,7 @@ public class searchController {
   @ApiOperation(
       value = "닉네임 검색",
       notes = "<h3>\n"
-          + " %검색어% 의 조건으로 찾아옵니다. \n"
+          + " 검색어% 의 조건으로 찾아옵니다. \n"
           + "</h3>"
   )
 //  // 각 메서드에 responseMessage를
@@ -44,7 +44,7 @@ public class searchController {
   @ApiOperation(
       value = "종목명 검색",
       notes = "<h3>\n"
-          + " %검색어% 의 조건으로 찾아옵니다. \n"
+          + " 검색어% 의 조건으로 찾아옵니다. \n"
           + "</h3>"
   )
 //  // 각 메서드에 responseMessage를
