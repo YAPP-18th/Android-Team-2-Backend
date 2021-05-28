@@ -19,6 +19,7 @@ public class SwaggerConfig {
   private static final String CONTROLLER_PACKAGE_NAME = "com.sns.zuzuclub.controller";
   private static final String COMMENT_PACKAGE = CONTROLLER_PACKAGE_NAME + ".comment";
   private static final String HOME_PACKAGE = CONTROLLER_PACKAGE_NAME + ".home";
+  private static final String IMAGE_PACKAGE = CONTROLLER_PACKAGE_NAME + ".image";
   private static final String LOGIN_PACKAGE = CONTROLLER_PACKAGE_NAME + ".login";
   private static final String POST_PACKAGE = CONTROLLER_PACKAGE_NAME + ".post";
   private static final String PROFILE_PACKAGE = CONTROLLER_PACKAGE_NAME + ".profile";
@@ -38,6 +39,12 @@ public class SwaggerConfig {
   public Docket homeApiDocket() {
     groupName = "HOME";
     return getDocket(groupName, HOME_PACKAGE);
+  }
+
+  @Bean
+  public Docket imageApiDocket() {
+    groupName = "IMAGE";
+    return getDocket(groupName, IMAGE_PACKAGE);
   }
 
   @Bean
