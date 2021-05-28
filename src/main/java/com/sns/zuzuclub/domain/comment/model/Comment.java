@@ -1,10 +1,7 @@
 package com.sns.zuzuclub.domain.comment.model;
 
 
-import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
-import com.sns.zuzuclub.domain.user.model.UserInfo;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +96,17 @@ public class Comment extends AuditEntity {
     return this.parentComment.getId();
   }
 
-  public UserInfo getWriterUserInfo(UserInfoRepository userInfoRepository){
-    return UserHelper.findUserInfoById(userInfoRepository, this.user.getId());
+  public void increaseCommentReactionCount() { this.commentReactionCount += 1; }
+
+  public void decreaseCommentReactionCount() {
+    this.commentReactionCount -= 1;
+  }
+
+  public boolean hasUserCommentReaction(Long loginUserId){
+    return this.getCommentReactionList()
+               .stream()
+               .anyMatch(commentReaction -> commentReaction.getUser()
+                                                           .getId()
+                                                           .equals(loginUserId));
   }
 }
