@@ -10,7 +10,7 @@ import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -47,13 +47,13 @@ public class Post extends AuditEntity {
   @Enumerated(EnumType.STRING)
   private PostEmotionType postEmotionType;
 
-  @OneToMany(mappedBy = "post")
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PostedStock> postedStockList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post")
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> commentList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post")
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PostReaction> postReactionList = new ArrayList<>();
 
   private String postImageUrl;
@@ -77,6 +77,10 @@ public class Post extends AuditEntity {
     this.user = user;
     user.getPostList().add(this);
     user.increasePostCount();
+  }
+
+  public void setPostedStock(List<Stock> stockList){
+    stockList.forEach(stock -> new PostedStock(stock, this));
   }
 
   public UserInfo getWriterUserInfo(UserInfoRepository userInfoRepository){

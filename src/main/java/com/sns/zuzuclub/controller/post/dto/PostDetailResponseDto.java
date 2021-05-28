@@ -61,7 +61,7 @@ public class PostDetailResponseDto {
     this.postId = post.getId();
     this.postEmotionType = post.getPostEmotionType();
     this.postImageUrl = post.getPostImageUrl();
-    this.postedStockDtoList = PostedStockDto.toListFrom(post);
+    this.postedStockDtoList = PostedStockDto.listOf(post);
     this.content = post.getContent();
     this.postReactionCount = post.getPostReactionCount();
     this.commentCount = post.getCommentCount();
