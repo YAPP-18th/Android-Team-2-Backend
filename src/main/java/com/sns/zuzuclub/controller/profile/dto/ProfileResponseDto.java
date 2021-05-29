@@ -2,12 +2,12 @@ package com.sns.zuzuclub.controller.profile.dto;
 
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.user.model.User;
-import com.sns.zuzuclub.domain.user.model.UserInfo;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class ProfileResponseDto {
 
@@ -38,20 +38,18 @@ public class ProfileResponseDto {
   @ApiModelProperty(value = "작성한 게시글 리스트")
   private boolean isLoginUserProfile;
 
-  public ProfileResponseDto(UserInfoRepository userInfoRepository, UserInfo userInfo, boolean isLoginUserProfile) {
+  public ProfileResponseDto(User profileUser, Long loginUserId) {
 
-    this.isLoginUserProfile = isLoginUserProfile;
+    this.isLoginUserProfile = profileUser.getId().equals(loginUserId);
 
-    this.nickname = userInfo.getNickname();
-    this.profileImageUrl = userInfo.getProfileImageUrl();
-    this.introduction = userInfo.getIntroduction();
+    this.nickname = profileUser.getNickname();
+    this.profileImageUrl = profileUser.getProfileImageUrl();
+    this.introduction = profileUser.getIntroduction();
+    this.userStockScrapCount = profileUser.getUserStockScrapCount();
+    this.followerCount = profileUser.getFollowerCount();
+    this.followingCount = profileUser.getFollowingCount();
+    this.postCount = profileUser.getPostCount();
 
-    User user = userInfo.getUser();
-    this.userStockScrapCount = user.getUserStockScrapCount();
-    this.followerCount = user.getFollowerCount();
-    this.followingCount = user.getFollowingCount();
-    this.postCount = user.getPostCount();
-
-    this.postResponseDtoList = PostResponseDto.toListFrom(userInfoRepository, user.getPostList(), userInfo.getId());
+    this.postResponseDtoList = PostResponseDto.ListFrom(profileUser.getPostList(), loginUserId);
   }
 }

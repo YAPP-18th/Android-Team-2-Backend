@@ -6,7 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class CreatePostResponseDto {
 
@@ -30,7 +32,7 @@ public class CreatePostResponseDto {
     this.postId = post.getId();
     this.content = post.getContent();
     this.postEmotionType = post.getPostEmotionType();
-    this.postedStockDtoList = PostedStockDto.toListFrom(post);
+    this.postedStockDtoList = PostedStockDto.listOf(post);
     this.postImageUrl = post.getPostImageUrl();
   }
 }

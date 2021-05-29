@@ -2,14 +2,15 @@ package com.sns.zuzuclub.controller.comment.dto;
 
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.domain.user.model.UserInfo;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
+import com.sns.zuzuclub.domain.user.model.User;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class CommentResponseDto {
     @ApiModelProperty(value = "댓글id", example = "")
@@ -36,23 +37,22 @@ public class CommentResponseDto {
     @ApiModelProperty(value = "내가 댓글 반응 작성했는지", example = "")
     private boolean hasUserCommentReaction;
 
-
-    public CommentResponseDto(UserInfoRepository userInfoRepository, Comment comment, Long userId) {
-        UserInfo writerUserInfo = comment.getWriterUserInfo(userInfoRepository);
+    public CommentResponseDto(Comment comment, Long loginUserId) {
+        User writer = comment.getUser();
         this.commentId = comment.getId();
-        this.nickname = writerUserInfo.getNickname();
-        this.profileImageUrl = writerUserInfo.getProfileImageUrl();
+        this.nickname = writer.getNickname();
+        this.profileImageUrl = writer.getProfileImageUrl();
         this.content = comment.getContent();
         this.parentCommentId = comment.getParentCommentId();
         this.createdAt = comment.getCreatedAt();
         this.commentReactionCount = comment.getCommentReactionCount();
-        this.hasUserCommentReaction = comment.hasUserCommentReaction(userId);
+        this.hasUserCommentReaction = comment.hasUserCommentReaction(loginUserId);
     }
 
-    public static List<CommentResponseDto> toListFrom(UserInfoRepository userInfoRepository, Post post, Long userId){
+    public static List<CommentResponseDto> toListFrom(Post post, Long loginUserId){
         return post.getCommentList()
                    .stream()
-                   .map(comment -> new CommentResponseDto(userInfoRepository, comment, userId))
+                   .map(comment -> new CommentResponseDto(comment, loginUserId))
                    .collect(Collectors.toList());
     }
 }

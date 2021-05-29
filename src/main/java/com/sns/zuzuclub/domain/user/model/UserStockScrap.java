@@ -1,5 +1,7 @@
 package com.sns.zuzuclub.domain.user.model;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,7 +31,13 @@ public class UserStockScrap {
   public UserStockScrap(User user, Stock stock) {
     this();
     updateUser(user);
-    updateStock(stock);
+    this.stock = stock;
+  }
+
+  public static List<UserStockScrap> toListFrom(User user, List<Stock> stockList) {
+    return stockList.stream()
+                    .map(stock -> new UserStockScrap(user, stock))
+                    .collect(Collectors.toList());
   }
 
   public void updateUser(User user){
@@ -42,7 +50,12 @@ public class UserStockScrap {
     user.increaseUserStockScrapCount();
   }
 
-  public void updateStock(Stock stock){
-    this.stock = stock;
+  public void deleteUser(){
+    this.user.getUserStockScrapList().remove(this);
+    this.user = null;
+  }
+
+  public void deleteStock(){
+    this.stock = null;
   }
 }

@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequestMapping("/signup")
 @RequiredArgsConstructor
 @RestController
@@ -35,7 +37,9 @@ public class SignupController {
   )
   @PostMapping("/nickname")
   public SingleResult<Boolean> hasDuplicateNickname(@RequestHeader(value = "Authorization") String jwtToken, @ApiParam(value = "닉네임", type = "String", required = true) @RequestBody String nickname) {
+    log.info(nickname);
     Boolean hasDuplicateNickname = signupService.hasDuplicateNickname(nickname);
+    log.info("hasDuplicateNickname : " + hasDuplicateNickname.toString());
     return ResponseForm.getSingleResult(hasDuplicateNickname, "닉네임 중복 검사");
   }
 
@@ -45,9 +49,10 @@ public class SignupController {
           + "- 미리 정해둔 관심 종목 리스트 20개를 불러옵니다.\n"
           + "</h3>"
   )
-  @GetMapping("/stock")
-  public MultipleResult<StockResponseDto> getStockList() {
+  @GetMapping("/stocks")
+  public MultipleResult<StockResponseDto> getStockList(@RequestHeader(value = "Authorization") String jwtToken) {
     List<StockResponseDto> stockListResponseDtoList = signupService.getStockList();
+    log.info(stockListResponseDtoList.toString());
     return ResponseForm.getMultipleResult(stockListResponseDtoList, "관심 종목 목록 불러오기");
   }
 
@@ -61,8 +66,10 @@ public class SignupController {
   )
   @PostMapping("/user")
   public SingleResult<String> registerUser(@RequestHeader(value = "Authorization") String jwtToken, @RequestBody SignupRequestDto signupRequestDto) {
+    log.info(signupRequestDto.toString());
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     String nickname = signupService.registerUser(userId, signupRequestDto);
+    log.info(nickname);
     return ResponseForm.getSingleResult(nickname, "회원정보 등록");
   }
 

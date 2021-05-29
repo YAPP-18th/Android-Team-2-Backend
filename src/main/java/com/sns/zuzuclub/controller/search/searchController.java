@@ -11,11 +11,14 @@ import com.sns.zuzuclub.global.response.ResponseForm;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class searchController {
@@ -26,7 +29,7 @@ public class searchController {
   @ApiOperation(
       value = "닉네임 검색",
       notes = "<h3>\n"
-          + " %검색어% 의 조건으로 찾아옵니다. \n"
+          + " 검색어% 의 조건으로 찾아옵니다. \n"
           + "</h3>"
   )
 //  // 각 메서드에 responseMessage를
@@ -36,15 +39,16 @@ public class searchController {
 //      @ApiResponse(code = 500, message = "페이지를 찾을 수 없어!!!")
 //  })
   @GetMapping("/users")
-  public MultipleResult<SearchUserResponseDto> searchUser(@RequestParam String nickname){
+  public MultipleResult<SearchUserResponseDto> searchUser(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam String nickname){
     List<SearchUserResponseDto> searchUserResponseDtoList = searchUserService.searchByNickname(nickname);
+    log.info(searchUserResponseDtoList.toString());
     return ResponseForm.getMultipleResult(searchUserResponseDtoList, "닉네임 검색");
   }
 
   @ApiOperation(
       value = "종목명 검색",
       notes = "<h3>\n"
-          + " %검색어% 의 조건으로 찾아옵니다. \n"
+          + " 검색어% 의 조건으로 찾아옵니다. \n"
           + "</h3>"
   )
 //  // 각 메서드에 responseMessage를
@@ -54,8 +58,9 @@ public class searchController {
 //      @ApiResponse(code = 500, message = "페이지를 찾을 수 없어!!!")
 //  })
   @GetMapping("/stocks")
-  public MultipleResult<StockResponseDto> searchStock(@RequestParam String stockName){
+  public MultipleResult<StockResponseDto> searchStock(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam String stockName){
     List<StockResponseDto> stockResponseDtoList =  searchStockService.searchStockByStockName(stockName);
+    log.info(stockResponseDtoList.toString());
     return ResponseForm.getMultipleResult(stockResponseDtoList, "종목명 검색");
   }
 

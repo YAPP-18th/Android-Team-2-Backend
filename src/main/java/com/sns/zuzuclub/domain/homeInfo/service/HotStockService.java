@@ -20,7 +20,6 @@ public class HotStockService {
   private final PostedStockService postedStockService;
   private final HotStockRepository hotStockRepository;
 
-  @Transactional
   public void updateHotStockRank(List<PostedStock> postedStockList) {
 
     for (PostEmotionType postEmotionType : PostEmotionType.values()) {

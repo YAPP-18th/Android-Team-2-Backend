@@ -2,14 +2,15 @@ package com.sns.zuzuclub.controller.post.dto;
 
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.domain.user.helper.UserHelper;
-import com.sns.zuzuclub.domain.user.model.UserInfo;
-import com.sns.zuzuclub.domain.user.repository.UserInfoRepository;
+import com.sns.zuzuclub.domain.user.model.User;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class PostResponseDto {
 
@@ -47,16 +48,19 @@ public class PostResponseDto {
     List<PostedStockDto> postedStockDtoList;
 
     @ApiModelProperty(value = "내 게시물인지 여부", example = "")
-    private boolean isMine = false;
+    private boolean isUserPost;
 
-    public PostResponseDto(UserInfoRepository userInfoRepository, Post post, Long userId) {
+    @ApiModelProperty(value = "작성일", example = "")
+    private LocalDateTime createdAt;
 
-        UserInfo writerUserInfo = post.getWriterUserInfo(userInfoRepository);
+    public PostResponseDto(Post post, Long loginUserId) {
 
-        this.isMine = userId.equals(writerUserInfo.getId());
-        this.userId = writerUserInfo.getId();
-        this.profileImageUrl = writerUserInfo.getProfileImageUrl();
-        this.nickname = writerUserInfo.getNickname();
+        User writer = post.getUser();
+
+        this.isUserPost = loginUserId.equals(writer.getId());
+        this.userId = writer.getId();
+        this.profileImageUrl = writer.getProfileImageUrl();
+        this.nickname = writer.getNickname();
 
         this.postId = post.getId();
         this.content = post.getContent();
@@ -64,13 +68,14 @@ public class PostResponseDto {
         this.postImageUrl = post.getPostImageUrl();
         this.commentCount = post.getCommentCount();
         this.postReactionCount = post.getPostReactionCount();
+        this.createdAt = post.getCreatedAt();
 
-        this.postedStockDtoList = PostedStockDto.toListFrom(post);
+        this.postedStockDtoList = PostedStockDto.listOf(post);
     }
 
-    public static List<PostResponseDto> toListFrom(UserInfoRepository userInfoRepository, List<Post> postList, Long userId){
+    public static List<PostResponseDto> ListFrom(List<Post> postList, Long loginUserId){
         return postList.stream()
-                       .map(post -> new PostResponseDto(userInfoRepository, post, userId))
+                       .map(post -> new PostResponseDto(post, loginUserId))
                        .collect(Collectors.toList());
     }
 }

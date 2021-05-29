@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class PostedStockDto {
 
@@ -25,7 +27,7 @@ public class PostedStockDto {
     postedStockName = stock.getStockName();
   }
 
-  public static List<PostedStockDto> toListFrom(Post post){
+  public static List<PostedStockDto> listOf(Post post){
     return post.getPostedStockList()
                .stream()
                .map(PostedStockDto::new)

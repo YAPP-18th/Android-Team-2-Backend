@@ -2,10 +2,13 @@ package com.sns.zuzuclub.controller.home.dto;
 
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.homeInfo.model.HotStock;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class HotStockDto {
   private Long stockId;
@@ -22,6 +25,7 @@ public class HotStockDto {
 
   public static List<HotStockDto> toListFrom(List<HotStock> hotStockList) {
     return hotStockList.stream()
+                       .sorted(Comparator.comparing(HotStock::getRanking))
                        .map(HotStockDto::new)
                        .collect(Collectors.toList());
   }
