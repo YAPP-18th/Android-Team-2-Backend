@@ -2,7 +2,9 @@ package com.sns.zuzuclub.controller.comment.dto;
 
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class CreateCommentResponseDto {
 

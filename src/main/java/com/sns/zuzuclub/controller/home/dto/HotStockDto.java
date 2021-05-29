@@ -6,7 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class HotStockDto {
   private Long stockId;

@@ -3,7 +3,9 @@ package com.sns.zuzuclub.controller.signup.dto;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class SignupRequestDto {
 

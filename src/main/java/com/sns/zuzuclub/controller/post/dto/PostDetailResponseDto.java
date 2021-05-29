@@ -7,7 +7,9 @@ import com.sns.zuzuclub.domain.user.model.User;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class PostDetailResponseDto {
 

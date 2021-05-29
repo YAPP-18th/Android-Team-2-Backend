@@ -2,7 +2,9 @@ package com.sns.zuzuclub.controller.home.dto;
 
 import com.sns.zuzuclub.domain.homeInfo.model.Weather;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class WeatherDto {
 

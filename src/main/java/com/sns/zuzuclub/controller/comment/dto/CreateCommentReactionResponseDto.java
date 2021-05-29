@@ -3,7 +3,9 @@ package com.sns.zuzuclub.controller.comment.dto;
 import com.sns.zuzuclub.constant.CommentReactionType;
 import com.sns.zuzuclub.domain.comment.model.CommentReaction;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class CreateCommentReactionResponseDto {
 

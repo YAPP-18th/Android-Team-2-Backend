@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class StockResponseDto {
 

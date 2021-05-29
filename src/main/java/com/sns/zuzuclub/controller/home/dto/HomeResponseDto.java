@@ -5,7 +5,9 @@ import com.sns.zuzuclub.domain.homeInfo.model.Weather;
 import com.sns.zuzuclub.domain.user.model.UserStockScrap;
 import java.util.List;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class HomeResponseDto {
 

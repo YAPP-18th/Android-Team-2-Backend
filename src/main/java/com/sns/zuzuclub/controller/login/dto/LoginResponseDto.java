@@ -3,7 +3,9 @@ package com.sns.zuzuclub.controller.login.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class LoginResponseDto {
 

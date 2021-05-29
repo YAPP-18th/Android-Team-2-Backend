@@ -8,7 +8,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class CommentResponseDto {
     @ApiModelProperty(value = "댓글id", example = "")

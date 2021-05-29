@@ -4,7 +4,9 @@ package com.sns.zuzuclub.controller.post.dto;
 import com.sns.zuzuclub.constant.PostReactionType;
 import com.sns.zuzuclub.domain.post.model.PostReaction;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class CreatePostReactionResponseDto {
 

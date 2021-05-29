@@ -8,10 +8,10 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
-
-@Setter
+@ToString
 @Getter
 public class CreatePostRequestDto {
 
