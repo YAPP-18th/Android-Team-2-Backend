@@ -91,7 +91,7 @@ public class Comment extends AuditEntity {
 
   public Long getParentCommentId(){
     if(this.parentComment == null){
-      return null;
+      return -1L;
     }
     return this.parentComment.getId();
   }
