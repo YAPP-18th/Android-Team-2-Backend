@@ -31,9 +31,9 @@ public class CreateCommentRequestDto {
 
   private Comment getParentComment(CommentRepository commentRepository) {
     Comment parentComment = null;
-    if (parentCommentId != null){
-      parentComment = CommentHelper.findCommentById(commentRepository, parentCommentId);
+    if (parentCommentId == -1){
+      return parentComment;
     }
-    return parentComment;
+    return CommentHelper.findCommentById(commentRepository, parentCommentId);
   }
 }

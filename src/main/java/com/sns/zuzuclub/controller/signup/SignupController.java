@@ -37,6 +37,7 @@ public class SignupController {
   )
   @PostMapping("/nickname")
   public SingleResult<Boolean> hasDuplicateNickname(@RequestHeader(value = "Authorization") String jwtToken, @ApiParam(value = "닉네임", type = "String", required = true) @RequestBody String nickname) {
+    nickname = nickname.replaceAll("\"", "");
     log.info(nickname);
     Boolean hasDuplicateNickname = signupService.hasDuplicateNickname(nickname);
     log.info("hasDuplicateNickname : " + hasDuplicateNickname.toString());

@@ -64,18 +64,18 @@ public class LoginService {
     String jwtAccessToken = jwtTokenProvider.createJwtAccessToken(userEntity.getId(), UserRoleType.USER);
     String jwtRefreshToken = jwtTokenProvider.createJwtRefreshToken(userEntity.getId());
 
-    if (userEntity.getNickname() != null) {
+    if (userEntity.getNickname().isEmpty()) {
       // 소셜로그인 완료, 회원가입 완료  / Ex) 다른 기기 로그인
       return LoginResponseDto.builder()
                              .jwtAccessToken(jwtAccessToken)
                              .jwtRefreshToken(jwtRefreshToken)
-                             .needUserInfo(false)
+                             .needUserInfo(true)
                              .build();
     }
     return LoginResponseDto.builder()
                            .jwtAccessToken(jwtAccessToken)
                            .jwtRefreshToken(jwtRefreshToken)
-                           .needUserInfo(true)
+                           .needUserInfo(false)
                            .build();
   }
 
