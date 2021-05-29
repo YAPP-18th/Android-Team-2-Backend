@@ -36,7 +36,7 @@ public class PostedStockService {
                    .forEachOrdered(postedStock -> {
                      Stock stock = postedStock.getStock();
                      stockWithCountMap.putIfAbsent(stock, 0);
-                     stockWithCountMap.compute(stock, (key, value) -> value++);
+                     stockWithCountMap.compute(stock, (key, value) -> value += 1);
                    });
     return stockWithCountMap;
   }

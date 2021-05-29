@@ -33,7 +33,7 @@ public class PostService {
     postList.forEach(post -> {
       PostEmotionType postEmotionType = post.getPostEmotionType();
       if (postEmotionType != null) {
-        postEmotionTypeWithCountMap.compute(postEmotionType, (emotion, count) -> count++);
+        postEmotionTypeWithCountMap.compute(postEmotionType, (emotion, count) -> count += 1);
       }
     });
 

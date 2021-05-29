@@ -21,11 +21,11 @@ public class StockResponseDto {
   private List<PostResponseDto> postResponseDtoList;
 
   @Builder
-  public StockResponseDto(User user, Stock stock, PostEmotionType postEmotionType, float postEmotionValue) {
+  public StockResponseDto(User user, Stock stock, PostEmotionType postEmotionType, float postEmotionValue, int size) {
     this.stockId = stock.getId();
     this.stockName = stock.getStockName();
     this.todayEmotion = postEmotionType;
-    this.todayEmotionValue = postEmotionValue;
+    this.todayEmotionValue = postEmotionValue / size;
     this.isScraped = user.isScrapedStock(stock);
 
     List<Post> postList = stock.getPostList();

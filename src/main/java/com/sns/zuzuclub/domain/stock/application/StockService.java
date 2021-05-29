@@ -49,6 +49,7 @@ public class StockService {
                              .stock(stock)
                              .postEmotionType(PostEmotionType.UP)
                              .postEmotionValue(0)
+                             .size(postedStockList.size())
                              .build();
     }
 
@@ -62,6 +63,7 @@ public class StockService {
                            .stock(stock)
                            .postEmotionType(mostPostedPostEmotionType.getKey())
                            .postEmotionValue(mostPostedPostEmotionType.getValue())
+                           .size(postedStockList.size())
                            .build();
   }
 
