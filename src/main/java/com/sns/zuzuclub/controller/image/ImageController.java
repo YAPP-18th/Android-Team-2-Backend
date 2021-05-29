@@ -6,12 +6,14 @@ import com.sns.zuzuclub.global.response.SingleResult;
 import com.sns.zuzuclub.util.S3Uploader;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class ImageController {
@@ -30,6 +32,7 @@ public class ImageController {
                                           @RequestPart MultipartFile multipartFile) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     String imageUrl = s3Uploader.upload(userId, multipartFile);
+    log.info(imageUrl);
     return ResponseForm.getSingleResult(imageUrl, "이미지 업로드");
   }
 }

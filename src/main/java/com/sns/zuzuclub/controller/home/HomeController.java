@@ -12,11 +12,13 @@ import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class HomeController {
@@ -37,6 +39,7 @@ public class HomeController {
   public SingleResult<HomeResponseDto> getHomeInfo(@RequestHeader(value = "Authorization") String jwtToken){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     HomeResponseDto homeResponseDto = homeInfoService.getHomeInfo(userId);
+    log.info(homeResponseDto.toString());
     return ResponseForm.getSingleResult(homeResponseDto, "홈 화면 정보");
   }
 
@@ -49,6 +52,7 @@ public class HomeController {
   @GetMapping("/home/hot")
   public MultipleResult<HotStockDto> getHotStockRanking(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam PostEmotionType postEmotionType){
     List<HotStockDto> hotStockDtoList = homeInfoService.getHotStockRanking(postEmotionType);
+    log.info(hotStockDtoList.toString());
     return ResponseForm.getMultipleResult(hotStockDtoList, "HOT종목 랭킹보기");
   }
 
@@ -62,6 +66,7 @@ public class HomeController {
   public MultipleResult<UserStockScrapDto> getUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     List<UserStockScrapDto> userStockScrapDtoList = homeInfoService.getUserStockScrap(userId);
+    log.info(userStockScrapDtoList.toString());
     return ResponseForm.getMultipleResult(userStockScrapDtoList, "나의 관심 종목 더보기");
   }
 

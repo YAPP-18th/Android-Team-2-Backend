@@ -9,6 +9,7 @@ import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class StockController {
@@ -36,6 +38,7 @@ public class StockController {
 
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     StockResponseDto stockResponseDto = stockService.getStock(userId, stockId);
+    log.info(stockResponseDto.toString());
     return ResponseForm.getSingleResult(stockResponseDto, "주식 종목 - 첫화면");
   }
 
@@ -50,6 +53,7 @@ public class StockController {
                                        @ApiParam(value = "주식종목 Id", type = "Long", required = true) @PathVariable Long stockId) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     stockService.createUserStockScrap(userId, stockId);
+    log.info("주식 종목 - 관심 종목 추가");
     return ResponseForm.getSuccessResult("주식 종목 - 관심 종목 추가");
   }
 
@@ -64,6 +68,7 @@ public class StockController {
                                          @ApiParam(value = "주식종목 Id", type = "Long", required = true) @PathVariable Long stockId) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     stockService.deleteUserStockScrap(userId, stockId);
+    log.info("주식 종목 - 관심 종목 취소");
     return ResponseForm.getSuccessResult("주식 종목 - 관심 종목 취소");
   }
 }

@@ -11,12 +11,14 @@ import com.sns.zuzuclub.global.response.ResponseForm;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class searchController {
@@ -39,6 +41,7 @@ public class searchController {
   @GetMapping("/users")
   public MultipleResult<SearchUserResponseDto> searchUser(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam String nickname){
     List<SearchUserResponseDto> searchUserResponseDtoList = searchUserService.searchByNickname(nickname);
+    log.info(searchUserResponseDtoList.toString());
     return ResponseForm.getMultipleResult(searchUserResponseDtoList, "닉네임 검색");
   }
 
@@ -57,6 +60,7 @@ public class searchController {
   @GetMapping("/stocks")
   public MultipleResult<StockResponseDto> searchStock(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam String stockName){
     List<StockResponseDto> stockResponseDtoList =  searchStockService.searchStockByStockName(stockName);
+    log.info(stockResponseDtoList.toString());
     return ResponseForm.getMultipleResult(stockResponseDtoList, "종목명 검색");
   }
 

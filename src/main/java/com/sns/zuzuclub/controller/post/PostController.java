@@ -16,6 +16,7 @@ import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class PostController {
@@ -45,8 +46,10 @@ public class PostController {
     public SingleResult<CreatePostResponseDto> createPost(@RequestHeader(value = "Authorization") String jwtToken,
                                                           @RequestBody CreatePostRequestDto createPostRequestDto)
     {
+        log.info(createPostRequestDto.toString());
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
         CreatePostResponseDto createPostResponseDto = feedService.createPost(userId, createPostRequestDto);
+        log.info(createPostResponseDto.toString());
         return ResponseForm.getSingleResult(createPostResponseDto,"게시물 작성");
     }
 
@@ -64,6 +67,7 @@ public class PostController {
     public MultipleResult<PostResponseDto> getFeed(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam FeedType feedType, @RequestParam int page){
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
         List<PostResponseDto> postResponseDtoList = feedService.getFeed(userId, feedType, page);
+        log.info(postResponseDtoList.toString());
         return ResponseForm.getMultipleResult(postResponseDtoList,"모든 게시글 가져오기 / page = " + page);
     }
 
@@ -78,6 +82,7 @@ public class PostController {
     public SingleResult<PostDetailResponseDto> getPostDetail(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId){
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
         PostDetailResponseDto postDetailResponseDto = feedService.getPostDetail(postId, userId);
+        log.info(postDetailResponseDto.toString());
         return ResponseForm.getSingleResult(postDetailResponseDto,"게시글 상세 가져오기" );
     }
 
@@ -91,6 +96,7 @@ public class PostController {
     public SingleResult<CreatePostReactionResponseDto> createPostReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId, @PathVariable PostReactionType postReactionType){
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
         CreatePostReactionResponseDto createPostReactionResponseDto  = feedService.createPostReaction(postId, postReactionType, userId);
+        log.info(createPostReactionResponseDto.toString());
         return ResponseForm.getSingleResult(createPostReactionResponseDto,"게시글 상세 - 반응하기" );
     }
 
@@ -104,6 +110,7 @@ public class PostController {
     public CommonResult deletePostReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId){
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
         feedService.deletePostReaction(postId, userId);
+        log.info("게시글 상세 - 반응 취소");
         return ResponseForm.getSuccessResult("게시글 상세 - 반응취소" );
     }
 }

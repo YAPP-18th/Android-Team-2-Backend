@@ -7,11 +7,13 @@ import com.sns.zuzuclub.global.response.ResponseForm;
 import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class ProfileController {
@@ -35,6 +37,7 @@ public class ProfileController {
   public SingleResult<ProfileResponseDto> getUserProfile(@RequestHeader(value = "Authorization") String jwtToken){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     ProfileResponseDto profileResponseDto = profileService.getUserProfile(userId, userId);
+    log.info(profileResponseDto.toString());
     return ResponseForm.getSingleResult(profileResponseDto, "프로필 페이지");
   }
 
@@ -55,6 +58,7 @@ public class ProfileController {
   public SingleResult<ProfileResponseDto> getUserProfile(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long userId){
     Long loginUser = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     ProfileResponseDto profileResponseDto = profileService.getUserProfile(loginUser, userId);
+    log.info(profileResponseDto.toString());
     return ResponseForm.getSingleResult(profileResponseDto, "프로필 페이지");
   }
 
