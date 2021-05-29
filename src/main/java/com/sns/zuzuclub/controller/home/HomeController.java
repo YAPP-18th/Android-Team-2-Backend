@@ -46,7 +46,7 @@ public class HomeController {
           + "- 감정별 , 언급이 가장 많은 종목 \n"
           + "</h3>"
   )
-  @GetMapping("/home/rank")
+  @GetMapping("/home/hot")
   public MultipleResult<HotStockDto> getHotStockRanking(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam PostEmotionType postEmotionType){
     List<HotStockDto> hotStockDtoList = homeInfoService.getHotStockRanking(postEmotionType);
     return ResponseForm.getMultipleResult(hotStockDtoList, "HOT종목 랭킹보기");

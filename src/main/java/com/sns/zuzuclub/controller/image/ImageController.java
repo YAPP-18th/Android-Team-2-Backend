@@ -25,7 +25,7 @@ public class ImageController {
           + "multipart/form-data 형식으로 파일을 받아서 저장된 url 을 리턴 받습니다.\n"
           + "</h3>"
   )
-  @PostMapping("/image")
+  @PostMapping("/images")
   public SingleResult<String> uploadImage(@RequestHeader(value = "Authorization") String jwtToken,
                                           @RequestPart MultipartFile multipartFile) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));

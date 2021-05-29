@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/stocks/{stockId}")
 @RequiredArgsConstructor
 @RestController
 public class StockController {
@@ -31,7 +30,7 @@ public class StockController {
           + "- 주식 종목의 첫화면을 불러옵니다. \n"
           + "</h3>"
   )
-  @GetMapping
+  @GetMapping("/stocks/{stockId}")
   public SingleResult<StockResponseDto> getStock(@RequestHeader(value = "Authorization") String jwtToken,
                                                  @ApiParam(value = "주식종목 Id", type = "Long", required = true) @PathVariable Long stockId) {
 
@@ -46,7 +45,7 @@ public class StockController {
           + "- 로그인 유저의 관심 종목에 stockId에 해당하는 주식을 추가합니다.\n"
           + "</h3>"
   )
-  @PostMapping
+  @PostMapping("/users/stocks/{stockId}")
   public CommonResult createUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken,
                                        @ApiParam(value = "주식종목 Id", type = "Long", required = true) @PathVariable Long stockId) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
@@ -60,7 +59,7 @@ public class StockController {
           + "- 로그인 유저의 관심 종목에 stockId에 해당하는 주식을 취소합니다.\n"
           + "</h3>"
   )
-  @DeleteMapping
+  @DeleteMapping("/users/stocks/{stockId}")
   public CommonResult deleteUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken,
                                          @ApiParam(value = "주식종목 Id", type = "Long", required = true) @PathVariable Long stockId) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));

@@ -41,7 +41,7 @@ public class PostController {
             + "\n"
             + "</h3>"
     )
-    @PostMapping("/post")
+    @PostMapping("/posts")
     public SingleResult<CreatePostResponseDto> createPost(@RequestHeader(value = "Authorization") String jwtToken,
                                                           @RequestBody CreatePostRequestDto createPostRequestDto)
     {
