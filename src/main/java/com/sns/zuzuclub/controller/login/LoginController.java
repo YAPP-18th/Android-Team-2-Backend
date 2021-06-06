@@ -51,6 +51,7 @@ public class LoginController {
   )
   @PostMapping("/jwt/refresh")
   public SingleResult<ReissueJwtTokenResponseDto> reissueJwtToken(@ApiParam(value = "JWT - RefreshToken") @RequestBody String jwtRefreshToken) {
+    jwtRefreshToken = jwtRefreshToken.replaceAll("\"", "");
     log.info(jwtRefreshToken);
     ReissueJwtTokenResponseDto reissueJwtTokenResponseDto = loginService.reissueJwtToken(jwtRefreshToken);
     log.info(reissueJwtTokenResponseDto.toString());

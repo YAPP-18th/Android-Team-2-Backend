@@ -13,7 +13,7 @@ public class PostReactionService {
 
   public void deletePostReaction(PostReaction postReaction){
     postReaction.deletePost();
-    postReactionRepository.delete(postReaction);
+    postReactionRepository.deleteById(postReaction.getId());
   }
 
 }
