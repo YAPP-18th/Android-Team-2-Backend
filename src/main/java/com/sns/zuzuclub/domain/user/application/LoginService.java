@@ -63,6 +63,7 @@ public class LoginService {
     User userEntity = userSecurityEntity.getUser();
     String jwtAccessToken = jwtTokenProvider.createJwtAccessToken(userEntity.getId(), UserRoleType.USER);
     String jwtRefreshToken = jwtTokenProvider.createJwtRefreshToken(userEntity.getId());
+    userSecurityEntity.updateJwtRefreshToken(jwtRefreshToken);
 
     if (userEntity.getNickname().isEmpty()) {
       // 소셜로그인 완료, 회원가입 완료  / Ex) 다른 기기 로그인
