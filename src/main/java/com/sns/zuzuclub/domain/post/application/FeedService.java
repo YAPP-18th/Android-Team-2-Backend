@@ -117,8 +117,7 @@ public class FeedService {
 
   @Transactional
   public void deletePostReaction(Long postId, Long userId) {
-    PostReaction postReaction = postReactionRepository.findByUserIdAndPostId(userId, postId)
-                                                      .orElseThrow(() -> new CustomException(PostErrorCodeType.INVALID_POST_REACTION));
-    postReactionService.deletePostReaction(postReaction);
+    List<PostReaction> postReactionList = postReactionRepository.findAllByUserIdAndPostId(userId, postId);
+    postReactionList.forEach(postReactionService::deletePostReaction);
   }
 }
