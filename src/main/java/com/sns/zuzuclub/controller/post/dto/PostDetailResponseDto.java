@@ -47,8 +47,8 @@ public class PostDetailResponseDto {
   @ApiModelProperty(value = "내 게시물인지 여부", example = "")
   private boolean isMine;
 
-  @ApiModelProperty(value = "반응했는지 여부", example = "")
-  private boolean hasUserPostReaction;
+  @ApiModelProperty(value = "내가 누른 반응, 없으면 빈 문자열 \"\" ", example = "")
+  private String postReaction;
 
   @ApiModelProperty(value = "시간", example = "")
   private String createdAt;
@@ -58,7 +58,7 @@ public class PostDetailResponseDto {
     User writer = post.getUser();
 
     this.isMine = loginUserId.equals(writer.getId());
-    this.hasUserPostReaction = post.hasUserPostReaction(loginUserId);
+    this.postReaction = post.getPostReactionFrom(loginUserId);
 
     this.profileImageUrl = writer.getProfileImageUrl();
     this.nickname = writer.getNickname();
