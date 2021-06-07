@@ -92,7 +92,7 @@ public class Post extends AuditEntity {
     this.postReactionCount -= 1;
   }
 
-  public String getPostReactionFrom(Long loginUserId){
+  public String getPostReactionByUser(Long loginUserId){
     Optional<PostReaction> result = this.postReactionList.stream()
                                                          .filter(postReaction -> postReaction.isOwnedBy(loginUserId))
                                                          .findFirst();

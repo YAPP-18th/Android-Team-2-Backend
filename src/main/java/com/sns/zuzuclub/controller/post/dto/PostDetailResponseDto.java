@@ -58,7 +58,7 @@ public class PostDetailResponseDto {
     User writer = post.getUser();
 
     this.isMine = loginUserId.equals(writer.getId());
-    this.postReaction = post.getPostReactionFrom(loginUserId);
+    this.postReaction = post.getPostReactionByUser(loginUserId);
 
     this.profileImageUrl = writer.getProfileImageUrl();
     this.nickname = writer.getNickname();
