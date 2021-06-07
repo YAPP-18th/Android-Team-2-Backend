@@ -57,4 +57,8 @@ public class PostReaction extends AuditEntity {
     this.post = null;
   }
 
+  public boolean isOwnedBy(Long userId){
+    return user.getId().equals(userId);
+  }
+
 }
