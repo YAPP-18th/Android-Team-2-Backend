@@ -3,6 +3,7 @@ package com.sns.zuzuclub.controller.post.dto;
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
+import com.sns.zuzuclub.util.TimeConvertor;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,7 +52,7 @@ public class PostResponseDto {
     private boolean isUserPost;
 
     @ApiModelProperty(value = "작성일", example = "")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     public PostResponseDto(Post post, Long loginUserId) {
 
@@ -68,7 +69,7 @@ public class PostResponseDto {
         this.postImageUrl = post.getPostImageUrl();
         this.commentCount = post.getCommentCount();
         this.postReactionCount = post.getPostReactionCount();
-        this.createdAt = post.getCreatedAt();
+        this.createdAt = TimeConvertor.convertToString(post.getCreatedAt());
 
         this.postedStockDtoList = PostedStockDto.listOf(post);
     }
