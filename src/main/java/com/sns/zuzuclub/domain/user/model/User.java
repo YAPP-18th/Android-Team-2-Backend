@@ -78,10 +78,6 @@ public class User extends AuditEntity {
   private int followerCount = 0;
   private int followingCount = 0;
 
-  public boolean hasUserInfo(){
-    return !this.nickname.isEmpty();
-  }
-
   public void registerNickname(String nickname){
     if(nickname.isEmpty()){
       throw new CustomException(UserErrorCodeType.EMPTY_NICKNAME);
@@ -91,6 +87,10 @@ public class User extends AuditEntity {
 
   public void registerIntroduction(String Introduction){
     this.introduction = Introduction;
+  }
+
+  public void registerProfileImageUrl(String profileImageUrl){
+    this.profileImageUrl = profileImageUrl;
   }
 
   public void increaseUserStockScrapCount(){
@@ -129,4 +129,7 @@ public class User extends AuditEntity {
                              .anyMatch(userStockScrap -> userStockScrap.getStock()
                                                                        .equals(stock));
   }
+
+
+
 }
