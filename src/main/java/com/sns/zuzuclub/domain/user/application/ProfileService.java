@@ -5,6 +5,7 @@ import com.sns.zuzuclub.controller.profile.dto.ProfileSettingDto;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
+import com.sns.zuzuclub.domain.user.service.UserService;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProfileService {
 
+  private final UserService userService;
   private final UserRepository userRepository;
 
   public ProfileResponseDto getUserProfile(Long loginUserId, Long profileUserId) {
@@ -30,11 +32,7 @@ public class ProfileService {
   @Transactional
   public void updateProfile(Long userId, ProfileSettingDto profileSettingDto) {
 
-    // 다시 .. 도메인 서비스로 리팩토링 필요하네..
-    boolean isDuplicatedNickname = userRepository.existsByNickname(profileSettingDto.getNickname());
-    if(isDuplicatedNickname){
-      throw new CustomException(UserErrorCodeType.DUPLICATE_NICKNAME);
-    }
+    userService.isDuplicated(profileSettingDto.getNickname());
 
     User user = UserHelper.findUserById(userRepository, userId);
     user.registerNickname(profileSettingDto.getNickname());
