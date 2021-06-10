@@ -2,15 +2,17 @@ package com.sns.zuzuclub.controller.profile.dto;
 
 import com.sns.zuzuclub.domain.user.model.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
+@NoArgsConstructor
 @Getter
 public class ProfileSettingDto {
 
-  private final String profileImageUrl;
-  private final String nickname;
-  private final String introduction;
+  private String profileImageUrl;
+  private String nickname;
+  private String introduction;
 
   public ProfileSettingDto(User user) {
     this.profileImageUrl = user.getProfileImageUrl();
