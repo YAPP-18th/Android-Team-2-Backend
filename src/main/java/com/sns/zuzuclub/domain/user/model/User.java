@@ -131,6 +131,11 @@ public class User extends AuditEntity {
                                                                        .equals(stock));
   }
 
+  public boolean hasFollower(Long userId){
+    return followers.stream()
+                    .anyMatch(userFollow -> userFollow.isFromUserById(userId));
+  }
+
 
 
 }
