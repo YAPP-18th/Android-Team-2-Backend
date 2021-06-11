@@ -4,6 +4,7 @@ import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.controller.comment.dto.CommentResponseDto;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
+import com.sns.zuzuclub.util.TimeConvertor;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.Getter;
@@ -46,16 +47,18 @@ public class PostDetailResponseDto {
   @ApiModelProperty(value = "내 게시물인지 여부", example = "")
   private boolean isMine;
 
-  @ApiModelProperty(value = "반응했는지 여부", example = "")
-  private boolean hasUserPostReaction;
+  @ApiModelProperty(value = "내가 누른 반응, 없으면 빈 문자열 \"\" ", example = "")
+  private String postReaction;
 
+  @ApiModelProperty(value = "시간", example = "")
+  private String createdAt;
 
   public PostDetailResponseDto(Post post, Long loginUserId) {
 
     User writer = post.getUser();
 
     this.isMine = loginUserId.equals(writer.getId());
-    this.hasUserPostReaction = post.hasUserPostReaction(loginUserId);
+    this.postReaction = post.getPostReactionByUser(loginUserId);
 
     this.profileImageUrl = writer.getProfileImageUrl();
     this.nickname = writer.getNickname();
@@ -66,6 +69,7 @@ public class PostDetailResponseDto {
     this.postedStockDtoList = PostedStockDto.listOf(post);
     this.content = post.getContent();
     this.postReactionCount = post.getPostReactionCount();
+    this.createdAt = TimeConvertor.convertToString(post.getCreatedAt());
     this.commentCount = post.getCommentCount();
     this.commentResponseDtoList = CommentResponseDto.toListFrom(post, loginUserId);
   }

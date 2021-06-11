@@ -55,6 +55,6 @@ public class CommentService {
   public void deleteCommentReaction(Long userId, Long commentId) {
     CommentReaction commentReaction = commentReactionRepository.findByUserIdAndCommentId(userId, commentId)
                                                                .orElseThrow(() -> new CustomException(CommentErrorCodeType.INVALID_COMMENT_REACTION));
-    commentReactionService.deleteCommentReaction(commentReaction);
+    commentReactionService.delete(commentReaction);
   }
 }

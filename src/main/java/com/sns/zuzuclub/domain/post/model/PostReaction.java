@@ -51,10 +51,8 @@ public class PostReaction extends AuditEntity {
     post.increasePostReactionCount();
   }
 
-  public void deletePost(){
-    this.post.decreasePostReactionCount();
-    this.post.getPostReactionList().remove(this);
-    this.post = null;
+  public boolean isOwnedBy(Long userId){
+    return user.getId().equals(userId);
   }
 
 }

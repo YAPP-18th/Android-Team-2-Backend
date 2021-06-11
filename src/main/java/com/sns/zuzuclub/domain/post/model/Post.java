@@ -1,12 +1,13 @@
 package com.sns.zuzuclub.domain.post.model;
 
+import com.sns.zuzuclub.constant.PostReactionType;
 import com.sns.zuzuclub.domain.stock.model.PostedStock;
-import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
+
+import java.util.Optional;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -91,10 +92,13 @@ public class Post extends AuditEntity {
     this.postReactionCount -= 1;
   }
 
-  public boolean hasUserPostReaction(Long loginUserId){
-    return this.postReactionList.stream()
-                                .anyMatch(postReaction -> postReaction.getUser()
-                                                                      .getId()
-                                                                      .equals(loginUserId));
+  public String getPostReactionByUser(Long loginUserId){
+    Optional<PostReaction> result = this.postReactionList.stream()
+                                                         .filter(postReaction -> postReaction.isOwnedBy(loginUserId))
+                                                         .findFirst();
+    if(result.isPresent()){
+      return result.get().getReactionType().toString();
+    }
+    return "";
   }
 }

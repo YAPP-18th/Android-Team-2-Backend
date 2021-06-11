@@ -3,8 +3,8 @@ package com.sns.zuzuclub.controller.post.dto;
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
+import com.sns.zuzuclub.util.TimeConvertor;
 import io.swagger.annotations.ApiModelProperty;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -51,7 +51,10 @@ public class PostResponseDto {
     private boolean isUserPost;
 
     @ApiModelProperty(value = "작성일", example = "")
-    private LocalDateTime createdAt;
+    private String createdAt;
+
+    @ApiModelProperty(value = "로그인 유저의 게시글 반응", example = "")
+    private String postReaction;
 
     public PostResponseDto(Post post, Long loginUserId) {
 
@@ -67,8 +70,9 @@ public class PostResponseDto {
         this.postEmotionType = post.getPostEmotionType();
         this.postImageUrl = post.getPostImageUrl();
         this.commentCount = post.getCommentCount();
+        this.postReaction = post.getPostReactionByUser(loginUserId);
         this.postReactionCount = post.getPostReactionCount();
-        this.createdAt = post.getCreatedAt();
+        this.createdAt = TimeConvertor.convertToString(post.getCreatedAt());
 
         this.postedStockDtoList = PostedStockDto.listOf(post);
     }

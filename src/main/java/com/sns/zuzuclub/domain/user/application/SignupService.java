@@ -12,6 +12,7 @@ import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserStockScrap;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
+import com.sns.zuzuclub.domain.user.service.UserService;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import java.util.List;
@@ -25,13 +26,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SignupService {
 
+  private final UserService userService;
+
   private final UserRepository userRepository;
   private final StockRepository stockRepository;
   private final SignupStockRepository signupStockRepository;
 
-
-  public Boolean hasDuplicateNickname(String nickname) {
-    return userRepository.existsByNickname(nickname);
+  public void isDuplicated(String nickname) {
+    userService.isDuplicated(nickname);
   }
 
   public List<StockResponseDto> getStockList() {
@@ -46,9 +48,7 @@ public class SignupService {
   @Transactional
   public String registerUser(Long userId, SignupRequestDto signupRequestDto) {
 
-    if (hasDuplicateNickname(signupRequestDto.getNickname())){
-      throw new CustomException(UserErrorCodeType.DUPLICATE_NICKNAME);
-    }
+    userService.isDuplicated(signupRequestDto.getNickname());
 
     User user = UserHelper.findUserById(userRepository, userId);
     user.registerNickname(signupRequestDto.getNickname());
