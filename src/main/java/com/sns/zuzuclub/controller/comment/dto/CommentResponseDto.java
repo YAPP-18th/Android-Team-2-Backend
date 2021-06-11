@@ -3,6 +3,7 @@ package com.sns.zuzuclub.controller.comment.dto;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
+import com.sns.zuzuclub.util.TimeConvertor;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,8 +29,8 @@ public class CommentResponseDto {
     @ApiModelProperty(value = "부모 댓글id", example = "")
     private Long parentCommentId;
 
-    @ApiModelProperty(value = "작성일(수정필요)", example = "")
-    private LocalDateTime createdAt;
+    @ApiModelProperty(value = "작성일", example = "")
+    private String createdAt;
 
     @ApiModelProperty(value = "댓글 반응 수", example = "")
     private int commentReactionCount;
@@ -44,7 +45,7 @@ public class CommentResponseDto {
         this.profileImageUrl = writer.getProfileImageUrl();
         this.content = comment.getContent();
         this.parentCommentId = comment.getParentCommentId();
-        this.createdAt = comment.getCreatedAt();
+        this.createdAt = TimeConvertor.convertToString(comment.getCreatedAt());
         this.commentReactionCount = comment.getCommentReactionCount();
         this.hasUserCommentReaction = comment.hasUserCommentReaction(loginUserId);
     }
