@@ -30,4 +30,8 @@ public class UserFollow extends AuditEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User toUser;
+
+  public boolean isFromUserById(Long userId){
+    return fromUser.getId().equals(userId);
+  }
 }

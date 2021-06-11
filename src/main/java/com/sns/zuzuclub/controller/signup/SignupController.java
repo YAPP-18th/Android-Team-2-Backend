@@ -4,7 +4,6 @@ import com.sns.zuzuclub.config.security.JwtTokenProvider;
 import com.sns.zuzuclub.controller.signup.dto.SignupRequestDto;
 import com.sns.zuzuclub.controller.signup.dto.StockResponseDto;
 import com.sns.zuzuclub.domain.user.application.SignupService;
-import com.sns.zuzuclub.global.response.CommonResult;
 import com.sns.zuzuclub.global.response.MultipleResult;
 import com.sns.zuzuclub.global.response.ResponseForm;
 import com.sns.zuzuclub.global.response.SingleResult;
@@ -37,12 +36,12 @@ public class SignupController {
           + "</h3>"
   )
   @PostMapping("/nickname")
-  public CommonResult isDuplicated(@RequestHeader(value = "Authorization") String jwtToken, @ApiParam(value = "닉네임", type = "String", required = true) @RequestBody String nickname) {
+  public SingleResult<Boolean> isDuplicatedNickname(@RequestHeader(value = "Authorization") String jwtToken, @ApiParam(value = "닉네임", type = "String", required = true) @RequestBody String nickname) {
     nickname = nickname.replaceAll("\"", "");
     log.info(nickname);
-    signupService.isDuplicated(nickname);
+    Boolean isDuplicatedNickname= signupService.isDuplicatedNickname(nickname);
     log.info("닉네임 중복 검사");
-    return ResponseForm.getSuccessResult("닉네임 중복 검사");
+    return ResponseForm.getSingleResult(isDuplicatedNickname, "닉네임 중복 검사");
   }
 
   @ApiOperation(

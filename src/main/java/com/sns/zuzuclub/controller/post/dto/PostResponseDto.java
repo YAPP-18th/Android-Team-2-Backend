@@ -56,11 +56,15 @@ public class PostResponseDto {
     @ApiModelProperty(value = "로그인 유저의 게시글 반응", example = "")
     private String postReaction;
 
+    @ApiModelProperty(value = "로그인 유저가 작성자를 팔로우하는지 여부", example = "")
+    private boolean isFollowdByLoginUser;
+
     public PostResponseDto(Post post, Long loginUserId) {
 
         User writer = post.getUser();
 
         this.isUserPost = loginUserId.equals(writer.getId());
+        this.isFollowdByLoginUser = writer.hasFollower(loginUserId);
         this.userId = writer.getId();
         this.profileImageUrl = writer.getProfileImageUrl();
         this.nickname = writer.getNickname();

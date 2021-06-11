@@ -35,12 +35,16 @@ public class ProfileResponseDto {
   @ApiModelProperty(value = "작성한 게시글 리스트")
   private List<PostResponseDto>  postResponseDtoList;
 
-  @ApiModelProperty(value = "작성한 게시글 리스트")
+  @ApiModelProperty(value = "로그인 한 유저의 프로필인지")
   private boolean isLoginUserProfile;
+
+  @ApiModelProperty(value = "로그인 한 유저의 프로필인지")
+  private boolean isFollowedByLoginUser;
 
   public ProfileResponseDto(User profileUser, Long loginUserId) {
 
     this.isLoginUserProfile = profileUser.getId().equals(loginUserId);
+    this.isFollowedByLoginUser = profileUser.hasFollower(loginUserId);
 
     this.nickname = profileUser.getNickname();
     this.profileImageUrl = profileUser.getProfileImageUrl();

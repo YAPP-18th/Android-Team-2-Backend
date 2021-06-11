@@ -13,8 +13,6 @@ import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserStockScrap;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.domain.user.service.UserService;
-import com.sns.zuzuclub.global.exception.CustomException;
-import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +30,8 @@ public class SignupService {
   private final StockRepository stockRepository;
   private final SignupStockRepository signupStockRepository;
 
-  public void isDuplicated(String nickname) {
-    userService.isDuplicated(nickname);
+  public Boolean isDuplicatedNickname(String nickname) {
+    return userRepository.existsByNickname(nickname);
   }
 
   public List<StockResponseDto> getStockList() {
@@ -48,10 +46,8 @@ public class SignupService {
   @Transactional
   public String registerUser(Long userId, SignupRequestDto signupRequestDto) {
 
-    userService.isDuplicated(signupRequestDto.getNickname());
-
     User user = UserHelper.findUserById(userRepository, userId);
-    user.registerNickname(signupRequestDto.getNickname());
+    user.registerNickname(userService, signupRequestDto.getNickname());
     user.registerIntroduction(signupRequestDto.getIntroduction());
 
     List<Stock> stockList = stockRepository.findAllById(signupRequestDto.getScrapStockIdList());
