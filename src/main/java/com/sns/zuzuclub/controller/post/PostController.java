@@ -6,15 +6,13 @@ import com.sns.zuzuclub.constant.PostReactionType;
 import com.sns.zuzuclub.controller.post.dto.CreatePostReactionResponseDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
+import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
-import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.application.FeedService;
 import com.sns.zuzuclub.global.response.CommonResult;
-import com.sns.zuzuclub.global.response.MultipleResult;
 import com.sns.zuzuclub.global.response.ResponseForm;
 import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,11 +62,11 @@ public class PostController {
             + "</h3>"
     )
     @GetMapping("/posts")
-    public MultipleResult<PostResponseDto> getFeed(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam FeedType feedType, @RequestParam int page){
+    public SingleResult<FeedResponseDto> getFeed(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam FeedType feedType, @RequestParam int page){
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-        List<PostResponseDto> postResponseDtoList = feedService.getFeed(userId, feedType, page);
-        log.info(postResponseDtoList.toString());
-        return ResponseForm.getMultipleResult(postResponseDtoList,"모든 게시글 가져오기 / page = " + page);
+        FeedResponseDto feedResponseDto = feedService.getFeed(userId, feedType, page);
+        log.info(feedResponseDto.toString());
+        return ResponseForm.getSingleResult(feedResponseDto,"모든 게시글 가져오기 / page = " + page);
     }
 
     @ApiOperation(

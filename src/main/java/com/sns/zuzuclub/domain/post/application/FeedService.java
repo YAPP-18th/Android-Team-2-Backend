@@ -5,6 +5,7 @@ import com.sns.zuzuclub.constant.PostReactionType;
 import com.sns.zuzuclub.controller.post.dto.CreatePostReactionResponseDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
+import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -60,7 +62,7 @@ public class FeedService {
     return new CreatePostResponseDto(newPostEntity);
   }
 
-  public List<PostResponseDto> getFeed(Long userId, FeedType feedType, int page) {
+  public FeedResponseDto getFeed(Long userId, FeedType feedType, int page) {
     // querydsl 로 리팩토링 필요
     // userId는 나중에 차단 먹일 때, 사용
     switch (feedType){
@@ -75,35 +77,32 @@ public class FeedService {
     }
   }
 
-  public List<PostResponseDto> getAllPost(Long userId, int page) {
+  public FeedResponseDto getAllPost(Long userId, int page) {
     Pageable pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
-    List<Post> postList = postRepository.findAll(pageable).getContent();
-    return PostResponseDto.ListFrom(postList, userId);
+    Page<Post> postPage = postRepository.findAll(pageable);
+    return new FeedResponseDto(postPage, userId);
   }
 
-  public List<PostResponseDto> getHotPost(Long userId, int page) {
+  public FeedResponseDto getHotPost(Long userId, int page) {
     Pageable pageable = PageRequest.of(page, 20, Sort.by("postReactionCount").descending());
     LocalDateTime from = LocalDateTime.now().minusDays(7); // 7일 전
-    List<Post> postList = postRepository.findByCreatedAtAfter(from, pageable);
-    return PostResponseDto.ListFrom(postList, userId);
+    Page<Post> postPage = postRepository.findByCreatedAtAfter(from, pageable);
+    return new FeedResponseDto(postPage, userId);
   }
 
-  public List<PostResponseDto> getFriendsPost(Long userId, int page) {
+  public FeedResponseDto getFriendsPost(Long userId, int page) {
 
     User user = UserHelper.findUserById(userRepository, userId);
     List<User> followingUserList = user.getMyFollowingUserList();
 
     Pageable pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
-    List<Post> postList = postRepository.findAllByUserIn(followingUserList, pageable);
-    return PostResponseDto.ListFrom(postList, userId);
-
-    // TODO : 피드 목록에서 자기꺼확인여부 생성자 분리해야함 + 리포지토리 빼내려면 User를 합치는게 나을듯
+    Page<Post> postPage = postRepository.findAllByUserIn(followingUserList, pageable);
+    return new FeedResponseDto(postPage, userId);
   }
 
   public PostDetailResponseDto getPostDetail(Long postId, Long loginUserId) {
     Post postEntity = PostHelper.findPostById(postRepository, postId);
     return new PostDetailResponseDto(postEntity, loginUserId);
-    // TODO : 피드 목록에서 자기꺼확인여부 생성자 분리해야함 + 리포지토리 빼내려면 User를 합치는게 나을듯
   }
 
   @Transactional
