@@ -4,8 +4,8 @@ import com.sns.zuzuclub.domain.alarm.model.Notification;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.stock.model.Stock;
+import com.sns.zuzuclub.domain.user.service.UserService;
 import com.sns.zuzuclub.global.exception.CustomException;
-import com.sns.zuzuclub.global.exception.errorCodeType.StockErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -78,10 +78,11 @@ public class User extends AuditEntity {
   private int followerCount = 0;
   private int followingCount = 0;
 
-  public void registerNickname(String nickname){
+  public void registerNickname(UserService userService,  String nickname){
     if(nickname.isEmpty()){
       throw new CustomException(UserErrorCodeType.EMPTY_NICKNAME);
     }
+    userService.validateNickname(this.id, nickname);
     this.nickname = nickname;
   }
 
