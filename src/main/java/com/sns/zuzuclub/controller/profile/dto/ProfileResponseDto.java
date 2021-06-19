@@ -41,6 +41,9 @@ public class ProfileResponseDto {
   @ApiModelProperty(value = "로그인 한 유저의 프로필인지")
   private boolean isFollowedByLoginUser;
 
+  @ApiModelProperty(value = "로그인 한 유저 id")
+  private Long loginUserId;
+
   public ProfileResponseDto(User profileUser, Long loginUserId) {
 
     this.isLoginUserProfile = profileUser.getId().equals(loginUserId);
@@ -53,6 +56,7 @@ public class ProfileResponseDto {
     this.followerCount = profileUser.getFollowerCount();
     this.followingCount = profileUser.getFollowingCount();
     this.postCount = profileUser.getPostCount();
+    this.loginUserId = loginUserId;
 
     this.postResponseDtoList = PostResponseDto.ListFrom(profileUser.getPostList(), loginUserId);
   }

@@ -13,7 +13,7 @@ public class TimeConvertor {
 
     long days = duration.toDays();
     if (days >= 7) {
-      return from.format(DateTimeFormatter.ofPattern("yyyy년-MM월-dd일 HH:mm:ss"));
+      return from.format(DateTimeFormatter.ofPattern("yy.MM.dd"));
     }
     if (days >= 1) {
       return days + "일 전";
