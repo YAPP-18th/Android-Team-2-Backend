@@ -30,42 +30,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class StockService {
 
-  private final PostService postService;
   private final StockRepository stockRepository;
   private final UserRepository userRepository;
-  private final PostedStockRepository postedStockRepository;
   private final UserStockScrapRepository userStockScrapRepository;
 
   public StockResponseDto getStock(Long userId, Long stockId) {
-
     User user = UserHelper.findUserById(userRepository, userId);
     Stock stock = StockHelper.findStockById(stockRepository, stockId);
-
-    // TODO 일단 전체 다 계산했는데, 배치로 돌려야함
-    List<PostedStock> postedStockList = postedStockRepository.findAllByStock(stock);
-
-    if (postedStockList.isEmpty()) {
-      return StockResponseDto.builder()
-                             .user(user)
-                             .stock(stock)
-                             .postEmotionType(PostEmotionType.UP)
-                             .postEmotionValue(0)
-                             .size(postedStockList.size())
-                             .build();
-    }
-
-    List<Post> postList = postedStockList.stream()
-                                         .map(PostedStock::getPost)
-                                         .collect(Collectors.toList());
-    Entry<PostEmotionType, Integer> mostPostedPostEmotionType = postService.getMostPostedPostEmotionType(postList);
-
-    return StockResponseDto.builder()
-                           .user(user)
-                           .stock(stock)
-                           .postEmotionType(mostPostedPostEmotionType.getKey())
-                           .postEmotionValue(mostPostedPostEmotionType.getValue())
-                           .size(postedStockList.size())
-                           .build();
+    return new StockResponseDto(user, stock);
   }
 
   @Transactional

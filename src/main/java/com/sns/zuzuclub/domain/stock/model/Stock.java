@@ -120,6 +120,9 @@ public class Stock {
   }
 
   public float getStockEmotionRatio(){
+    if(totalCount == 0){
+      return 0;
+    }
     float stockEmotionValue = 0;
     switch (this.stockEmotionType){
       case UP:
