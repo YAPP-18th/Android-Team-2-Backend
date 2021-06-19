@@ -1,12 +1,9 @@
 package com.sns.zuzuclub.controller.home.dto;
 
-import com.sns.zuzuclub.constant.PostEmotionType;
-import com.sns.zuzuclub.domain.stock.model.Stock;
+import com.sns.zuzuclub.domain.homeInfo.model.HotStock;
+import com.sns.zuzuclub.domain.homeInfo.model.Weather;
 import com.sns.zuzuclub.domain.user.model.UserStockScrap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -18,13 +15,9 @@ public class HomeResponseDto {
   private List<HotStockDto> hotStockDtoList;
   private List<UserStockScrapDto> userStockScrapDtoList;
 
-  @Builder
-  public HomeResponseDto(Entry<PostEmotionType, Integer> weather,
-                         int postCount,
-                         Map<PostEmotionType, Stock> hotStockMap,
-                         List<UserStockScrap> userStockScrapList) {
-    this.weatherDto = new WeatherDto(weather, postCount);
-    this.hotStockDtoList = HotStockDto.toListFrom(hotStockMap);
+  public HomeResponseDto(Weather weather, List<HotStock> hotStockList, List<UserStockScrap> userStockScrapList) {
+    this.weatherDto = new WeatherDto(weather);
+    this.hotStockDtoList = HotStockDto.toListFrom(hotStockList);
     this.userStockScrapDtoList = UserStockScrapDto.toListFrom(userStockScrapList);
   }
 }

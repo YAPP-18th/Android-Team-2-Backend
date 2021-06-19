@@ -5,8 +5,6 @@ import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.util.TimeConvertor;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -84,12 +82,7 @@ public class PostResponseDto {
     }
 
     public static List<PostResponseDto> ListFrom(List<Post> postList, Long loginUserId){
-
-        if (postList.isEmpty()) {
-            return new ArrayList<>();
-        }
         return postList.stream()
-                       .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                        .map(post -> new PostResponseDto(post, loginUserId))
                        .collect(Collectors.toList());
     }

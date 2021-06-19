@@ -1,7 +1,6 @@
 package com.sns.zuzuclub.controller.home.dto;
 
-import com.sns.zuzuclub.constant.PostEmotionType;
-import java.util.Map.Entry;
+import com.sns.zuzuclub.domain.homeInfo.model.Weather;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -10,10 +9,11 @@ import lombok.ToString;
 public class WeatherDto {
 
   private String weather;
-  private float ratio;
+  private float percentage;
 
-  public WeatherDto(Entry<PostEmotionType, Integer> weather, int postCount) {
-    this.weather = weather.getKey().toString();
-    this.ratio = (float)weather.getValue() / postCount;
+  public WeatherDto(Weather weather) {
+    this.weather = weather.getPostEmotionType()
+                          .getWeather();
+    this.percentage = weather.getPercentage();
   }
 }

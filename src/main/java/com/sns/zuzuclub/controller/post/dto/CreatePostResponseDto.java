@@ -24,7 +24,7 @@ public class CreatePostResponseDto {
   @ApiModelProperty(value = "언급한 주식들 id/이름")
   private List<PostedStockDto> postedStockDtoList;
 
-  @ApiModelProperty(value = "게시글 사진url", example = "www.사진")
+  @ApiModelProperty(value = "게시글 사진url", example = "www.사진. -> 아직 해야함...!")
   private String postImageUrl;
 
   @Builder
