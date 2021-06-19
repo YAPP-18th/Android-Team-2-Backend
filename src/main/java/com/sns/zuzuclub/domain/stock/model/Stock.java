@@ -2,8 +2,13 @@ package com.sns.zuzuclub.domain.stock.model;
 
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.post.model.Post;
+import com.sns.zuzuclub.global.exception.CustomException;
+import com.sns.zuzuclub.global.exception.errorCodeType.StockErrorCodeType;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,7 +30,7 @@ public class Stock {
 
   private String stockName;
 
-  private PostEmotionType postEmotionType;
+  private PostEmotionType stockEmotionType = PostEmotionType.UP;
 
   private int upCount = 0;
 
@@ -39,6 +44,101 @@ public class Stock {
 
   @OneToMany(mappedBy = "stock")
   private List<PostedStock> postedStockList = new ArrayList<>();
+
+  private void increaseTotalCount(){
+    this.totalCount += 1;
+  }
+
+  private void increaseUpCount(){
+    this.upCount += 1;
+  }
+
+  private void decreaseUpCount(){
+    this.upCount -= 1;
+  }
+
+  private void increaseDownCount(){
+    this.upCount += 1;
+  }
+
+  private void decreaseDownCount(){
+    this.downCount -= 1;
+  }
+
+  private void increaseExpectCount(){
+    this.upCount += 1;
+  }
+
+  private void decreaseExpectCount(){
+    this.expectCount -= 1;
+  }
+
+  private void increaseUnstableCount(){
+    this.upCount += 1;
+  }
+
+  private void decreaseUnstableCount(){
+    this.unstableCount -= 1;
+  }
+
+  private void increaseStockEmotionCount(PostEmotionType postEmotionType) {
+    switch (postEmotionType) {
+      case UP:
+        increaseUpCount();
+        break;
+      case DOWN:
+        increaseDownCount();
+        break;
+      case EXPECT:
+        increaseExpectCount();
+        break;
+      case UNSTABLE:
+        increaseUnstableCount();
+        break;
+    }
+  }
+
+  private void calculateStockEmotionType(){
+    Map<PostEmotionType, Integer> map = new EnumMap<>(PostEmotionType.class);
+    map.put(PostEmotionType.UP, upCount);
+    map.put(PostEmotionType.DOWN, downCount);
+    map.put(PostEmotionType.EXPECT, expectCount);
+    map.put(PostEmotionType.UNSTABLE, unstableCount);
+
+    Entry<PostEmotionType, Integer> entry = map.entrySet()
+                                               .stream()
+                                               .max(Entry.comparingByValue())
+                                               .orElseThrow(() -> new CustomException(StockErrorCodeType.STOCK_EMOTION_UPDATE_ERROR));
+    this.stockEmotionType = entry.getKey();
+  }
+
+  public void updatePostEmotionInfo(PostEmotionType postEmotionType) {
+    increaseTotalCount();
+    if (postEmotionType == null) {
+      return;
+    }
+    increaseStockEmotionCount(postEmotionType);
+    calculateStockEmotionType();
+  }
+
+  public float getStockEmotionRatio(){
+    float stockEmotionValue = 0;
+    switch (this.stockEmotionType){
+      case UP:
+        stockEmotionValue = (float) this.upCount;
+        break;
+      case DOWN:
+        stockEmotionValue = (float) this.downCount;
+        break;
+      case EXPECT:
+        stockEmotionValue = (float) this.expectCount;
+        break;
+      case UNSTABLE:
+        stockEmotionValue = (float) this.unstableCount;
+        break;
+    }
+    return stockEmotionValue / totalCount;
+  }
 
   public List<Post> getPostList(){
     return this.postedStockList.stream()
