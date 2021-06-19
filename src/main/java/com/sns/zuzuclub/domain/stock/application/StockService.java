@@ -16,9 +16,10 @@ import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.domain.user.repository.UserStockScrapRepository;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.StockErrorCodeType;
-import java.time.LocalDateTime;
-import java.util.AbstractMap;
+import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -82,5 +83,23 @@ public class StockService {
     userStockScrap.deleteUser();
     userStockScrap.deleteStock();
     userStockScrapRepository.delete(userStockScrap);
+  }
+
+  public Map<PostEmotionType, Stock> getHotStockMap(List<Stock> stockList) {
+    Map<PostEmotionType, Stock> resultMap = new EnumMap<>(PostEmotionType.class);
+    for (PostEmotionType postEmotionType : PostEmotionType.values()) {
+      Stock maxCountStock = getMaxEmotionRatioStock(stockList, postEmotionType);
+      resultMap.put(postEmotionType, maxCountStock);
+    }
+    return resultMap;
+  }
+
+  private Stock getMaxEmotionRatioStock(List<Stock> stockList, PostEmotionType postEmotionType) {
+    Stock maxCountStock = stockList.stream()
+                                   .filter(stock -> stock.isSameEmotion(postEmotionType))
+                                   .max(Comparator.comparing(Stock::getStockEmotionRatio))
+                                   // 카카오로 기본값
+                                   .orElseGet(() -> StockHelper.findStockById(stockRepository, 1876L));
+    return maxCountStock;
   }
 }

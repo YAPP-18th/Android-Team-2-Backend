@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,6 +32,7 @@ public class Stock {
 
   private String stockName;
 
+  @Enumerated(EnumType.STRING)
   private PostEmotionType stockEmotionType = PostEmotionType.UP;
 
   private int upCount = 0;
@@ -58,7 +61,7 @@ public class Stock {
   }
 
   private void increaseDownCount(){
-    this.upCount += 1;
+    this.downCount += 1;
   }
 
   private void decreaseDownCount(){
@@ -66,7 +69,7 @@ public class Stock {
   }
 
   private void increaseExpectCount(){
-    this.upCount += 1;
+    this.expectCount += 1;
   }
 
   private void decreaseExpectCount(){
@@ -74,7 +77,7 @@ public class Stock {
   }
 
   private void increaseUnstableCount(){
-    this.upCount += 1;
+    this.unstableCount += 1;
   }
 
   private void decreaseUnstableCount(){
@@ -112,13 +115,8 @@ public class Stock {
     this.stockEmotionType = entry.getKey();
   }
 
-  public void updatePostEmotionInfo(PostEmotionType postEmotionType) {
-    increaseTotalCount();
-    if (postEmotionType == null) {
-      return;
-    }
-    increaseStockEmotionCount(postEmotionType);
-    calculateStockEmotionType();
+  public boolean isSameEmotion(PostEmotionType postEmotionType){
+    return this.stockEmotionType.equals(postEmotionType);
   }
 
   public float getStockEmotionRatio(){
@@ -138,6 +136,15 @@ public class Stock {
         break;
     }
     return stockEmotionValue / totalCount;
+  }
+
+  public void updatePostEmotionInfo(PostEmotionType postEmotionType) {
+    increaseTotalCount();
+    if (postEmotionType == null) {
+      return;
+    }
+    increaseStockEmotionCount(postEmotionType);
+    calculateStockEmotionType();
   }
 
   public List<Post> getPostList(){
