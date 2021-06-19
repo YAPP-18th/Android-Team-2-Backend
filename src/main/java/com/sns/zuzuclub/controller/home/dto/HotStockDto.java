@@ -1,9 +1,12 @@
 package com.sns.zuzuclub.controller.home.dto;
 
 import com.sns.zuzuclub.constant.PostEmotionType;
-import com.sns.zuzuclub.domain.homeInfo.model.HotStock;
-import java.util.Comparator;
+
+import com.sns.zuzuclub.domain.stock.model.Stock;
+
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,19 +17,19 @@ public class HotStockDto {
   private Long stockId;
   private String stockName;
   private PostEmotionType postEmotionType;
-  private int rank;
 
-  public HotStockDto(HotStock hotStock) {
-    this.stockId = hotStock.getStock().getId();
-    this.stockName = hotStock.getStock().getStockName();
-    this.postEmotionType = hotStock.getPostEmotionType();
-    this.rank = hotStock.getRanking();
+  public HotStockDto(Entry<PostEmotionType, Stock> hotStockEntry) {
+    Stock stock = hotStockEntry.getValue();
+
+    this.postEmotionType = hotStockEntry.getKey();
+    this.stockId = stock.getId();
+    this.stockName = stock.getStockName();
   }
 
-  public static List<HotStockDto> toListFrom(List<HotStock> hotStockList) {
-    return hotStockList.stream()
-                       .sorted(Comparator.comparing(HotStock::getRanking))
-                       .map(HotStockDto::new)
-                       .collect(Collectors.toList());
+  public static List<HotStockDto> toListFrom(Map<PostEmotionType, Stock> hotStockMap) {
+    return hotStockMap.entrySet()
+        .stream()
+        .map(HotStockDto::new)
+        .collect(Collectors.toList());
   }
 }
