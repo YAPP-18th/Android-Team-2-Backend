@@ -54,8 +54,6 @@ public class FeedService {
     Post newPostEntity = createPostRequestDto.toPostEntity(userEntity);
 
     List<Stock> requestStockList = stockRepository.findAllById(createPostRequestDto.getRequestStockIdList());
-    requestStockList.forEach(stock -> stock.updatePostEmotionInfo(createPostRequestDto.getPostEmotionType()));
-
     List<PostedStock> postedStockList = requestStockList.stream()
                                                         .map(stock -> new PostedStock(stock, newPostEntity))
                                                         .collect(Collectors.toList());
