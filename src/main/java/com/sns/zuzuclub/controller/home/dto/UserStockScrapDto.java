@@ -18,10 +18,14 @@ public class UserStockScrapDto {
   @ApiModelProperty(value = "주식 종목 명", example = "삼성전자")
   private String stockName;
 
+  @ApiModelProperty(value = "주식 대표 감정", example = "UP, DOWN, EXPECT, UNSTABLE")
+  private String stockEmotionType;
+
   public UserStockScrapDto(UserStockScrap userStockScrap) {
     Stock stock = userStockScrap.getStock();
     this.stockId = stock.getId();
     this.stockName = stock.getStockName();
+    this.stockEmotionType = stock.getStockEmotionType().toString();
   }
 
   public static List<UserStockScrapDto> toListFrom(List<UserStockScrap> userStockScrapList) {
