@@ -1,5 +1,6 @@
 package com.sns.zuzuclub.domain.stock.model;
 
+import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.post.model.Post;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,18 @@ public class Stock {
   private Long id;
 
   private String stockName;
+
+  private PostEmotionType postEmotionType;
+
+  private int upCount = 0;
+
+  private int downCount = 0;
+
+  private int expectCount = 0;
+
+  private int unstableCount = 0;
+
+  private int totalCount = 0;
 
   @OneToMany(mappedBy = "stock")
   private List<PostedStock> postedStockList = new ArrayList<>();
