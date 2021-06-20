@@ -2,6 +2,7 @@ package com.sns.zuzuclub.controller.home;
 
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
 import com.sns.zuzuclub.controller.home.dto.HomeResponseDto;
+import com.sns.zuzuclub.controller.home.dto.UserScrapDto;
 import com.sns.zuzuclub.controller.home.dto.UserStockScrapDto;
 import com.sns.zuzuclub.domain.home.application.HomeInfoService;
 import com.sns.zuzuclub.global.response.MultipleResult;
@@ -46,11 +47,11 @@ public class HomeController {
           + "</h3>"
   )
   @GetMapping("/home/scrap")
-  public MultipleResult<UserStockScrapDto> getUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken){
+  public SingleResult<UserScrapDto> getUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-    List<UserStockScrapDto> userStockScrapDtoList = homeInfoService.getUserStockScrap(userId);
-    log.info(userStockScrapDtoList.toString());
-    return ResponseForm.getMultipleResult(userStockScrapDtoList, "나의 관심 종목 더보기");
+    UserScrapDto userScrapDto = homeInfoService.getUserStockScrap(userId);
+    log.info(userScrapDto.toString());
+    return ResponseForm.getSingleResult(userScrapDto, "나의 관심 종목 더보기");
   }
 
 }
