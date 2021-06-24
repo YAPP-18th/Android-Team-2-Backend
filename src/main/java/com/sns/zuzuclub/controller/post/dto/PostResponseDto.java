@@ -89,7 +89,6 @@ public class PostResponseDto {
             return new ArrayList<>();
         }
         return postList.stream()
-                       .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                        .map(post -> new PostResponseDto(post, loginUserId))
                        .collect(Collectors.toList());
     }
