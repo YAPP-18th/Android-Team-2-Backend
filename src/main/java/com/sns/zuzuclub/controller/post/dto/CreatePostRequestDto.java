@@ -24,8 +24,8 @@ public class CreatePostRequestDto {
   @ApiModelProperty(value = "게시글 감정", example = "UP")
   private PostEmotionType postEmotionType;
 
-  @ApiModelProperty(value = "언급한 주식들의 id 값")
-  private List<Long> requestStockIdList;
+  @ApiModelProperty(value = "언급한 주식들의 종목명")
+  private List<String> requestStockNameList;
 
   public Post toPostEntity(User user){
     return Post.builder()
