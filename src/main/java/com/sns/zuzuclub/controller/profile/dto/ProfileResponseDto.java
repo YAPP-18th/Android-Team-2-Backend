@@ -1,9 +1,12 @@
 package com.sns.zuzuclub.controller.profile.dto;
 
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
+import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -58,6 +61,10 @@ public class ProfileResponseDto {
     this.postCount = profileUser.getPostCount();
     this.loginUserId = loginUserId;
 
-    this.postResponseDtoList = PostResponseDto.ListFrom(profileUser.getPostList(), loginUserId);
+    List<Post> postList = profileUser.getPostList()
+                                     .stream()
+                                     .sorted(Comparator.comparing(Post::getCreatedAt))
+                                     .collect(Collectors.toList());
+    this.postResponseDtoList = PostResponseDto.ListFrom(postList, loginUserId);
   }
 }

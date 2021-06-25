@@ -50,11 +50,13 @@ public class StockService {
 
   @Transactional
   public void deleteUserStockScrap(Long userId, Long stockId) {
-    UserStockScrap userStockScrap = userStockScrapRepository.findByUserIdAndStockId(userId, stockId)
-                                                            .orElseThrow(() -> new CustomException(StockErrorCodeType.INVALID_STOCK_ID));
-    userStockScrap.deleteUser();
-    userStockScrap.deleteStock();
-    userStockScrapRepository.delete(userStockScrap);
+    List<UserStockScrap> userStockScrapList = userStockScrapRepository.findAllByUserIdAndStockId(userId, stockId);
+//                                                            .orElseThrow(() -> new CustomException(StockErrorCodeType.INVALID_STOCK_ID));
+    userStockScrapList.forEach(userStockScrap -> {
+      userStockScrap.deleteUser();
+      userStockScrap.deleteStock();
+    });
+    userStockScrapRepository.deleteAll(userStockScrapList);
   }
 
   public Map<PostEmotionType, Stock> getHotStockMap(List<Stock> stockList) {
