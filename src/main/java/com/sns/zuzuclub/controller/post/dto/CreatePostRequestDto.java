@@ -5,6 +5,7 @@ import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.util.S3Uploader;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,7 @@ public class CreatePostRequestDto {
   private PostEmotionType postEmotionType;
 
   @ApiModelProperty(value = "언급한 주식들의 종목명")
-  private List<String> requestStockNameList;
+  private List<String> requestStockNameList = new ArrayList<>();
 
   public Post toPostEntity(User user){
     return Post.builder()
