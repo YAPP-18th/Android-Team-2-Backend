@@ -114,4 +114,8 @@ public class Comment extends AuditEntity {
       this.user = null;
     }
   }
+
+  public void deleteContent(){
+    this.content = "삭제된 댓글 입니다.";
+  }
 }
