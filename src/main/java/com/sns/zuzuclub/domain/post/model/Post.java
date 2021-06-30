@@ -1,7 +1,8 @@
 package com.sns.zuzuclub.domain.post.model;
 
-import com.sns.zuzuclub.constant.PostReactionType;
+import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
 import com.sns.zuzuclub.domain.stock.model.PostedStock;
+import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,5 +101,31 @@ public class Post extends AuditEntity {
       return result.get().getReactionType().toString();
     }
     return "";
+  }
+
+  public void modify(ModifyPostRequestDto modifyPostRequestDto) {
+    modifyContent(modifyPostRequestDto.getContent());
+    this.postImageUrl = modifyPostRequestDto.getPostImageUrl();
+    this.postEmotionType = modifyPostRequestDto.getPostEmotionType();
+  }
+
+  private void modifyContent(String newContent){
+    if (newContent == null){
+      this.content = "";
+    }
+    this.content = newContent;
+  }
+
+  public List<PostedStock> deletePostedStock(){
+    this.postedStockList.forEach(oldPostedStock -> {
+      deletePostEmotionInfo(oldPostedStock);
+      oldPostedStock.deleteStock();
+    });
+    return this.postedStockList;
+  }
+
+  private void deletePostEmotionInfo(PostedStock oldPostedStock) {
+    Stock oldStock = oldPostedStock.getStock();
+    oldStock.removePostEmotionInfo(this.postEmotionType);
   }
 }
