@@ -73,7 +73,7 @@ public class PostController {
     }
 
     @ApiOperation(
-        value = "피드 - 게시글 상세",
+        value = "게시물 상세 조회",
         notes = "<h3>\n"
         + "- 게시글 상세정보를 불러옵니다.\n"
         + "- page는 0부터 시작해서, 20개씩 최신순으로 불러옵니다.\n"
@@ -88,7 +88,7 @@ public class PostController {
     }
 
     @ApiOperation(
-        value = "게시물 수정하기",
+        value = "게시물 수정",
         notes = "<h3>\n"
             + "- 게시물 id를 받아서 게시물을 수정합니다.\n"
             + "- **[수정 가능 목록]**\n"
@@ -110,7 +110,19 @@ public class PostController {
         return ResponseForm.getSingleResult(postResponseDto, "게시물 수정");
     }
 
-
+    @ApiOperation(
+        value = "게시물 삭제",
+        notes = "<h3>\n"
+            + "- 게시물 id를 받아서 게시물을 삭제합니다.\n"
+            + "</h3>"
+    )
+    @DeleteMapping("/posts/{postId}")
+    public CommonResult deletePost(@RequestHeader(value = "Authorization") String jwtToken,
+                                   @PathVariable Long postId) {
+        feedService.deletePost(postId);
+        log.info(postId + "번 게시물 삭제 완료");
+        return ResponseForm.getSuccessResult("게시물 삭제");
+    }
 
     @ApiOperation(
         value = "피드 - 게시글 상세 - 반응하기",
@@ -118,7 +130,7 @@ public class PostController {
             + "- 게시글에 반응 합니다.\n"
             + "</h3>"
     )
-    @PostMapping("/posts/{postId}/{postReactionType}")
+    @PostMapping("/posts/{postId}/reaction/{postReactionType}")
     public SingleResult<CreatePostReactionResponseDto> createPostReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId, @PathVariable PostReactionType postReactionType){
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
         CreatePostReactionResponseDto createPostReactionResponseDto  = feedService.createPostReaction(postId, postReactionType, userId);
@@ -132,7 +144,7 @@ public class PostController {
             + "- 게시글에 반응을 취소합니다.\n"
             + "</h3>"
     )
-    @DeleteMapping("/posts/{postId}")
+    @DeleteMapping("/posts/{postId}/reaction")
     public CommonResult deletePostReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId){
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
         feedService.deletePostReaction(postId, userId);
