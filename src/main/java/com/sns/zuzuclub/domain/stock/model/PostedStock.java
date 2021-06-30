@@ -1,5 +1,6 @@
 package com.sns.zuzuclub.domain.stock.model;
 
+import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.global.AuditEntity;
 import javax.persistence.Entity;
@@ -27,24 +28,22 @@ public class PostedStock extends AuditEntity {
   private Post post;
 
   public PostedStock(Stock stock, Post post) {
-    this();
-    this.updateStock(stock);
-    this.updatePost(post);
+    this.initStock(stock);
+    this.initPost(post);
   }
 
-  public void updateStock(Stock stock){
-    if(this.stock != null){
-      this.stock.getPostedStockList().remove(this);
-    }
+  private void initStock(Stock stock){
     this.stock = stock;
     stock.getPostedStockList().add(this);
   }
 
-  public void updatePost(Post post){
-    if(this.post != null){
-      this.post.getPostedStockList().remove(this);
-    }
+  private void initPost(Post post){
     this.post = post;
     post.getPostedStockList().add(this);
+  }
+
+  public void deleteStock() {
+    this.stock.getPostedStockList().remove(this);
+    this.stock = null;
   }
 }

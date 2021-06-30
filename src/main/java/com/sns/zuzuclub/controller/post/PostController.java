@@ -7,7 +7,9 @@ import com.sns.zuzuclub.controller.post.dto.CreatePostReactionResponseDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
+import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
+import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.application.FeedService;
 import com.sns.zuzuclub.global.response.CommonResult;
 import com.sns.zuzuclub.global.response.ResponseForm;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,24 +35,6 @@ public class PostController {
 
     private final FeedService feedService;
     private final JwtTokenProvider jwtTokenProvider;
-
-    @ApiOperation(
-        value = "게시물 작성하기",
-        notes = "<h3>\n"
-            + "- 게시물을 작성합니다.\n"
-            + "\n"
-            + "</h3>"
-    )
-    @PostMapping("/posts")
-    public SingleResult<CreatePostResponseDto> createPost(@RequestHeader(value = "Authorization") String jwtToken,
-                                                          @RequestBody CreatePostRequestDto createPostRequestDto)
-    {
-        log.info(createPostRequestDto.toString());
-        Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-        CreatePostResponseDto createPostResponseDto = feedService.createPost(userId, createPostRequestDto);
-        log.info(createPostResponseDto.toString());
-        return ResponseForm.getSingleResult(createPostResponseDto,"게시물 작성");
-    }
 
     @ApiOperation(
         value = "피드 불러오기 - ALL, HOT, FRIENDS",
@@ -70,6 +55,24 @@ public class PostController {
     }
 
     @ApiOperation(
+        value = "게시물 작성하기",
+        notes = "<h3>\n"
+            + "- 게시물을 작성합니다.\n"
+            + "\n"
+            + "</h3>"
+    )
+    @PostMapping("/posts")
+    public SingleResult<CreatePostResponseDto> createPost(@RequestHeader(value = "Authorization") String jwtToken,
+                                                          @RequestBody CreatePostRequestDto createPostRequestDto)
+    {
+        log.info(createPostRequestDto.toString());
+        Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+        CreatePostResponseDto createPostResponseDto = feedService.createPost(userId, createPostRequestDto);
+        log.info(createPostResponseDto.toString());
+        return ResponseForm.getSingleResult(createPostResponseDto,"게시물 작성");
+    }
+
+    @ApiOperation(
         value = "피드 - 게시글 상세",
         notes = "<h3>\n"
         + "- 게시글 상세정보를 불러옵니다.\n"
@@ -83,6 +86,31 @@ public class PostController {
         log.info(postDetailResponseDto.toString());
         return ResponseForm.getSingleResult(postDetailResponseDto,"게시글 상세 가져오기" );
     }
+
+    @ApiOperation(
+        value = "게시물 수정하기",
+        notes = "<h3>\n"
+            + "- 게시물 id를 받아서 게시물을 수정합니다.\n"
+            + "- **[수정 가능 목록]**\n"
+            + "  - 이미지 url\n"
+            + "  - 게시글 내용\n"
+            + "  - 게시글 감정\n"
+            + "  - 언급한 주식들의 종목명\n"
+            + "</h3>"
+    )
+    @PutMapping("/posts/{postId}")
+    public SingleResult<PostResponseDto> modifyPost(@RequestHeader(value = "Authorization") String jwtToken,
+                                                    @PathVariable Long postId,
+                                                    @RequestBody ModifyPostRequestDto modifyPostRequestDto) {
+        log.info(modifyPostRequestDto.toString());
+        Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+        PostResponseDto postResponseDto = feedService.modifyPost(userId, postId,
+                                                                 modifyPostRequestDto);
+        log.info(postResponseDto.toString());
+        return ResponseForm.getSingleResult(postResponseDto, "게시물 수정");
+    }
+
+
 
     @ApiOperation(
         value = "피드 - 게시글 상세 - 반응하기",

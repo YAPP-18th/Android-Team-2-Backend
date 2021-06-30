@@ -1,11 +1,13 @@
 package com.sns.zuzuclub.domain.post.application;
 
 import com.sns.zuzuclub.constant.FeedType;
+import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.constant.PostReactionType;
 import com.sns.zuzuclub.controller.post.dto.CreatePostReactionResponseDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
+import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
@@ -23,6 +25,7 @@ import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +57,7 @@ public class FeedService {
     Post newPostEntity = createPostRequestDto.toPostEntity(userEntity);
 
     List<Stock> requestStockList = stockRepository.findAllByStockNameIn(createPostRequestDto.getRequestStockNameList());
-    requestStockList.forEach(stock -> stock.updatePostEmotionInfo(createPostRequestDto.getPostEmotionType()));
+    requestStockList.forEach(stock -> stock.addPostEmotionInfo(createPostRequestDto.getPostEmotionType()));
 
     List<PostedStock> postedStockList = requestStockList.stream()
                                                         .map(stock -> new PostedStock(stock, newPostEntity))
@@ -62,6 +65,27 @@ public class FeedService {
     postedStockRepository.saveAll(postedStockList);
     postRepository.save(newPostEntity);
     return new CreatePostResponseDto(newPostEntity);
+  }
+
+  @Transactional
+  public PostResponseDto modifyPost(Long userId, Long postId, ModifyPostRequestDto modifyPostRequestDto) {
+
+    Post post = PostHelper.findPostById(postRepository, postId);
+
+    List<PostedStock> result = post.deletePostedStock();
+    postedStockRepository.deleteAll(result);
+    post.getPostedStockList().clear();
+
+    PostEmotionType newPostEmotionType = modifyPostRequestDto.getPostEmotionType();
+    List<Stock> newStockList = stockRepository.findAllByStockNameIn(modifyPostRequestDto.getPostedStockNameList());
+    newStockList.forEach(newStock -> newStock.addPostEmotionInfo(newPostEmotionType));
+    List<PostedStock> newPostedStockList = newStockList.stream()
+                                                       .map(stock -> new PostedStock(stock, post))
+                                                       .collect(Collectors.toList());
+    postedStockRepository.saveAll(newPostedStockList);
+
+    post.modify(modifyPostRequestDto);
+    return new PostResponseDto(post, userId);
   }
 
   public FeedResponseDto getFeed(Long userId, FeedType feedType, int page) {
