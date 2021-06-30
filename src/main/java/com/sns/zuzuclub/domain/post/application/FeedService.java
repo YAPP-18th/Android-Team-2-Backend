@@ -49,45 +49,6 @@ public class FeedService {
   private final PostReactionRepository postReactionRepository;
   private final StockRepository stockRepository;
 
-
-  @Transactional
-  public CreatePostResponseDto createPost(Long userId, CreatePostRequestDto createPostRequestDto) {
-
-    User userEntity = UserHelper.findUserById(userRepository, userId);
-    Post newPostEntity = createPostRequestDto.toPostEntity(userEntity);
-
-    List<Stock> requestStockList = stockRepository.findAllByStockNameIn(createPostRequestDto.getRequestStockNameList());
-    requestStockList.forEach(stock -> stock.addPostEmotionInfo(createPostRequestDto.getPostEmotionType()));
-
-    List<PostedStock> postedStockList = requestStockList.stream()
-                                                        .map(stock -> new PostedStock(stock, newPostEntity))
-                                                        .collect(Collectors.toList());
-    postedStockRepository.saveAll(postedStockList);
-    postRepository.save(newPostEntity);
-    return new CreatePostResponseDto(newPostEntity);
-  }
-
-  @Transactional
-  public PostResponseDto modifyPost(Long userId, Long postId, ModifyPostRequestDto modifyPostRequestDto) {
-
-    Post post = PostHelper.findPostById(postRepository, postId);
-
-    List<PostedStock> result = post.deletePostedStock();
-    postedStockRepository.deleteAll(result);
-    post.getPostedStockList().clear();
-
-    PostEmotionType newPostEmotionType = modifyPostRequestDto.getPostEmotionType();
-    List<Stock> newStockList = stockRepository.findAllByStockNameIn(modifyPostRequestDto.getPostedStockNameList());
-    newStockList.forEach(newStock -> newStock.addPostEmotionInfo(newPostEmotionType));
-    List<PostedStock> newPostedStockList = newStockList.stream()
-                                                       .map(stock -> new PostedStock(stock, post))
-                                                       .collect(Collectors.toList());
-    postedStockRepository.saveAll(newPostedStockList);
-
-    post.modify(modifyPostRequestDto);
-    return new PostResponseDto(post, userId);
-  }
-
   public FeedResponseDto getFeed(Long userId, FeedType feedType, int page) {
     // querydsl 로 리팩토링 필요
     // userId는 나중에 차단 먹일 때, 사용
@@ -126,9 +87,62 @@ public class FeedService {
     return new FeedResponseDto(postPage, userId);
   }
 
+  @Transactional
+  public CreatePostResponseDto createPost(Long userId, CreatePostRequestDto createPostRequestDto) {
+
+    User userEntity = UserHelper.findUserById(userRepository, userId);
+    Post newPostEntity = createPostRequestDto.toPostEntity(userEntity);
+
+    List<Stock> requestStockList = stockRepository.findAllByStockNameIn(createPostRequestDto.getRequestStockNameList());
+    requestStockList.forEach(stock -> stock.addPostEmotionInfo(createPostRequestDto.getPostEmotionType()));
+
+    List<PostedStock> postedStockList = requestStockList.stream()
+                                                        .map(stock -> new PostedStock(stock, newPostEntity))
+                                                        .collect(Collectors.toList());
+    postedStockRepository.saveAll(postedStockList);
+    postRepository.save(newPostEntity);
+    return new CreatePostResponseDto(newPostEntity);
+  }
+
   public PostDetailResponseDto getPostDetail(Long postId, Long loginUserId) {
     Post postEntity = PostHelper.findPostById(postRepository, postId);
     return new PostDetailResponseDto(postEntity, loginUserId);
+  }
+
+  @Transactional
+  public PostResponseDto modifyPost(Long userId, Long postId, ModifyPostRequestDto modifyPostRequestDto) {
+
+    Post post = PostHelper.findPostById(postRepository, postId);
+
+    List<PostedStock> result = post.deletePostedStock();
+    postedStockRepository.deleteAll(result);
+    post.getPostedStockList().clear();
+
+    PostEmotionType newPostEmotionType = modifyPostRequestDto.getPostEmotionType();
+    List<Stock> newStockList = stockRepository.findAllByStockNameIn(modifyPostRequestDto.getPostedStockNameList());
+    newStockList.forEach(newStock -> newStock.addPostEmotionInfo(newPostEmotionType));
+    List<PostedStock> newPostedStockList = newStockList.stream()
+                                                       .map(stock -> new PostedStock(stock, post))
+                                                       .collect(Collectors.toList());
+    postedStockRepository.saveAll(newPostedStockList);
+
+    post.modify(modifyPostRequestDto);
+    return new PostResponseDto(post, userId);
+  }
+
+  @Transactional
+  public void deletePost(Long postId) {
+    Post post = PostHelper.findPostById(postRepository, postId);
+
+    post.deleteUser();
+
+    List<PostedStock> result = post.deletePostedStock();
+    postedStockRepository.deleteAll(result);
+    post.getPostedStockList().clear();
+
+    post.deleteComment();
+
+    postRepository.delete(post);
   }
 
   @Transactional

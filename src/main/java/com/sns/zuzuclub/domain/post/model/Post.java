@@ -9,6 +9,7 @@ import java.util.List;
 
 
 import java.util.Optional;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -48,10 +49,10 @@ public class Post extends AuditEntity {
   @OneToMany(mappedBy = "post") // cascade 불가
   private List<PostedStock> postedStockList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post") // cascade 불가
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> commentList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post") // cascade 불가
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PostReaction> postReactionList = new ArrayList<>();
 
   private String postImageUrl;
@@ -60,18 +61,13 @@ public class Post extends AuditEntity {
 
   @Builder
   public Post(User user, String content, PostEmotionType postEmotionType, String postImageUrl) {
-    this();
-    updateUser(user);
+    initUser(user);
     this.content = content;
     this.postEmotionType = postEmotionType;
     this.postImageUrl = postImageUrl;
   }
 
-  public void updateUser(User user){
-    if(this.user != null){
-      this.user.decreasePostCount();
-      this.user.getPostList().remove(this);
-    }
+  public void initUser(User user){
     this.user = user;
     user.getPostList().add(this);
     user.increasePostCount();
@@ -127,5 +123,17 @@ public class Post extends AuditEntity {
   private void deletePostEmotionInfo(PostedStock oldPostedStock) {
     Stock oldStock = oldPostedStock.getStock();
     oldStock.removePostEmotionInfo(this.postEmotionType);
+  }
+
+  public void deleteUser(){
+    if(this.user != null){
+      this.user.decreasePostCount();
+      this.user.getPostList().remove(this);
+      this.user = null;
+    }
+  }
+
+  public void deleteComment(){
+    this.commentList.forEach(Comment::deleteUser);
   }
 }
