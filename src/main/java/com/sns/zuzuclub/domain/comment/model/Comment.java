@@ -109,7 +109,7 @@ public class Comment extends AuditEntity {
 
   public void deleteUser(){
     if (this.user != null){
-      this.user.decreasCommentCount();
+      this.user.decreaseCommentCount();
       this.user.getCommentList().remove(this);
       this.user = null;
     }
