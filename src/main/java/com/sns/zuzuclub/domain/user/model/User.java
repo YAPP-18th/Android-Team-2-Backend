@@ -142,10 +142,15 @@ public class User extends AuditEntity {
     this.followingCount -= 1;
   }
 
-  // 내가 팔로우하는 유저 리스트 리턴
   public List<User> getFollowingUserList(){
     return following.stream()
                     .map(UserFollow::getToUser)
+                    .collect(Collectors.toList());
+  }
+
+  public List<User> getFollowerUserList() {
+    return followers.stream()
+                    .map(UserFollow::getFromUser)
                     .collect(Collectors.toList());
   }
 
