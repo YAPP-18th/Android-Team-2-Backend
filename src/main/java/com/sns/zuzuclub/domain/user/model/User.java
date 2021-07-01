@@ -143,7 +143,7 @@ public class User extends AuditEntity {
   }
 
   // 내가 팔로우하는 유저 리스트 리턴
-  public List<User> getMyFollowingUserList(){
+  public List<User> getFollowingUserList(){
     return following.stream()
                     .map(UserFollow::getToUser)
                     .collect(Collectors.toList());
@@ -153,6 +153,11 @@ public class User extends AuditEntity {
     return userStockScrapList.stream()
                              .anyMatch(userStockScrap -> userStockScrap.getStock()
                                                                        .equals(stock));
+  }
+
+  public boolean hasFollowing(User targetUser){
+    return following.stream()
+                    .anyMatch(userFollow -> userFollow.isToUser(targetUser));
   }
 
   public boolean hasFollower(Long userId){
