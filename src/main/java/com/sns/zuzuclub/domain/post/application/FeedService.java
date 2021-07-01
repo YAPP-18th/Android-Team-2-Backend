@@ -80,7 +80,7 @@ public class FeedService {
   public FeedResponseDto getFriendsPost(Long userId, int page) {
 
     User user = UserHelper.findUserById(userRepository, userId);
-    List<User> followingUserList = user.getMyFollowingUserList();
+    List<User> followingUserList = user.getFollowingUserList();
 
     Pageable pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
     Page<Post> postPage = postRepository.findAllByUserIn(followingUserList, pageable);

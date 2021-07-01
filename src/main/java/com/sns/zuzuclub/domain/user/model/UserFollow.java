@@ -50,6 +50,10 @@ public class UserFollow extends AuditEntity {
     toUser.increaseFollowerCount();
   }
 
+  public boolean isToUser(User user){
+    return toUser.getId().equals(user.getId());
+  }
+
   public boolean isFromUserById(Long userId){
     return fromUser.getId().equals(userId);
   }
