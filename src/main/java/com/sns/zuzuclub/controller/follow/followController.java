@@ -46,11 +46,26 @@ public class followController {
           + "</h3>"
   )
   @GetMapping("/users/{userId}/following")
-  public MultipleResult<FollowDto> getFollower(@RequestHeader(value = "Authorization") String jwtToken,
+  public MultipleResult<FollowDto> getFollowing(@RequestHeader(value = "Authorization") String jwtToken,
                                                @PathVariable("userId") Long targetUserId) {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     List<FollowDto> followDtoList = followService.getFollowing(userId, targetUserId);
     log.info(followDtoList.toString());
     return ResponseForm.getMultipleResult(followDtoList, "팔로잉 목록 조회");
+  }
+
+  @ApiOperation(
+      value = "팔로워 목록 조회",
+      notes = "<h3>\n"
+          + "- userId를 갖는 유저의 팔로워 목록을 조회합니다.\n"
+          + "</h3>"
+  )
+  @GetMapping("/users/{userId}/follower")
+  public MultipleResult<FollowDto> getFollower(@RequestHeader(value = "Authorization") String jwtToken,
+                                               @PathVariable("userId") Long targetUserId) {
+    Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+    List<FollowDto> followDtoList = followService.getFollower(userId, targetUserId);
+    log.info(followDtoList.toString());
+    return ResponseForm.getMultipleResult(followDtoList, "팔로우 목록 조회");
   }
 }

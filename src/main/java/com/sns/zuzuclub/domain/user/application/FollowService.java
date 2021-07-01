@@ -34,4 +34,11 @@ public class FollowService {
     List<User> followingUserList = targetUser.getFollowingUserList();
     return FollowDto.listFrom(loginUser, followingUserList);
   }
+
+  public List<FollowDto> getFollower(Long loginUserId, Long targetUserId) {
+    User loginUser = UserHelper.findUserById(userRepository, loginUserId);
+    User targetUser = UserHelper.findUserById(userRepository, targetUserId);
+    List<User> followerUserList = targetUser.getFollowerUserList();
+    return FollowDto.listFrom(loginUser, followerUserList);
+  }
 }
