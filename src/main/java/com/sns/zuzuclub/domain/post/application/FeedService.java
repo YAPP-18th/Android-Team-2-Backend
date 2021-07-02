@@ -9,6 +9,7 @@ import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
 import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
+import com.sns.zuzuclub.controller.post.dto.ReactionDto;
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
@@ -159,5 +160,11 @@ public class FeedService {
     PostReaction postReaction = postReactionRepository.findByUserIdAndPostId(userId, postId)
                                                       .orElseThrow(() -> new CustomException(PostErrorCodeType.INVALID_POST_REACTION));
     postReactionService.deletePostReaction(postReaction);
+  }
+
+  public ReactionDto getPostReaction(Long postId) {
+    Post post = PostHelper.findPostById(postRepository, postId);
+    List<PostReaction> postReactionList = post.getPostReactionList();
+    return new ReactionDto(postReactionList);
   }
 }

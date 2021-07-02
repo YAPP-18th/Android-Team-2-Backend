@@ -9,12 +9,16 @@ import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
 import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
+import com.sns.zuzuclub.controller.post.dto.ReactionDto;
+
 import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.application.FeedService;
 import com.sns.zuzuclub.global.response.CommonResult;
+
 import com.sns.zuzuclub.global.response.ResponseForm;
 import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -122,6 +126,20 @@ public class PostController {
         feedService.deletePost(postId);
         log.info(postId + "번 게시물 삭제 완료");
         return ResponseForm.getSuccessResult("게시물 삭제");
+    }
+
+    @ApiOperation(
+        value = "피드 - 게시글 - 반응목록 조회",
+        notes = "<h3>\n"
+            + "- postId를 갖는 게시글에 반응한 유저들을 조회합니다.\n"
+            + "</h3>"
+    )
+    @GetMapping("/posts/{postId}/reactions")
+    public SingleResult<ReactionDto> getPostReaction(@RequestHeader(value = "Authorization") String jwtToken,
+                                                     @PathVariable Long postId) {
+        ReactionDto reactionDto = feedService.getPostReaction(postId);
+        log.info(reactionDto.toString());
+        return ResponseForm.getSingleResult(reactionDto, "게시글 상세 - 반응하기" );
     }
 
     @ApiOperation(
