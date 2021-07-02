@@ -18,7 +18,7 @@ public class StockResponseDto {
   private Long stockId;
   private String stockName;
   private PostEmotionType todayEmotion;
-  private float todayEmotionValue;
+  private int todayEmotionValue;
   private boolean isScraped;
   private List<PostResponseDto> postResponseDtoList;
 
@@ -26,12 +26,12 @@ public class StockResponseDto {
     this.stockId = stock.getId();
     this.stockName = stock.getStockName();
     this.todayEmotion = stock.getStockEmotionType();
-    this.todayEmotionValue = stock.getStockEmotionRatio();
+    this.todayEmotionValue = (int)(stock.getStockEmotionRatio() * 100);
     this.isScraped = user.isScrapedStock(stock);
 
     List<Post> postList = stock.getPostList()
                                .stream()
-                               .sorted(Comparator.comparing(Post::getCreatedAt))
+                               .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                                .collect(Collectors.toList());
     this.postResponseDtoList = PostResponseDto.ListFrom(postList, user.getId());
   }
