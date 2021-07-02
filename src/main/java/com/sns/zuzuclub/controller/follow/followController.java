@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,5 +68,20 @@ public class followController {
     List<FollowDto> followDtoList = followService.getFollower(userId, targetUserId);
     log.info(followDtoList.toString());
     return ResponseForm.getMultipleResult(followDtoList, "팔로우 목록 조회");
+  }
+
+  @ApiOperation(
+      value = "팔로우 취소",
+      notes = "<h3>\n"
+          + "- userId를 갖는 유저에 대해서 팔로우를 취소합니다.\n"
+          + "</h3>"
+  )
+  @DeleteMapping("/users/{userId}/follower")
+  public CommonResult unfollow(@RequestHeader(value = "Authorization") String jwtToken,
+                                               @PathVariable("userId") Long targetUserId) {
+    Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+    followService.unfollow(userId, targetUserId);
+    log.info("팔로우 취소");
+    return ResponseForm.getSuccessResult("팔로우 취소");
   }
 }

@@ -50,6 +50,23 @@ public class UserFollow extends AuditEntity {
     toUser.increaseFollowerCount();
   }
 
+  public void delete(){
+    deleteFromUser();
+    deleteToUser();
+  }
+
+  private void deleteFromUser() {
+    this.fromUser.decreaseFollowingCount();
+    this.fromUser.getFollowing().remove(this);
+    this.fromUser = null;
+  }
+
+  private void deleteToUser() {
+    this.toUser.decreaseFollowerCount();
+    this.toUser.getFollowers().remove(this);
+    this.toUser = null;
+  }
+
   public boolean isToUser(User user){
     return toUser.getId().equals(user.getId());
   }
