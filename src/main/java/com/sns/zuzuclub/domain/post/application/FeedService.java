@@ -7,7 +7,6 @@ import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
-import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.model.PostReaction;
@@ -53,7 +52,10 @@ public class FeedService {
     User userEntity = UserHelper.findUserById(userRepository, userId);
     Post newPostEntity = createPostRequestDto.toPostEntity(userEntity);
 
-    List<Stock> requestStockList = stockRepository.findAllByStockNameIn(createPostRequestDto.getRequestStockNameList());
+    List<String> requestStockNameList = createPostRequestDto.getRequestStockNameList();
+    requestStockNameList.addAll(newPostEntity.extractStockNameFromContent());
+
+    List<Stock> requestStockList = stockRepository.findAllByStockNameIn(requestStockNameList);
     requestStockList.forEach(stock -> stock.updatePostEmotionInfo(createPostRequestDto.getPostEmotionType()));
 
     List<PostedStock> postedStockList = requestStockList.stream()
