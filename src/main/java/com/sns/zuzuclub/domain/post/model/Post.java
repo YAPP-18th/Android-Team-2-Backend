@@ -1,13 +1,15 @@
 package com.sns.zuzuclub.domain.post.model;
 
-import com.sns.zuzuclub.constant.PostReactionType;
 import com.sns.zuzuclub.domain.stock.model.PostedStock;
 import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -100,5 +102,21 @@ public class Post extends AuditEntity {
       return result.get().getReactionType().toString();
     }
     return "";
+  }
+
+  public List<String> extractStockNameFromContent() {
+    List<String> stockNameList = new ArrayList<>();
+    Matcher matcher = Pattern.compile("(\\$)([가-핳]|\\w)+(\\s|$)").matcher(this.content);
+    while (matcher.find()){
+      String result = matcher.group();
+      stockNameList.add(extractStockName(result));
+    }
+    return stockNameList;
+  }
+
+  private String extractStockName(String str) {
+    return str
+        .replaceAll("\\s", "")
+        .replaceAll("\\$", "");
   }
 }
