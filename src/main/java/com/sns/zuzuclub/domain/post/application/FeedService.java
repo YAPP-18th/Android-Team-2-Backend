@@ -1,75 +1,29 @@
 package com.sns.zuzuclub.domain.post.application;
 
 import com.sns.zuzuclub.constant.FeedType;
-import com.sns.zuzuclub.constant.PostEmotionType;
-import com.sns.zuzuclub.constant.PostReactionType;
-import com.sns.zuzuclub.controller.post.dto.CreatePostReactionResponseDto;
-import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
-import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
-import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
-import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
-import com.sns.zuzuclub.controller.post.dto.ReactionDto;
-import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
-import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.domain.post.model.PostReaction;
-import com.sns.zuzuclub.domain.post.repository.PostReactionRepository;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;
-import com.sns.zuzuclub.domain.post.service.PostReactionService;
-import com.sns.zuzuclub.domain.stock.model.PostedStock;
-import com.sns.zuzuclub.domain.stock.model.Stock;
-import com.sns.zuzuclub.domain.stock.repository.PostedStockRepository;
-import com.sns.zuzuclub.domain.stock.repository.StockRepository;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class FeedService {
 
-  private final PostReactionService postReactionService;
-
   private final UserRepository userRepository;
-  private final PostedStockRepository postedStockRepository;
   private final PostRepository postRepository;
-  private final PostReactionRepository postReactionRepository;
-  private final StockRepository stockRepository;
-
-
-  @Transactional
-  public CreatePostResponseDto createPost(Long userId, CreatePostRequestDto createPostRequestDto) {
-
-    User userEntity = UserHelper.findUserById(userRepository, userId);
-    Post newPostEntity = createPostRequestDto.toPostEntity(userEntity);
-
-    List<String> requestStockNameList = createPostRequestDto.getRequestStockNameList();
-    requestStockNameList.addAll(newPostEntity.extractStockNameFromContent());
-
-    List<Stock> requestStockList = stockRepository.findAllByStockNameIn(requestStockNameList);
-    requestStockList.forEach(stock -> stock.addPostEmotionInfo(createPostRequestDto.getPostEmotionType()));
-
-    List<PostedStock> postedStockList = requestStockList.stream()
-                                                        .map(stock -> new PostedStock(stock, newPostEntity))
-                                                        .collect(Collectors.toList());
-    postedStockRepository.saveAll(postedStockList);
-    postRepository.save(newPostEntity);
-    return new CreatePostResponseDto(newPostEntity);
-  }
 
   public FeedResponseDto getFeed(Long userId, FeedType feedType, int page) {
     // querydsl 로 리팩토링 필요
@@ -86,20 +40,20 @@ public class FeedService {
     }
   }
 
-  public FeedResponseDto getAllPost(Long userId, int page) {
+  private FeedResponseDto getAllPost(Long userId, int page) {
     Pageable pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
     Page<Post> postPage = postRepository.findAll(pageable);
     return new FeedResponseDto(postPage, userId);
   }
 
-  public FeedResponseDto getHotPost(Long userId, int page) {
+  private FeedResponseDto getHotPost(Long userId, int page) {
     Pageable pageable = PageRequest.of(page, 20, Sort.by("postReactionCount").descending());
     LocalDateTime from = LocalDateTime.now().minusDays(7); // 7일 전
     Page<Post> postPage = postRepository.findByCreatedAtAfter(from, pageable);
     return new FeedResponseDto(postPage, userId);
   }
 
-  public FeedResponseDto getFriendsPost(Long userId, int page) {
+  private FeedResponseDto getFriendsPost(Long userId, int page) {
 
     User user = UserHelper.findUserById(userRepository, userId);
     List<User> followingUserList = user.getFollowingUserList();
@@ -109,66 +63,4 @@ public class FeedService {
     return new FeedResponseDto(postPage, userId);
   }
 
-  public PostDetailResponseDto getPostDetail(Long postId, Long loginUserId) {
-    Post postEntity = PostHelper.findPostById(postRepository, postId);
-    return new PostDetailResponseDto(postEntity, loginUserId);
-  }
-
-  @Transactional
-  public PostResponseDto modifyPost(Long userId, Long postId, ModifyPostRequestDto modifyPostRequestDto) {
-
-    Post post = PostHelper.findPostById(postRepository, postId);
-
-    List<PostedStock> result = post.deletePostedStock();
-    postedStockRepository.deleteAll(result);
-    post.getPostedStockList().clear();
-
-    PostEmotionType newPostEmotionType = modifyPostRequestDto.getPostEmotionType();
-    List<Stock> newStockList = stockRepository.findAllByStockNameIn(modifyPostRequestDto.getPostedStockNameList());
-    newStockList.forEach(newStock -> newStock.addPostEmotionInfo(newPostEmotionType));
-    List<PostedStock> newPostedStockList = newStockList.stream()
-                                                       .map(stock -> new PostedStock(stock, post))
-                                                       .collect(Collectors.toList());
-    postedStockRepository.saveAll(newPostedStockList);
-
-    post.modify(modifyPostRequestDto);
-    return new PostResponseDto(post, userId);
-  }
-
-  @Transactional
-  public void deletePost(Long postId) {
-    Post post = PostHelper.findPostById(postRepository, postId);
-
-    post.deleteUser();
-
-    List<PostedStock> result = post.deletePostedStock();
-    postedStockRepository.deleteAll(result);
-    post.getPostedStockList().clear();
-
-    post.deleteComment();
-
-    postRepository.delete(post);
-  }
-
-  @Transactional
-  public CreatePostReactionResponseDto createPostReaction(Long postId, PostReactionType postReactionType, Long userId) {
-    User user = UserHelper.findUserById(userRepository, userId);
-    Post post = PostHelper.findPostById(postRepository, postId);
-    PostReaction postReaction = new PostReaction(user, post, postReactionType);
-    postReactionRepository.save(postReaction);
-    return new CreatePostReactionResponseDto(postReaction);
-  }
-
-  public ReactionDto getPostReaction(Long postId) {
-    Post post = PostHelper.findPostById(postRepository, postId);
-    List<PostReaction> postReactionList = post.getPostReactionList();
-    return new ReactionDto(postReactionList);
-  }
-
-  @Transactional
-  public void deletePostReaction(Long postId, Long userId) {
-    PostReaction postReaction = postReactionRepository.findByUserIdAndPostId(userId, postId)
-                                                      .orElseThrow(() -> new CustomException(PostErrorCodeType.INVALID_POST_REACTION));
-    postReactionService.deletePostReaction(postReaction);
-  }
 }

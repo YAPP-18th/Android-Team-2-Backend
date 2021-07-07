@@ -3,10 +3,9 @@ package com.sns.zuzuclub.domain.home.application;
 import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.controller.home.dto.HomeResponseDto;
 import com.sns.zuzuclub.controller.home.dto.UserScrapDto;
-import com.sns.zuzuclub.controller.home.dto.UserStockScrapDto;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;
-import com.sns.zuzuclub.domain.post.service.PostService;
+import com.sns.zuzuclub.domain.post.service.PostCalculateService;
 import com.sns.zuzuclub.domain.stock.application.StockService;
 import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.stock.repository.StockRepository;
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HomeInfoService {
 
-  private final PostService postService;
+  private final PostCalculateService postCalculateService;
   private final StockService stockService;
 
   private final UserRepository userRepository;
@@ -37,7 +36,7 @@ public class HomeInfoService {
   public HomeResponseDto getHomeInfo(Long userId) {
 
     List<Post> postList = postRepository.findTop100ByOrderByCreatedAtDesc();
-    Entry<PostEmotionType, Integer> weather = postService.getMostPostedPostEmotionType(postList);
+    Entry<PostEmotionType, Integer> weather = postCalculateService.getMostPostedPostEmotionType(postList);
     int postCount = postList.size();
 
     List<Stock> stockList = stockRepository.findAllByTotalCountIsGreaterThan(5);
