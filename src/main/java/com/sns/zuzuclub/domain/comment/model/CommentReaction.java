@@ -35,17 +35,12 @@ public class CommentReaction extends AuditEntity {
   private CommentReactionType commentReactionType;
 
   public CommentReaction(User user, Comment comment, CommentReactionType commentReactionType) {
-    this();
     this.user = user;
     this.commentReactionType = commentReactionType;
-    updateComment(comment);
+    initComment(comment);
   }
 
-  public void updateComment(Comment comment) {
-    if(this.comment != null){
-      this.comment.decreaseCommentReactionCount();
-      this.comment.getCommentReactionList().remove(this);
-    }
+  public void initComment(Comment comment) {
     this.comment = comment;
     comment.getCommentReactionList().add(this);
     comment.increaseCommentReactionCount();

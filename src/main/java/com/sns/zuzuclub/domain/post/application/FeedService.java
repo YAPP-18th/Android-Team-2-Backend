@@ -1,12 +1,16 @@
 package com.sns.zuzuclub.domain.post.application;
 
 import com.sns.zuzuclub.constant.FeedType;
+import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.constant.PostReactionType;
 import com.sns.zuzuclub.controller.post.dto.CreatePostReactionResponseDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
+import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
 import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
+import com.sns.zuzuclub.controller.post.dto.ReactionDto;
+import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.model.PostReaction;
@@ -22,6 +26,7 @@ import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +61,7 @@ public class FeedService {
     requestStockNameList.addAll(newPostEntity.extractStockNameFromContent());
 
     List<Stock> requestStockList = stockRepository.findAllByStockNameIn(requestStockNameList);
-    requestStockList.forEach(stock -> stock.updatePostEmotionInfo(createPostRequestDto.getPostEmotionType()));
+    requestStockList.forEach(stock -> stock.addPostEmotionInfo(createPostRequestDto.getPostEmotionType()));
 
     List<PostedStock> postedStockList = requestStockList.stream()
                                                         .map(stock -> new PostedStock(stock, newPostEntity))
@@ -97,7 +102,7 @@ public class FeedService {
   public FeedResponseDto getFriendsPost(Long userId, int page) {
 
     User user = UserHelper.findUserById(userRepository, userId);
-    List<User> followingUserList = user.getMyFollowingUserList();
+    List<User> followingUserList = user.getFollowingUserList();
 
     Pageable pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
     Page<Post> postPage = postRepository.findAllByUserIn(followingUserList, pageable);
@@ -110,12 +115,54 @@ public class FeedService {
   }
 
   @Transactional
+  public PostResponseDto modifyPost(Long userId, Long postId, ModifyPostRequestDto modifyPostRequestDto) {
+
+    Post post = PostHelper.findPostById(postRepository, postId);
+
+    List<PostedStock> result = post.deletePostedStock();
+    postedStockRepository.deleteAll(result);
+    post.getPostedStockList().clear();
+
+    PostEmotionType newPostEmotionType = modifyPostRequestDto.getPostEmotionType();
+    List<Stock> newStockList = stockRepository.findAllByStockNameIn(modifyPostRequestDto.getPostedStockNameList());
+    newStockList.forEach(newStock -> newStock.addPostEmotionInfo(newPostEmotionType));
+    List<PostedStock> newPostedStockList = newStockList.stream()
+                                                       .map(stock -> new PostedStock(stock, post))
+                                                       .collect(Collectors.toList());
+    postedStockRepository.saveAll(newPostedStockList);
+
+    post.modify(modifyPostRequestDto);
+    return new PostResponseDto(post, userId);
+  }
+
+  @Transactional
+  public void deletePost(Long postId) {
+    Post post = PostHelper.findPostById(postRepository, postId);
+
+    post.deleteUser();
+
+    List<PostedStock> result = post.deletePostedStock();
+    postedStockRepository.deleteAll(result);
+    post.getPostedStockList().clear();
+
+    post.deleteComment();
+
+    postRepository.delete(post);
+  }
+
+  @Transactional
   public CreatePostReactionResponseDto createPostReaction(Long postId, PostReactionType postReactionType, Long userId) {
     User user = UserHelper.findUserById(userRepository, userId);
     Post post = PostHelper.findPostById(postRepository, postId);
     PostReaction postReaction = new PostReaction(user, post, postReactionType);
     postReactionRepository.save(postReaction);
     return new CreatePostReactionResponseDto(postReaction);
+  }
+
+  public ReactionDto getPostReaction(Long postId) {
+    Post post = PostHelper.findPostById(postRepository, postId);
+    List<PostReaction> postReactionList = post.getPostReactionList();
+    return new ReactionDto(postReactionList);
   }
 
   @Transactional

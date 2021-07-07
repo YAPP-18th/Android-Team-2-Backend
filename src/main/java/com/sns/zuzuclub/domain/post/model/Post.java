@@ -1,6 +1,8 @@
 package com.sns.zuzuclub.domain.post.model;
 
+import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
 import com.sns.zuzuclub.domain.stock.model.PostedStock;
+import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,6 +10,7 @@ import java.util.List;
 
 
 import java.util.Optional;
+import javax.persistence.CascadeType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.Entity;
@@ -49,10 +52,10 @@ public class Post extends AuditEntity {
   @OneToMany(mappedBy = "post") // cascade 불가
   private List<PostedStock> postedStockList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post") // cascade 불가
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> commentList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post") // cascade 불가
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PostReaction> postReactionList = new ArrayList<>();
 
   private String postImageUrl;
@@ -61,18 +64,13 @@ public class Post extends AuditEntity {
 
   @Builder
   public Post(User user, String content, PostEmotionType postEmotionType, String postImageUrl) {
-    this();
-    updateUser(user);
+    initUser(user);
     this.content = content;
     this.postEmotionType = postEmotionType;
     this.postImageUrl = postImageUrl;
   }
 
-  public void updateUser(User user){
-    if(this.user != null){
-      this.user.decreasePostCount();
-      this.user.getPostList().remove(this);
-    }
+  public void initUser(User user){
     this.user = user;
     user.getPostList().add(this);
     user.increasePostCount();
@@ -102,6 +100,44 @@ public class Post extends AuditEntity {
       return result.get().getReactionType().toString();
     }
     return "";
+  }
+
+  public void modify(ModifyPostRequestDto modifyPostRequestDto) {
+    modifyContent(modifyPostRequestDto.getContent());
+    this.postImageUrl = modifyPostRequestDto.getPostImageUrl();
+    this.postEmotionType = modifyPostRequestDto.getPostEmotionType();
+  }
+
+  private void modifyContent(String newContent){
+    if (newContent == null){
+      this.content = "";
+    }
+    this.content = newContent;
+  }
+
+  public List<PostedStock> deletePostedStock(){
+    this.postedStockList.forEach(oldPostedStock -> {
+      deletePostEmotionInfo(oldPostedStock);
+      oldPostedStock.deleteStock();
+    });
+    return this.postedStockList;
+  }
+
+  private void deletePostEmotionInfo(PostedStock oldPostedStock) {
+    Stock oldStock = oldPostedStock.getStock();
+    oldStock.removePostEmotionInfo(this.postEmotionType);
+  }
+
+  public void deleteUser(){
+    if(this.user != null){
+      this.user.decreasePostCount();
+      this.user.getPostList().remove(this);
+      this.user = null;
+    }
+  }
+
+  public void deleteComment(){
+    this.commentList.forEach(Comment::deleteUser);
   }
 
   public List<String> extractStockNameFromContent() {

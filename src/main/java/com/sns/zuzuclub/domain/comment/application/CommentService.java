@@ -44,6 +44,12 @@ public class CommentService {
   }
 
   @Transactional
+  public void deleteComment(Long commentId) {
+    Comment comment = CommentHelper.findCommentById(commentRepository, commentId);
+    comment.deleteContent();
+  }
+
+  @Transactional
   public CreateCommentReactionResponseDto createCommentReaction(Long userId, Long commentId, CommentReactionType commentReactionType) {
     User user = UserHelper.findUserById(userRepository, userId);
     Comment comment = CommentHelper.findCommentById(commentRepository, commentId);

@@ -52,6 +52,13 @@ public class Stock {
     this.totalCount += 1;
   }
 
+  private void decreaseTotalCount(){
+    if (this.totalCount <= 0){
+      return;
+    }
+    this.totalCount -= 1;
+  }
+
   private void increaseUpCount(){
     this.upCount += 1;
   }
@@ -101,6 +108,26 @@ public class Stock {
     }
   }
 
+  private void decreaseStockEmotionCount(PostEmotionType postEmotionType) {
+    if(postEmotionType == null){
+      return;
+    }
+    switch (postEmotionType) {
+      case UP:
+        decreaseUpCount();
+        break;
+      case DOWN:
+        decreaseDownCount();
+        break;
+      case EXPECT:
+        decreaseExpectCount();
+        break;
+      case UNSTABLE:
+        decreaseUnstableCount();
+        break;
+    }
+  }
+
   private void calculateStockEmotionType(){
     Map<PostEmotionType, Integer> map = new EnumMap<>(PostEmotionType.class);
     map.put(PostEmotionType.UP, upCount);
@@ -141,12 +168,21 @@ public class Stock {
     return stockEmotionValue / totalCount;
   }
 
-  public void updatePostEmotionInfo(PostEmotionType postEmotionType) {
+  public void addPostEmotionInfo(PostEmotionType postEmotionType) {
     increaseTotalCount();
     if (postEmotionType == null) {
       return;
     }
     increaseStockEmotionCount(postEmotionType);
+    calculateStockEmotionType();
+  }
+
+  public void removePostEmotionInfo(PostEmotionType oldPostEmotionType) {
+    decreaseTotalCount();
+    if (oldPostEmotionType == null) {
+      return;
+    }
+    decreaseStockEmotionCount(oldPostEmotionType);
     calculateStockEmotionType();
   }
 

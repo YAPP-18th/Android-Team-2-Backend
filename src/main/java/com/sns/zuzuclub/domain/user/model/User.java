@@ -22,11 +22,13 @@ import javax.persistence.OneToMany;
 
 import com.sns.zuzuclub.global.AuditEntity;
 import javax.persistence.OrderBy;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of="id")
 @Entity
 public class User extends AuditEntity {
 
@@ -114,14 +116,41 @@ public class User extends AuditEntity {
     this.commentCount += 1;
   }
 
-  public void decreasCommentCount(){
+  public void decreaseCommentCount(){
     this.commentCount -= 1;
   }
 
-  // 내가 팔로우하는 유저 리스트 리턴
-  public List<User> getMyFollowingUserList(){
+  public void increaseFollowerCount(){
+    this.followerCount += 1;
+  }
+
+  public void decreaseFollowerCount(){
+    if (this.followerCount <= 0){
+      return;
+    }
+    this.followerCount -= 1;
+  }
+
+  public void increaseFollowingCount(){
+    this.followingCount += 1;
+  }
+
+  public void decreaseFollowingCount(){
+    if (this.followingCount <= 0){
+      return;
+    }
+    this.followingCount -= 1;
+  }
+
+  public List<User> getFollowingUserList(){
     return following.stream()
                     .map(UserFollow::getToUser)
+                    .collect(Collectors.toList());
+  }
+
+  public List<User> getFollowerUserList() {
+    return followers.stream()
+                    .map(UserFollow::getFromUser)
                     .collect(Collectors.toList());
   }
 
@@ -129,6 +158,11 @@ public class User extends AuditEntity {
     return userStockScrapList.stream()
                              .anyMatch(userStockScrap -> userStockScrap.getStock()
                                                                        .equals(stock));
+  }
+
+  public boolean hasFollowing(User targetUser){
+    return following.stream()
+                    .anyMatch(userFollow -> userFollow.isToUser(targetUser));
   }
 
   public boolean hasFollower(Long userId){

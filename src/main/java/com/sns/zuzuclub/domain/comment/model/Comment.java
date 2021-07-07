@@ -5,6 +5,7 @@ import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -42,7 +43,7 @@ public class Comment extends AuditEntity {
   @OneToMany(mappedBy = "parentComment")
   private List<Comment> childCommentList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "comment")
+  @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CommentReaction> commentReactionList = new ArrayList<>();
 
   private int commentReactionCount = 0;
@@ -50,23 +51,19 @@ public class Comment extends AuditEntity {
   @Builder
   public Comment(User user, Post post, String content, Comment parentComment) {
     this();
-    this.updateUser(user);
-    this.updatePost(post);
+    this.initUser(user);
+    this.initPost(post);
     this.content = content;
     this.updateParentComment(parentComment);
   }
 
-  public void updateUser(User user){
-    if (this.user != null){
-      this.user.decreasCommentCount();
-      this.user.getCommentList().remove(this);
-    }
+  public void initUser(User user){
     this.user = user;
     user.getCommentList().add(this);
     user.increaseCommentCount();
   }
 
-  public void updatePost(Post post){
+  public void initPost(Post post){
     if(this.post != null){
       this.post.decreaseCommentCount();
       this.post.getCommentList().remove(this);
@@ -108,5 +105,17 @@ public class Comment extends AuditEntity {
                .anyMatch(commentReaction -> commentReaction.getUser()
                                                            .getId()
                                                            .equals(loginUserId));
+  }
+
+  public void deleteUser(){
+    if (this.user != null){
+      this.user.decreaseCommentCount();
+      this.user.getCommentList().remove(this);
+      this.user = null;
+    }
+  }
+
+  public void deleteContent(){
+    this.content = "삭제된 댓글 입니다.";
   }
 }
