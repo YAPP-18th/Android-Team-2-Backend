@@ -5,11 +5,14 @@ import com.sns.zuzuclub.domain.stock.model.PostedStock;
 import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
 import java.util.Optional;
 import javax.persistence.CascadeType;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -135,5 +138,21 @@ public class Post extends AuditEntity {
 
   public void deleteComment(){
     this.commentList.forEach(Comment::deleteUser);
+  }
+
+  public List<String> extractStockNameFromContent() {
+    List<String> stockNameList = new ArrayList<>();
+    Matcher matcher = Pattern.compile("(\\$)([가-핳]|\\w)+(\\s|$)").matcher(this.content);
+    while (matcher.find()){
+      String result = matcher.group();
+      stockNameList.add(extractStockName(result));
+    }
+    return stockNameList;
+  }
+
+  private String extractStockName(String str) {
+    return str
+        .replaceAll("\\s", "")
+        .replaceAll("\\$", "");
   }
 }

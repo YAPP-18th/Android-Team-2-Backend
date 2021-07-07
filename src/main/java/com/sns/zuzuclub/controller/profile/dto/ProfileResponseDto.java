@@ -63,7 +63,7 @@ public class ProfileResponseDto {
 
     List<Post> postList = profileUser.getPostList()
                                      .stream()
-                                     .sorted(Comparator.comparing(Post::getCreatedAt))
+                                     .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                                      .collect(Collectors.toList());
     this.postResponseDtoList = PostResponseDto.ListFrom(postList, loginUserId);
   }
