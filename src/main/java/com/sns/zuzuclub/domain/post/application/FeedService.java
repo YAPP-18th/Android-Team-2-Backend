@@ -1,7 +1,7 @@
 package com.sns.zuzuclub.domain.post.application;
 
-import com.sns.zuzuclub.constant.FeedType;
-import com.sns.zuzuclub.controller.post.dto.FeedResponseDto;
+import com.sns.zuzuclub.domain.post.model.FeedType;
+import com.sns.zuzuclub.domain.post.dto.FeedResponseDto;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;

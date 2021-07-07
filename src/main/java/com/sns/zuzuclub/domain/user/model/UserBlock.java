@@ -1,6 +1,6 @@
 package com.sns.zuzuclub.domain.user.model;
 
-import com.sns.zuzuclub.global.AuditEntity;
+import com.sns.zuzuclub.domain.common.model.AuditEntity;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

@@ -2,8 +2,8 @@ package com.sns.zuzuclub.domain.user.application;
 
 
 
-import com.sns.zuzuclub.controller.signup.dto.SignupRequestDto;
-import com.sns.zuzuclub.controller.signup.dto.StockResponseDto;
+import com.sns.zuzuclub.domain.user.dto.signup.SignupRequestDto;
+import com.sns.zuzuclub.domain.user.dto.signup.StockResponseDto;
 import com.sns.zuzuclub.domain.stock.model.SignupStock;
 import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.stock.repository.SignupStockRepository;

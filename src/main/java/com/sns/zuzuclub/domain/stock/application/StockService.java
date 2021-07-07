@@ -1,7 +1,7 @@
 package com.sns.zuzuclub.domain.stock.application;
 
-import com.sns.zuzuclub.constant.PostEmotionType;
-import com.sns.zuzuclub.controller.stock.dto.StockResponseDto;
+import com.sns.zuzuclub.domain.post.model.PostEmotionType;
+import com.sns.zuzuclub.domain.stock.dto.StockResponseDto;
 import com.sns.zuzuclub.domain.stock.helper.StockHelper;
 import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.stock.repository.StockRepository;

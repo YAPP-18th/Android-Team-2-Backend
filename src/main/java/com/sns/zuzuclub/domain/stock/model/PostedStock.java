@@ -1,8 +1,7 @@
 package com.sns.zuzuclub.domain.stock.model;
 
-import com.sns.zuzuclub.constant.PostEmotionType;
 import com.sns.zuzuclub.domain.post.model.Post;
-import com.sns.zuzuclub.global.AuditEntity;
+import com.sns.zuzuclub.domain.common.model.AuditEntity;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

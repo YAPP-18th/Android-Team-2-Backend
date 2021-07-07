@@ -1,11 +1,11 @@
 package com.sns.zuzuclub.domain.post.application;
 
-import com.sns.zuzuclub.constant.PostEmotionType;
-import com.sns.zuzuclub.controller.post.dto.CreatePostRequestDto;
-import com.sns.zuzuclub.controller.post.dto.CreatePostResponseDto;
-import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
-import com.sns.zuzuclub.controller.post.dto.PostDetailResponseDto;
-import com.sns.zuzuclub.controller.post.dto.PostResponseDto;
+import com.sns.zuzuclub.domain.post.model.PostEmotionType;
+import com.sns.zuzuclub.domain.post.dto.CreatePostRequestDto;
+import com.sns.zuzuclub.domain.post.dto.CreatePostResponseDto;
+import com.sns.zuzuclub.domain.post.dto.ModifyPostRequestDto;
+import com.sns.zuzuclub.domain.post.dto.PostDetailResponseDto;
+import com.sns.zuzuclub.domain.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;

@@ -14,7 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.sns.zuzuclub.global.AuditEntity;
+import com.sns.zuzuclub.domain.common.model.AuditEntity;
 import com.sns.zuzuclub.domain.post.model.Post;
 import lombok.Builder;
 import lombok.Getter;

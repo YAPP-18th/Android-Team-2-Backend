@@ -1,6 +1,5 @@
 package com.sns.zuzuclub.domain.comment.model;
 
-import com.sns.zuzuclub.constant.CommentReactionType;
 import com.sns.zuzuclub.domain.user.model.User;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.sns.zuzuclub.global.AuditEntity;
+import com.sns.zuzuclub.domain.common.model.AuditEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -1,6 +1,6 @@
 package com.sns.zuzuclub.domain.user.model;
 
-import com.sns.zuzuclub.domain.alarm.model.Notification;
+import com.sns.zuzuclub.domain.notification.model.Notification;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.stock.model.Stock;
@@ -20,7 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.sns.zuzuclub.global.AuditEntity;
+import com.sns.zuzuclub.domain.common.model.AuditEntity;
 import javax.persistence.OrderBy;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

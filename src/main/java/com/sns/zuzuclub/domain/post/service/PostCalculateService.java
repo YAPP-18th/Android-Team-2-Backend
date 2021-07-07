@@ -1,6 +1,6 @@
 package com.sns.zuzuclub.domain.post.service;
 
-import com.sns.zuzuclub.constant.PostEmotionType;
+import com.sns.zuzuclub.domain.post.model.PostEmotionType;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.global.exception.SchedulerException;
 import java.util.List;

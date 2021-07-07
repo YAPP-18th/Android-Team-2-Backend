@@ -1,7 +1,7 @@
 package com.sns.zuzuclub.config.security;
 
 
-import com.sns.zuzuclub.constant.UserRoleType;
+import com.sns.zuzuclub.domain.user.model.UserRoleType;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.JwtErrorCodeType;
 import io.jsonwebtoken.ExpiredJwtException;

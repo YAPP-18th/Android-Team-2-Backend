@@ -1,11 +1,10 @@
 package com.sns.zuzuclub.domain.post.model;
 
-import com.sns.zuzuclub.controller.post.dto.ModifyPostRequestDto;
+import com.sns.zuzuclub.domain.post.dto.ModifyPostRequestDto;
 import com.sns.zuzuclub.domain.stock.model.PostedStock;
 import com.sns.zuzuclub.domain.stock.model.Stock;
 import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 
@@ -23,9 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.sns.zuzuclub.constant.PostEmotionType;
-
-import com.sns.zuzuclub.global.AuditEntity;
+import com.sns.zuzuclub.domain.common.model.AuditEntity;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import lombok.Builder;
 import lombok.Getter;

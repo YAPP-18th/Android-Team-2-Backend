@@ -1,10 +1,10 @@
 package com.sns.zuzuclub.domain.user.application;
 
-import com.sns.zuzuclub.constant.SocialTokenProviderType;
-import com.sns.zuzuclub.constant.UserRoleType;
-import com.sns.zuzuclub.controller.login.dto.LoginRequestDto;
-import com.sns.zuzuclub.controller.login.dto.LoginResponseDto;
-import com.sns.zuzuclub.controller.login.dto.ReissueJwtTokenResponseDto;
+import com.sns.zuzuclub.config.security.social.SocialTokenProviderType;
+import com.sns.zuzuclub.domain.user.model.UserRoleType;
+import com.sns.zuzuclub.domain.user.dto.login.LoginRequestDto;
+import com.sns.zuzuclub.domain.user.dto.login.LoginResponseDto;
+import com.sns.zuzuclub.domain.user.dto.login.ReissueJwtTokenResponseDto;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserSecurity;
@@ -12,7 +12,7 @@ import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.domain.user.repository.UserSecurityRepository;
 
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
-import com.sns.zuzuclub.util.social.SocialTokenProviderFactory;
+import com.sns.zuzuclub.config.security.social.SocialTokenProviderFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
