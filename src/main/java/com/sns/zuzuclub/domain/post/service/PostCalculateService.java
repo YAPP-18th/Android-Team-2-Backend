@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class PostService {
+public class PostCalculateService {
 
   public Entry<PostEmotionType, Integer> getMostPostedPostEmotionType(List<Post> postList) {
 

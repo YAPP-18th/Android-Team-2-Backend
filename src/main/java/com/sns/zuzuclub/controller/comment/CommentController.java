@@ -58,34 +58,4 @@ public class CommentController {
     log.info(commentId + "번 댓글 삭제");
     return ResponseForm.getSuccessResult("댓글 삭제");
   }
-
-
-  @ApiOperation(
-      value = "댓글 반응 작성",
-      notes = "<h3>\n"
-          + "- 댓글에 반응합니다.\n"
-          + "</h3>"
-  )
-  @PostMapping("/comments/{commentId}/{commentReactionType}")
-  public SingleResult<CreateCommentReactionResponseDto> createCommentReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long commentId, @PathVariable CommentReactionType commentReactionType){
-    Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-    CreateCommentReactionResponseDto createCommentReactionResponseDto = commentService.createCommentReaction(userId, commentId, commentReactionType);
-    log.info(createCommentReactionResponseDto.toString());
-    return ResponseForm.getSingleResult(createCommentReactionResponseDto, "댓글 반응 작성");
-  }
-
-  @ApiOperation(
-      value = "댓글 반응 취소",
-      notes = "<h3>\n"
-          + "- 댓글에 반응을 취소합니다.\n"
-          + "</h3>"
-  )
-  @DeleteMapping("/comments/{commentId}")
-  public CommonResult deleteCommentReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long commentId){
-    Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-    commentService.deleteCommentReaction(userId, commentId);
-    log.info("댓글 반응 취소");
-    return ResponseForm.getSuccessResult("댓글 반응 취소");
-  }
-
 }
