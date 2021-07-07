@@ -15,10 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
-import com.sns.zuzuclub.constant.SocialTokenProviderType;
-import com.sns.zuzuclub.constant.UserRoleType;
+import com.sns.zuzuclub.config.security.social.SocialTokenProviderType;
 
-import com.sns.zuzuclub.global.AuditEntity;
+import com.sns.zuzuclub.domain.common.model.AuditEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

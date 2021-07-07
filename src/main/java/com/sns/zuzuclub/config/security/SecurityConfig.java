@@ -1,6 +1,6 @@
 package com.sns.zuzuclub.config.security;
 
-import com.sns.zuzuclub.constant.UserRoleType;
+import com.sns.zuzuclub.domain.user.model.UserRoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;

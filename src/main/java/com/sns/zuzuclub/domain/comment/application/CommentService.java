@@ -1,7 +1,7 @@
 package com.sns.zuzuclub.domain.comment.application;
 
-import com.sns.zuzuclub.controller.comment.dto.CreateCommentRequestDto;
-import com.sns.zuzuclub.controller.comment.dto.CreateCommentResponseDto;
+import com.sns.zuzuclub.domain.comment.dto.CreateCommentRequestDto;
+import com.sns.zuzuclub.domain.comment.dto.CreateCommentResponseDto;
 import com.sns.zuzuclub.domain.comment.helper.CommentHelper;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.comment.repository.CommentRepository;

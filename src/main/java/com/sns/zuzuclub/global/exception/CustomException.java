@@ -1,7 +1,6 @@
 package com.sns.zuzuclub.global.exception;
 
 import com.sns.zuzuclub.global.exception.errorCodeType.CommentErrorCodeType;
-import com.sns.zuzuclub.global.exception.errorCodeType.HomeErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.ImageUploadErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
 import com.sns.zuzuclub.global.exception.errorCodeType.SocialLoginErrorCodeType;
@@ -48,12 +47,6 @@ public class CustomException extends RuntimeException{
   }
 
   public CustomException(ImageUploadErrorCodeType errorCodeType)
-  {
-    super(errorCodeType.getMessage());
-    this.errorCode = errorCodeType.getErrorCode();
-  }
-
-  public CustomException(HomeErrorCodeType errorCodeType)
   {
     super(errorCodeType.getMessage());
     this.errorCode = errorCodeType.getErrorCode();

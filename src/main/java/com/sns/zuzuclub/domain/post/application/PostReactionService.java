@@ -1,8 +1,8 @@
 package com.sns.zuzuclub.domain.post.application;
 
-import com.sns.zuzuclub.constant.PostReactionType;
-import com.sns.zuzuclub.controller.post.dto.CreatePostReactionResponseDto;
-import com.sns.zuzuclub.controller.post.dto.ReactionDto;
+import com.sns.zuzuclub.domain.post.model.PostReactionType;
+import com.sns.zuzuclub.domain.post.dto.CreatePostReactionResponseDto;
+import com.sns.zuzuclub.domain.post.dto.ReactionDto;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.model.PostReaction;
