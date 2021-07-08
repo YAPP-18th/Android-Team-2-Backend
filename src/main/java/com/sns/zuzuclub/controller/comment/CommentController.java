@@ -43,21 +43,21 @@ public class CommentController {
     return ResponseForm.getSingleResult(createCommentResponseDto, "댓글 작성");
   }
 
-  @ApiOperation(
-      value = "댓글 삭제",
-      notes = "<h3>\n"
-          + "- 댓글의 내용을 \"삭제된 댓글 입니다.\" 로 수정합니다.\n"
-          + "- 즉, 실제로 댓글을 삭제하지는 않습니다.\n"
-          + "- 댓글은 게시글이 삭제되는 경우에만 완전하게 삭제됩니다.\n"
-          + "</h3>"
-  )
-  @DeleteMapping("/posts/comments/{commentId}")
-  public CommonResult deleteComment(@RequestHeader(value = "Authorization") String jwtToken,
-                                                              @PathVariable Long commentId) {
-    commentService.deleteComment(commentId);
-    log.info(commentId + "번 댓글 삭제");
-    return ResponseForm.getSuccessResult("댓글 삭제");
-  }
+//  @ApiOperation(
+//      value = "댓글 삭제",
+//      notes = "<h3>\n"
+//          + "- 댓글의 내용을 \"삭제된 댓글 입니다.\" 로 수정합니다.\n"
+//          + "- 즉, 실제로 댓글을 삭제하지는 않습니다.\n"
+//          + "- 댓글은 게시글이 삭제되는 경우에만 완전하게 삭제됩니다.\n"
+//          + "</h3>"
+//  )
+//  @DeleteMapping("/posts/comments/{commentId}")
+//  public CommonResult deleteComment(@RequestHeader(value = "Authorization") String jwtToken,
+//                                                              @PathVariable Long commentId) {
+//    commentService.deleteComment(commentId);
+//    log.info(commentId + "번 댓글 삭제");
+//    return ResponseForm.getSuccessResult("댓글 삭제");
+//  }
 
 
   @ApiOperation(

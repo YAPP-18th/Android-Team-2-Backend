@@ -123,15 +123,19 @@ public class FeedService {
     postedStockRepository.deleteAll(result);
     post.getPostedStockList().clear();
 
+    post.modify(modifyPostRequestDto);
+
+    List<String> modifyStockNameList = modifyPostRequestDto.getPostedStockNameList();
+    modifyStockNameList.addAll(post.extractStockNameFromContent());
+    List<Stock> newStockList = stockRepository.findAllByStockNameIn(modifyStockNameList);
+
     PostEmotionType newPostEmotionType = modifyPostRequestDto.getPostEmotionType();
-    List<Stock> newStockList = stockRepository.findAllByStockNameIn(modifyPostRequestDto.getPostedStockNameList());
     newStockList.forEach(newStock -> newStock.addPostEmotionInfo(newPostEmotionType));
     List<PostedStock> newPostedStockList = newStockList.stream()
                                                        .map(stock -> new PostedStock(stock, post))
                                                        .collect(Collectors.toList());
     postedStockRepository.saveAll(newPostedStockList);
 
-    post.modify(modifyPostRequestDto);
     return new PostResponseDto(post, userId);
   }
 
