@@ -10,10 +10,13 @@ import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserStockScrap;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.domain.user.repository.UserStockScrapRepository;
+import com.sns.zuzuclub.global.exception.CustomException;
+import com.sns.zuzuclub.global.exception.errorCodeType.StockErrorCodeType;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +29,16 @@ public class StockService {
   private final UserRepository userRepository;
   private final UserStockScrapRepository userStockScrapRepository;
 
-  public StockResponseDto getStock(Long userId, Long stockId) {
+  public StockResponseDto getStockById(Long userId, Long stockId) {
     User user = UserHelper.findUserById(userRepository, userId);
     Stock stock = StockHelper.findStockById(stockRepository, stockId);
+    return new StockResponseDto(user, stock);
+  }
+
+  public StockResponseDto getStockByName(Long userId, String stockName) {
+    User user = UserHelper.findUserById(userRepository, userId);
+    Stock stock = stockRepository.findByStockName(stockName)
+                                 .orElseThrow(() -> new CustomException(StockErrorCodeType.INVALID_STOCK_NAME));
     return new StockResponseDto(user, stock);
   }
 
