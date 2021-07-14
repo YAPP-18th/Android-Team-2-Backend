@@ -1,6 +1,6 @@
 package com.sns.zuzuclub.domain.user.application;
 
-import com.sns.zuzuclub.controller.follow.dto.FollowDto;
+import com.sns.zuzuclub.domain.user.dto.follow.FollowDto;
 import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.model.UserFollow;

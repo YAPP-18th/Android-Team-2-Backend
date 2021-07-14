@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
@@ -15,91 +14,55 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-  private static final String DEFAULT_TITLE = "ZUZU CLUB PROJECT - ";
-  private static final String CONTROLLER_PACKAGE_NAME = "com.sns.zuzuclub.controller";
-  private static final String COMMENT_PACKAGE = CONTROLLER_PACKAGE_NAME + ".comment";
-  private static final String FOLLOW_PACKAGE = CONTROLLER_PACKAGE_NAME + ".follow";
-  private static final String HOME_PACKAGE = CONTROLLER_PACKAGE_NAME + ".home";
-  private static final String IMAGE_PACKAGE = CONTROLLER_PACKAGE_NAME + ".image";
-  private static final String LOGIN_PACKAGE = CONTROLLER_PACKAGE_NAME + ".login";
-  private static final String POST_PACKAGE = CONTROLLER_PACKAGE_NAME + ".post";
-  private static final String PROFILE_PACKAGE = CONTROLLER_PACKAGE_NAME + ".profile";
-  private static final String SEARCH_PACKAGE = CONTROLLER_PACKAGE_NAME + ".search";
-  private static final String SIGNUP_PACKAGE = CONTROLLER_PACKAGE_NAME + ".signup";
-  private static final String STOCK_PACKAGE = CONTROLLER_PACKAGE_NAME + ".stock";
-
-  private String groupName;
-
+  private static final String DEFAULT_TITLE = "ZUZU CLUB PROJECT";
+  private static final String BASE_DOMAIN_PACKAGE = "com.sns.zuzuclub.domain";
+  private static final String COMMENT_PACKAGE = BASE_DOMAIN_PACKAGE + ".comment";
+  private static final String COMMON_PACKAGE = BASE_DOMAIN_PACKAGE + ".common";
+  private static final String NOTIFICATION_PACKAGE = BASE_DOMAIN_PACKAGE + ".notification";
+  private static final String POST_PACKAGE = BASE_DOMAIN_PACKAGE + ".post";
+  private static final String STOCK_PACKAGE = BASE_DOMAIN_PACKAGE + ".stock";
+  private static final String USER_PACKAGE = BASE_DOMAIN_PACKAGE + ".user";
 
   @Bean
   public Docket commentApiDocket() {
-    groupName = "COMMENT";
-    return getDocket(groupName, COMMENT_PACKAGE);
+    return getDocket(COMMENT_PACKAGE);
   }
 
   @Bean
-  public Docket followApiDocket() {
-    groupName = "FOLLOW";
-    return getDocket(groupName, FOLLOW_PACKAGE);
+  public Docket commonApiDocket() {
+    return getDocket(COMMON_PACKAGE);
   }
 
   @Bean
-  public Docket homeApiDocket() {
-    groupName = "HOME";
-    return getDocket(groupName, HOME_PACKAGE);
-  }
-
-  @Bean
-  public Docket imageApiDocket() {
-    groupName = "IMAGE";
-    return getDocket(groupName, IMAGE_PACKAGE);
-  }
-
-  @Bean
-  public Docket loginApiDocket() {
-    groupName = "LOGIN";
-    return getDocket(groupName, LOGIN_PACKAGE);
+  public Docket notificationApiDocket() {
+    return getDocket(NOTIFICATION_PACKAGE);
   }
 
   @Bean
   public Docket postApiDocket() {
-    groupName = "POST";
-    return getDocket(groupName, POST_PACKAGE);
-  }
-
-  @Bean
-  public Docket profileApiDocket() {
-    groupName = "PROFILE";
-    return getDocket(groupName, PROFILE_PACKAGE);
-  }
-
-  @Bean
-  public Docket searchApiDocket() {
-    groupName = "SEARCH";
-    return getDocket(groupName, SEARCH_PACKAGE);
-  }
-
-
-  @Bean
-  public Docket signupApiDocket() {
-    groupName = "SIGNUP";
-    return getDocket(groupName, SIGNUP_PACKAGE);
+    return getDocket(POST_PACKAGE);
   }
 
   @Bean
   public Docket stockApiDocket() {
-    groupName = "STOCK";
-    return getDocket(groupName, STOCK_PACKAGE);
+    return getDocket(STOCK_PACKAGE);
   }
 
-  private Docket getDocket(String groupName, String basePackage) {
+  @Bean
+  public Docket userApiDocket() {
+    return getDocket(USER_PACKAGE);
+  }
+
+  private Docket getDocket(String basePackage) {
+    int idx = basePackage.lastIndexOf(".");
+    String packageName = basePackage.substring(idx+1).toUpperCase();
     return new Docket(DocumentationType.SWAGGER_2)
         .useDefaultResponseMessages(false)
-        .groupName(groupName)
+        .groupName(packageName)
         .select()
         .apis(RequestHandlerSelectors.basePackage(basePackage))
         .build()
-        .apiInfo(apiInfo(DEFAULT_TITLE + groupName));
+        .apiInfo(apiInfo(DEFAULT_TITLE));
   }
 
   private ApiInfo apiInfo(String description) {
