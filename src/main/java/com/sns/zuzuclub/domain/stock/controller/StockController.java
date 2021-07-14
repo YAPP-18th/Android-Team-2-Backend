@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -26,17 +27,33 @@ public class StockController {
   private final JwtTokenProvider jwtTokenProvider;
 
   @ApiOperation(
-      value = "주식 종목 - 첫화면",
+      value = "주식 종목 - 첫화면 (종목id로)",
       notes = "<h3>\n"
           + "- 주식 종목의 첫화면을 불러옵니다. \n"
           + "</h3>"
   )
   @GetMapping("/stocks/{stockId}")
-  public SingleResult<StockResponseDto> getStock(@RequestHeader(value = "Authorization") String jwtToken,
+  public SingleResult<StockResponseDto> getStockById(@RequestHeader(value = "Authorization") String jwtToken,
                                                  @ApiParam(value = "주식종목 Id", type = "Long", required = true) @PathVariable Long stockId) {
 
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-    StockResponseDto stockResponseDto = stockService.getStock(userId, stockId);
+    StockResponseDto stockResponseDto = stockService.getStockById(userId, stockId);
+    log.info(stockResponseDto.toString());
+    return ResponseForm.getSingleResult(stockResponseDto, "주식 종목 - 첫화면");
+  }
+
+  @ApiOperation(
+      value = "주식 종목 - 첫화면 (종목이름으로)",
+      notes = "<h3>\n"
+          + "- 주식 종목의 첫화면을 불러옵니다. \n"
+          + "</h3>"
+  )
+  @GetMapping("/stock")
+  public SingleResult<StockResponseDto> getStockByName(@RequestHeader(value = "Authorization") String jwtToken,
+                                                 @ApiParam(value = "주식 종목명", type = "string", required = true) @RequestParam String name) {
+
+    Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+    StockResponseDto stockResponseDto = stockService.getStockByName(userId, name);
     log.info(stockResponseDto.toString());
     return ResponseForm.getSingleResult(stockResponseDto, "주식 종목 - 첫화면");
   }
