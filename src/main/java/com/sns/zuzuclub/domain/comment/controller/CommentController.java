@@ -32,7 +32,7 @@ public class CommentController {
           + "- 부모 댓글 없으면(=대댓글아니면) 부모 댓글 id 는 null로 설정\n"
           + "</h3>"
   )
-  @PostMapping("/posts/{postId}/comment")
+  @PostMapping("/posts/{postId}/comments")
   public SingleResult<CreateCommentResponseDto> createComment(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long postId, @RequestBody CreateCommentRequestDto createCommentRequestDto){
     log.info(createCommentRequestDto.toString());
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));

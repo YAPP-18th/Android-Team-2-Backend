@@ -30,7 +30,7 @@ public class CommentReactionController {
           + "- 댓글에 반응합니다.\n"
           + "</h3>"
   )
-  @PostMapping("/comments/{commentId}/reactions/{commentReactionType}")
+  @PostMapping("/comments/{commentId}/reaction/{commentReactionType}")
   public SingleResult<CreateCommentReactionResponseDto> createCommentReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long commentId, @PathVariable CommentReactionType commentReactionType){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     CreateCommentReactionResponseDto createCommentReactionResponseDto = commentReactionService.createCommentReaction(userId, commentId, commentReactionType);
@@ -44,7 +44,7 @@ public class CommentReactionController {
           + "- 댓글에 반응을 취소합니다.\n"
           + "</h3>"
   )
-  @DeleteMapping("/comments/{commentId}/reactions")
+  @DeleteMapping("/comments/{commentId}/reaction")
   public CommonResult deleteCommentReaction(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long commentId){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     commentReactionService.deleteCommentReaction(userId, commentId);

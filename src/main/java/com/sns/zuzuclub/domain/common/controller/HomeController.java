@@ -43,7 +43,7 @@ public class HomeController {
           + "- 나의 관심 종목 더보기 \n"
           + "</h3>"
   )
-  @GetMapping("/home/scrap")
+  @GetMapping("/user/stocks")
   public SingleResult<UserScrapDto> getUserStockScrap(@RequestHeader(value = "Authorization") String jwtToken){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     UserScrapDto userScrapDto = homeService.getUserStockScrap(userId);
