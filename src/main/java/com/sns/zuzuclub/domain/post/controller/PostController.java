@@ -79,15 +79,14 @@ public class PostController {
             + "</h3>"
     )
     @PutMapping("/posts/{postId}")
-    public SingleResult<PostResponseDto> modifyPost(@RequestHeader(value = "Authorization") String jwtToken,
+    public SingleResult<PostDetailResponseDto> modifyPost(@RequestHeader(value = "Authorization") String jwtToken,
                                                     @PathVariable Long postId,
                                                     @RequestBody ModifyPostRequestDto modifyPostRequestDto) {
         log.info(modifyPostRequestDto.toString());
         Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-        PostResponseDto postResponseDto = postService.modifyPost(userId, postId,
-                                                                 modifyPostRequestDto);
-        log.info(postResponseDto.toString());
-        return ResponseForm.getSingleResult(postResponseDto, "게시물 수정");
+        PostDetailResponseDto postDetailResponseDto = postService.modifyPost(userId, postId, modifyPostRequestDto);
+        log.info(postDetailResponseDto.toString());
+        return ResponseForm.getSingleResult(postDetailResponseDto, "게시물 수정");
     }
 
     @ApiOperation(
