@@ -59,7 +59,7 @@ public class PostService {
   }
 
   @Transactional
-  public PostResponseDto modifyPost(Long userId, Long postId, ModifyPostRequestDto modifyPostRequestDto) {
+  public PostDetailResponseDto modifyPost(Long userId, Long postId, ModifyPostRequestDto modifyPostRequestDto) {
 
     Post post = PostHelper.findPostById(postRepository, postId);
 
@@ -80,7 +80,7 @@ public class PostService {
                                                        .collect(Collectors.toList());
     postedStockRepository.saveAll(newPostedStockList);
 
-    return new PostResponseDto(post, userId);
+    return new PostDetailResponseDto(post, userId);
   }
 
   @Transactional
