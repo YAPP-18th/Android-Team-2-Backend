@@ -1,18 +1,23 @@
 package com.sns.zuzuclub.global.exception.errorCodeType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+@JsonFormat(shape = Shape.OBJECT)
 @Getter
 public enum JwtErrorCodeType {
 
-  JWT_TOKEN_ERROR(421, "JWT 토큰 에러"),
-  UNAUTHORIZED_JWT(422, "JWT 토큰에 유효하지 않은 권한"),
-  EXPIRED_JWT_TOKEN(423, "만료된 JWT 토큰"),
-  UNSUPPORTED_JWT_TOKEN(424, "지원되지 않는 JWT 토큰"),
-  MALFORMED_JWT_TOKEN(425, "잘못된 JWT 토큰"),
-  NOT_MATCH_FROM_USER_ID(426, "Refresh Token 정보가 일치하지 않습니다.");
+  EXPIRED_ACCESS_TOKEN(421, "만료된 ACC 토큰"),
+  EXPIRED_REFRESH_TOKEN(422, "만료된 REF 토큰"),
+  NOT_VALID_TOKEN(423, "유효하지 않은 토큰"),
+  UNAUTHORIZED_JWT(424, "허용되지 않은 권한");
 
+
+  @JsonProperty("code")
   private final int errorCode;
+  @JsonProperty("msg")
   private final String message;
 
   JwtErrorCodeType(final int errorCode, final String message) {

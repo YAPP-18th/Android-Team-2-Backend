@@ -13,6 +13,9 @@ import com.sns.zuzuclub.domain.user.repository.UserSecurityRepository;
 
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
 import com.sns.zuzuclub.config.security.social.SocialTokenProviderFactory;
+import com.sns.zuzuclub.global.exception.CustomException;
+import com.sns.zuzuclub.global.exception.errorCodeType.JwtErrorCodeType;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,23 +86,37 @@ public class LoginService {
   @Transactional
   public ReissueJwtTokenResponseDto reissueJwtToken(String jwtRefreshToken) {
 
-    jwtTokenProvider.isValidatedToken(jwtRefreshToken);
+    validateRefreshToken(jwtRefreshToken);
 
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtRefreshToken));
     UserSecurity userSecurityEntity = UserHelper.findUserSecurityById(userSecurityRepository, userId);
-    userSecurityEntity.isSameToken(jwtRefreshToken);
 
     String reissuedJwtAccessToken = jwtTokenProvider.createJwtAccessToken(userSecurityEntity.getId(), userSecurityEntity.getUserRoleType());
-    String reissuedJwtRefreshToken = jwtRefreshToken;
-
-    if (jwtTokenProvider.calculateDaysLeft(jwtRefreshToken) < 3){
-      reissuedJwtRefreshToken = jwtTokenProvider.createJwtRefreshToken(userSecurityEntity.getId());
-      userSecurityEntity.updateJwtRefreshToken(reissuedJwtRefreshToken);
-    }
+    String reissuedJwtRefreshToken = getReissuedJwtRefreshToken(jwtRefreshToken, userSecurityEntity);
 
     return ReissueJwtTokenResponseDto.builder()
                                      .jwtAccessToken(reissuedJwtAccessToken)
                                      .jwtRefreshToken(reissuedJwtRefreshToken)
                                      .build();
+  }
+
+  private String getReissuedJwtRefreshToken(String jwtRefreshToken, UserSecurity userSecurityEntity) {
+    long daysLeft = jwtTokenProvider.calculateDaysLeft(jwtRefreshToken);
+    if (daysLeft > 3) {
+      return jwtRefreshToken;
+    }
+    String reissuedJwtRefreshToken = jwtTokenProvider.createJwtRefreshToken(userSecurityEntity.getId());
+    userSecurityEntity.updateJwtRefreshToken(reissuedJwtRefreshToken);
+    return reissuedJwtRefreshToken;
+  }
+
+  private void validateRefreshToken(String jwtRefreshToken) {
+    try {
+      jwtTokenProvider.validateRefreshToken(jwtRefreshToken);
+    } catch (ExpiredJwtException e) {
+      throw new CustomException(JwtErrorCodeType.EXPIRED_REFRESH_TOKEN);
+    } catch (RuntimeException e) {
+      throw new CustomException(JwtErrorCodeType.NOT_VALID_TOKEN);
+    }
   }
 }

@@ -2,26 +2,26 @@ package com.sns.zuzuclub.config.logging;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class LoggerInterceptor implements HandlerInterceptor {
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    logger.info("url : {}", getFullURL(request));
+    log.info("url : {}", getFullURL(request));
     return true;
   }
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-    logger.info("response status: {}", response.getStatus());
+    log.info("response status: {}", response.getStatus());
   }
 
   private String getFullURL(HttpServletRequest request) {
