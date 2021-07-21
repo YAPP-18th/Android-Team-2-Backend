@@ -3,7 +3,7 @@ package com.sns.zuzuclub.domain.comment.dto;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
-import com.sns.zuzuclub.util.TimeConvertor;
+import com.sns.zuzuclub.global.util.TimeConvertor;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;

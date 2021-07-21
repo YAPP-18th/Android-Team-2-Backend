@@ -4,7 +4,7 @@ import com.sns.zuzuclub.domain.post.model.PostEmotionType;
 import com.sns.zuzuclub.domain.comment.dto.CommentResponseDto;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
-import com.sns.zuzuclub.util.TimeConvertor;
+import com.sns.zuzuclub.global.util.TimeConvertor;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.Getter;
