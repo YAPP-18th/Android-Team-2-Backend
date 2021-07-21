@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.util;
+package com.sns.zuzuclub.global.util;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
