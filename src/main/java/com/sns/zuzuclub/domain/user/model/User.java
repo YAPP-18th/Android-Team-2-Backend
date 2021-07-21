@@ -68,11 +68,9 @@ public class User extends AuditEntity {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy
-  private List<Notification> notificationList = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderBy
   private List<UserStockScrap> userStockScrapList = new ArrayList<>();
+
+  private String fcmToken = "";
 
   private int postCount = 0;
   private int commentCount = 0;
@@ -170,6 +168,8 @@ public class User extends AuditEntity {
                     .anyMatch(userFollow -> userFollow.isFromUserById(userId));
   }
 
-
+  public void updateFcmToken(String fcmToken){
+    this.fcmToken = fcmToken;
+  }
 
 }

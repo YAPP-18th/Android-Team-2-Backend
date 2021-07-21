@@ -4,3 +4,4 @@ spring:
     group:
       local: jwt, aws
       prod: jwt, aws
+      test: jwt, aws
