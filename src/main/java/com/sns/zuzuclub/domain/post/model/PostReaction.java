@@ -61,11 +61,12 @@ public class PostReaction extends AuditEntity {
     Long userId = post.getUser().getId();
     Long targetId = post.getId();
 
-    String message = user.getNickname() + " 님이 나의 글에 " + reactionType.name() + " 반응했습니다.";
+    String message = user.getNickname() + " 님이 내 게시물에 \"" + reactionType.getContent() + "\" 반응했습니다.";
 
 
     return PushNotification.builder()
                            .userId(userId)
+                           .senderId(user.getId())
                            .notificationType(NotificationType.POST_REACTION)
                            .redirectTargetId(targetId)
                            .alarmMessage(message)

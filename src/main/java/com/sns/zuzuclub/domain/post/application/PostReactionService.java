@@ -1,6 +1,6 @@
 package com.sns.zuzuclub.domain.post.application;
 
-import com.sns.zuzuclub.domain.notification.dto.NotificationDto;
+import com.sns.zuzuclub.domain.notification.dto.FcmNotificationDto;
 import com.sns.zuzuclub.domain.notification.model.PushNotification;
 import com.sns.zuzuclub.domain.notification.repository.PushNotificationRepository;
 import com.sns.zuzuclub.domain.post.model.PostReactionType;
@@ -16,7 +16,7 @@ import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.PostErrorCodeType;
-import com.sns.zuzuclub.infra.fcm.FcmService;
+import com.sns.zuzuclub.infra.fcm.FcmSender;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostReactionService {
 
-  private final FcmService fcmService;
+  private final FcmSender fcmSender;
 
   private final UserRepository userRepository;
   private final PostRepository postRepository;
@@ -44,8 +44,8 @@ public class PostReactionService {
     PushNotification pushNotification = postReaction.createPushNotification();
     pushNotificationRepository.save(pushNotification);
 
-    NotificationDto notificationDto = pushNotification.createNotificationDto(post.getUser());
-    fcmService.sendMessage(notificationDto);
+    FcmNotificationDto fcmNotificationDto = pushNotification.createNotificationDto(post.getUser());
+    fcmSender.sendMessage(fcmNotificationDto);
 
     return new CreatePostReactionResponseDto(postReaction);
   }

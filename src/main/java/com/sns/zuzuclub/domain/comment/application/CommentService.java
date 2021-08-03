@@ -5,7 +5,7 @@ import com.sns.zuzuclub.domain.comment.dto.CreateCommentResponseDto;
 import com.sns.zuzuclub.domain.comment.helper.CommentHelper;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.comment.repository.CommentRepository;
-import com.sns.zuzuclub.domain.notification.dto.NotificationDto;
+import com.sns.zuzuclub.domain.notification.dto.FcmNotificationDto;
 import com.sns.zuzuclub.domain.notification.model.PushNotification;
 import com.sns.zuzuclub.domain.notification.repository.PushNotificationRepository;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
@@ -15,7 +15,7 @@ import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 
-import com.sns.zuzuclub.infra.fcm.FcmService;
+import com.sns.zuzuclub.infra.fcm.FcmSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommentService {
 
-  private final FcmService fcmService;
+  private final FcmSender fcmSender;
 
   private final UserRepository userRepository;
   private final PostRepository postRepository;
@@ -44,8 +44,8 @@ public class CommentService {
     PushNotification pushNotification = newComment.createPushNotification();
     pushNotificationRepository.save(pushNotification);
 
-    NotificationDto notificationDto = pushNotification.createNotificationDto(postEntity.getUser());
-    fcmService.sendMessage(notificationDto);
+    FcmNotificationDto fcmNotificationDto = pushNotification.createNotificationDto(postEntity.getUser());
+    fcmSender.sendMessage(fcmNotificationDto);
 
     return new CreateCommentResponseDto(newComment);
   }

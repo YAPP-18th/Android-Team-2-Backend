@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class NotificationDto {
+public class FcmNotificationDto {
 
   private String title;
   private String body;
@@ -14,10 +14,10 @@ public class NotificationDto {
   private String fcmToken;
 
   @Builder
-  public NotificationDto(String title,
-                         String body,
-                         String fcmToken,
-                         Map<String, String> data) {
+  public FcmNotificationDto(String title,
+                            String body,
+                            String fcmToken,
+                            Map<String, String> data) {
     this.title = title;
     this.body = body;
     this.fcmToken = fcmToken;

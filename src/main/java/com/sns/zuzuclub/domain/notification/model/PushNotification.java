@@ -1,7 +1,7 @@
 package com.sns.zuzuclub.domain.notification.model;
 
 import com.sns.zuzuclub.domain.common.model.AuditEntity;
-import com.sns.zuzuclub.domain.notification.dto.NotificationDto;
+import com.sns.zuzuclub.domain.notification.dto.FcmNotificationDto;
 import com.sns.zuzuclub.domain.user.model.User;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +26,8 @@ public class PushNotification extends AuditEntity {
 
   private Long userId;
 
+  private Long senderId;
+
   @Enumerated(EnumType.STRING)
   private NotificationType notificationType;
 
@@ -37,24 +39,30 @@ public class PushNotification extends AuditEntity {
 
   @Builder
   public PushNotification(Long userId,
+                          Long senderId,
                           NotificationType notificationType,
                           Long redirectTargetId,
                           String alarmMessage) {
     this.userId = userId;
+    this.senderId = senderId;
     this.notificationType = notificationType;
     this.redirectTargetId = redirectTargetId;
     this.alarmMessage = alarmMessage;
     this.isRead = false;
   }
 
-  public NotificationDto createNotificationDto(User targetUser){
+  public FcmNotificationDto createNotificationDto(User targetUser){
     Map<String, String> data = new HashMap<>();
     data.put("redirectUrl", notificationType.getRedirectUrl(redirectTargetId));
-    return NotificationDto.builder()
-                          .title(notificationType.getTitle()) // "팔로우 알림"
-                          .body(alarmMessage) //""
-                          .fcmToken(targetUser.getFcmToken())
-                          .data(data)
-                          .build();
+    return FcmNotificationDto.builder()
+                             .title(notificationType.getTitle()) // "팔로우 알림"
+                             .body(alarmMessage) //""
+                             .fcmToken(targetUser.getFcmToken())
+                             .data(data)
+                             .build();
+  }
+
+  public void updateReadStatusTrue(){
+    this.isRead = true;
   }
 }

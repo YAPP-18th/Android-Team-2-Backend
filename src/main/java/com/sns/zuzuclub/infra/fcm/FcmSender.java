@@ -4,16 +4,16 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
-import com.sns.zuzuclub.domain.notification.dto.NotificationDto;
+import com.sns.zuzuclub.domain.notification.dto.FcmNotificationDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class FcmService {
+public class FcmSender {
 
-  public void sendMessage(NotificationDto notificationDto) {
-    Message message = getMessage(notificationDto);
+  public void sendMessage(FcmNotificationDto fcmNotificationDto) {
+    Message message = getMessage(fcmNotificationDto);
     try {
       String messageId = FirebaseMessaging.getInstance().send(message);
       log.info("Send Message Id : {}", messageId);
@@ -22,18 +22,18 @@ public class FcmService {
     }
   }
 
-  private Message getMessage(NotificationDto notificationDto) {
+  private Message getMessage(FcmNotificationDto fcmNotificationDto) {
     return Message.builder()
-                  .setNotification(getNotification(notificationDto))
-                  .putAllData(notificationDto.getData())
-                  .setToken(notificationDto.getFcmToken())
+                  .setNotification(getNotification(fcmNotificationDto))
+                  .putAllData(fcmNotificationDto.getData())
+                  .setToken(fcmNotificationDto.getFcmToken())
                   .build();
   }
 
-  private Notification getNotification(NotificationDto notificationDto) {
+  private Notification getNotification(FcmNotificationDto fcmNotificationDto) {
     return Notification.builder()
-                       .setTitle(notificationDto.getTitle())
-                       .setBody(notificationDto.getBody())
+                       .setTitle(fcmNotificationDto.getTitle())
+                       .setBody(fcmNotificationDto.getBody())
                        .build();
   }
 }

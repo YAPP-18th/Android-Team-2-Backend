@@ -51,10 +51,11 @@ public class CommentReaction extends AuditEntity {
     Long userId = this.comment.getUser().getId();
     Long targetId = this.comment.getPost().getId();
 
-    String message = this.user.getNickname() + " 님이 내 댓글에 "+this.commentReactionType+" 반응했습니다.";
+    String message = this.user.getNickname() + " 님이 내 댓글에 \""+commentReactionType.getContent()+"\" 반응했습니다.";
 
     return PushNotification.builder()
                            .userId(userId)
+                           .senderId(user.getId())
                            .notificationType(NotificationType.COMMENT_REACTION)
                            .redirectTargetId(targetId)
                            .alarmMessage(message)

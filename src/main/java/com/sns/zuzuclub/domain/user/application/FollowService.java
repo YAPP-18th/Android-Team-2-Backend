@@ -1,6 +1,6 @@
 package com.sns.zuzuclub.domain.user.application;
 
-import com.sns.zuzuclub.domain.notification.dto.NotificationDto;
+import com.sns.zuzuclub.domain.notification.dto.FcmNotificationDto;
 import com.sns.zuzuclub.domain.notification.model.PushNotification;
 import com.sns.zuzuclub.domain.notification.repository.PushNotificationRepository;
 import com.sns.zuzuclub.domain.user.dto.follow.FollowDto;
@@ -11,7 +11,7 @@ import com.sns.zuzuclub.domain.user.repository.UserFollowRepository;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
-import com.sns.zuzuclub.infra.fcm.FcmService;
+import com.sns.zuzuclub.infra.fcm.FcmSender;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class FollowService {
 
-  private final FcmService fcmService;
+  private final FcmSender fcmSender;
 
   private final UserRepository userRepository;
   private final UserFollowRepository userFollowRepository;
@@ -43,8 +43,8 @@ public class FollowService {
     PushNotification pushNotification = userFollow.createPushNotification();
     pushNotificationRepository.save(pushNotification);
 
-    NotificationDto notificationDto = pushNotification.createNotificationDto(targetUser);
-    fcmService.sendMessage(notificationDto);
+    FcmNotificationDto fcmNotificationDto = pushNotification.createNotificationDto(targetUser);
+    fcmSender.sendMessage(fcmNotificationDto);
   }
 
   public List<FollowDto> getFollowing(Long loginUserId, Long targetUserId) {
