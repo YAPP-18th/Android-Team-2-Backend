@@ -3,11 +3,8 @@ package com.sns.zuzuclub.domain.notification.controller;
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
 import com.sns.zuzuclub.domain.notification.application.NotificationService;
 import com.sns.zuzuclub.domain.notification.dto.FcmTokenDto;
-import com.sns.zuzuclub.domain.post.dto.CreatePostRequestDto;
-import com.sns.zuzuclub.domain.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.global.response.CommonResult;
 import com.sns.zuzuclub.global.response.ResponseForm;
-import com.sns.zuzuclub.global.response.SingleResult;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,5 +36,4 @@ public class NotificationController {
     log.info("FCM TOKEN 수신");
     return ResponseForm.getSuccessResult("FCM TOKEN 수신");
   }
-
 }

@@ -1,5 +1,7 @@
 package com.sns.zuzuclub.domain.user.model;
 
+import com.sns.zuzuclub.domain.notification.model.PushNotification;
+import com.sns.zuzuclub.domain.notification.model.NotificationType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -73,5 +75,20 @@ public class UserFollow extends AuditEntity {
 
   public boolean isFromUserById(Long userId){
     return fromUser.getId().equals(userId);
+  }
+
+  public PushNotification createPushNotification(){
+
+    Long fromUserId = this.fromUser.getId();
+    Long toUserId = this.toUser.getId();
+
+    String message = this.fromUser.getNickname() + " 님이 회원님을 팔로우하기 시작했습니다.";
+
+    return PushNotification.builder()
+                           .userId(toUserId)
+                           .notificationType(NotificationType.FOLLOW)
+                           .redirectTargetId(fromUserId)
+                           .alarmMessage(message)
+                           .build();
   }
 }
