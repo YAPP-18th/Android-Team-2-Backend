@@ -1,5 +1,7 @@
 package com.sns.zuzuclub.domain.comment.model;
 
+import com.sns.zuzuclub.domain.notification.model.NotificationType;
+import com.sns.zuzuclub.domain.notification.model.PushNotification;
 import com.sns.zuzuclub.domain.user.model.User;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -43,5 +45,20 @@ public class CommentReaction extends AuditEntity {
     this.comment = comment;
     comment.getCommentReactionList().add(this);
     comment.increaseCommentReactionCount();
+  }
+
+  public PushNotification createPushNotification() {
+    Long userId = this.comment.getUser().getId();
+    Long targetId = this.comment.getPost().getId();
+
+    String message = this.user.getNickname() + " 님이 내 댓글에 \""+commentReactionType.getContent()+"\" 반응했습니다.";
+
+    return PushNotification.builder()
+                           .userId(userId)
+                           .senderId(user.getId())
+                           .notificationType(NotificationType.COMMENT_REACTION)
+                           .redirectTargetId(targetId)
+                           .alarmMessage(message)
+                           .build();
   }
 }

@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.config.notification;
+package com.sns.zuzuclub.infra.fcm;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

@@ -1,6 +1,5 @@
 package com.sns.zuzuclub.domain.user.model;
 
-import com.sns.zuzuclub.domain.notification.model.Notification;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.stock.model.Stock;

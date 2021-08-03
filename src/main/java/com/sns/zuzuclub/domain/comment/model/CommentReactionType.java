@@ -1,18 +1,21 @@
 package com.sns.zuzuclub.domain.comment.model;
 
+import lombok.Getter;
+
+@Getter
 public enum CommentReactionType {
 
-  SYMPATHY(1),
-  FUNNY(2),
-  ANGRY(3),
-  SAD(4),
-  FIGHTING(5),
-  ENVIOUS(6),
-  THINK(7);
+  SYMPATHY("공감해요"),
+  FUNNY("좋아요"),
+  ANGRY("화나요"),
+  SAD("슬퍼요"),
+  FIGHTING("힘내요"),
+  ENVIOUS("부러워요"),
+  THINK("절레절레");
 
-  private final int value;
+  private final String content;
 
-  CommentReactionType(int value) {
-    this.value = value;
+  CommentReactionType(String content) {
+    this.content = content;
   }
 }
