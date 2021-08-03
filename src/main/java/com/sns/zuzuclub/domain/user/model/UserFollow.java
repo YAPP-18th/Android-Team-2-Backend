@@ -79,15 +79,15 @@ public class UserFollow extends AuditEntity {
 
   public PushNotification createPushNotification(){
 
-    Long fromUserId = this.fromUser.getId();
     Long toUserId = this.toUser.getId();
+    Long targetId = this.fromUser.getId();
 
     String message = this.fromUser.getNickname() + " 님이 회원님을 팔로우하기 시작했습니다.";
 
     return PushNotification.builder()
                            .userId(toUserId)
                            .notificationType(NotificationType.FOLLOW)
-                           .redirectTargetId(fromUserId)
+                           .redirectTargetId(targetId)
                            .alarmMessage(message)
                            .build();
   }
