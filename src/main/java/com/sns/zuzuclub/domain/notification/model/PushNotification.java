@@ -65,4 +65,8 @@ public class PushNotification extends AuditEntity {
   public void updateReadStatusTrue(){
     this.isRead = true;
   }
+
+  public String getRedirectUrl(){
+    return this.notificationType.getRedirectUrl(redirectTargetId);
+  }
 }
