@@ -126,7 +126,7 @@ public class Comment extends AuditEntity {
     Long userId = post.getUser().getId();
     Long targetId = post.getId();
 
-    String message = user.getNickname() + "님이 내 게시물에 댓글을 남겼습니다.";
+    String message = user.getNickname() + " 님이 내 게시물에 댓글을 남겼습니다.";
 
     return PushNotification.builder()
                            .userId(userId)

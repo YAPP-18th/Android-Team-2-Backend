@@ -44,7 +44,7 @@ public class PostReactionService {
     PushNotification pushNotification = postReaction.createPushNotification();
     pushNotificationRepository.save(pushNotification);
 
-    FcmNotificationDto fcmNotificationDto = pushNotification.createNotificationDto(post.getUser());
+    FcmNotificationDto fcmNotificationDto = pushNotification.createFcmNotificationDto(post.getUser());
     fcmSender.sendMessage(fcmNotificationDto);
 
     return new CreatePostReactionResponseDto(postReaction);

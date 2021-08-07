@@ -44,7 +44,7 @@ public class CommentService {
     PushNotification pushNotification = newComment.createPushNotification();
     pushNotificationRepository.save(pushNotification);
 
-    FcmNotificationDto fcmNotificationDto = pushNotification.createNotificationDto(postEntity.getUser());
+    FcmNotificationDto fcmNotificationDto = pushNotification.createFcmNotificationDto(postEntity.getUser());
     fcmSender.sendMessage(fcmNotificationDto);
 
     return new CreateCommentResponseDto(newComment);

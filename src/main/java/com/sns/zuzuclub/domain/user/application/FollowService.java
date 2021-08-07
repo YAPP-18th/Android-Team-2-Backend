@@ -43,7 +43,7 @@ public class FollowService {
     PushNotification pushNotification = userFollow.createPushNotification();
     pushNotificationRepository.save(pushNotification);
 
-    FcmNotificationDto fcmNotificationDto = pushNotification.createNotificationDto(targetUser);
+    FcmNotificationDto fcmNotificationDto = pushNotification.createFcmNotificationDto(targetUser);
     fcmSender.sendMessage(fcmNotificationDto);
   }
 

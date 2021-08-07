@@ -1,8 +1,11 @@
 package com.sns.zuzuclub.domain.notification.model;
 
+import com.sns.zuzuclub.domain.comment.model.CommentReactionType;
 import com.sns.zuzuclub.domain.common.model.AuditEntity;
 import com.sns.zuzuclub.domain.notification.dto.FcmNotificationDto;
+import com.sns.zuzuclub.domain.post.model.PostReactionType;
 import com.sns.zuzuclub.domain.user.model.User;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.Entity;
@@ -51,9 +54,10 @@ public class PushNotification extends AuditEntity {
     this.isRead = false;
   }
 
-  public FcmNotificationDto createNotificationDto(User targetUser){
+  public FcmNotificationDto createFcmNotificationDto(User targetUser){
     Map<String, String> data = new HashMap<>();
-    data.put("redirectUrl", notificationType.getRedirectUrl(redirectTargetId));
+    data.put("redirectId", redirectTargetId.toString());
+    data.put("reactionType", parseReactionType().toString());
     return FcmNotificationDto.builder()
                              .title(notificationType.getTitle()) // "팔로우 알림"
                              .body(alarmMessage) //""
@@ -66,7 +70,41 @@ public class PushNotification extends AuditEntity {
     this.isRead = true;
   }
 
-  public String getRedirectUrl(){
-    return this.notificationType.getRedirectUrl(redirectTargetId);
+  public Long parseReactionType(){
+    boolean isPostReaction = this.notificationType.equals(NotificationType.POST_REACTION);
+    if (isPostReaction){
+      String reactionContent = parseReactionContent();
+      PostReactionType postReactionType = getPostReactionType(reactionContent);
+      return (long) postReactionType.ordinal();
+    }
+    boolean isCommentReaction = this.notificationType.equals(NotificationType.COMMENT_REACTION);
+    if (isCommentReaction){
+      String reactionContent = parseReactionContent();
+      CommentReactionType commentReactionType = getCommentReactionType(reactionContent);
+      return (long)commentReactionType.ordinal();
+    }
+    return -1L;
+  }
+
+  private String parseReactionContent() {
+    int start = alarmMessage.indexOf("\"");
+    int end = alarmMessage.lastIndexOf("\"");
+    return alarmMessage.substring(start+1, end);
+  }
+
+  private CommentReactionType getCommentReactionType(String reactionContent) {
+    return Arrays.stream(CommentReactionType.values())
+                 .filter(c -> c.getContent().equals(reactionContent))
+                 .findFirst()
+                 .get();
+  }
+
+
+  private PostReactionType getPostReactionType(String reactionContent) {
+    return Arrays.stream(PostReactionType.values())
+                 .filter(p -> p.getContent()
+                               .equals(reactionContent))
+                 .findFirst()
+                 .get();
   }
 }

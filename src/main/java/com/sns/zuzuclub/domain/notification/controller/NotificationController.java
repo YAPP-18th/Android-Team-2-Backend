@@ -33,7 +33,7 @@ public class NotificationController {
           + "</h3>"
   )
   @GetMapping("/notifications")
-  public MultipleResult<PushNotificationDto> getFcmToken(@RequestHeader(value = "Authorization") String jwtToken)
+  public MultipleResult<PushNotificationDto> getNotifications(@RequestHeader(value = "Authorization") String jwtToken)
   {
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
     List<PushNotificationDto> pushNotificationDtoList = notificationService.getNotifications(userId);
