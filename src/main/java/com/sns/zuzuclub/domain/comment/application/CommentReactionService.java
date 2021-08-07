@@ -43,7 +43,7 @@ public class CommentReactionService {
     PushNotification pushNotification = commentReaction.createPushNotification();
     pushNotificationRepository.save(pushNotification);
 
-    FcmNotificationDto fcmNotificationDto = pushNotification.createNotificationDto(comment.getUser());
+    FcmNotificationDto fcmNotificationDto = pushNotification.createFcmNotificationDto(comment.getUser());
     fcmSender.sendMessage(fcmNotificationDto);
 
 
