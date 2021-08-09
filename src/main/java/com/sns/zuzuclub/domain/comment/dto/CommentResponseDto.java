@@ -37,6 +37,9 @@ public class CommentResponseDto {
     @ApiModelProperty(value = "내가 댓글 반응 작성했는지", example = "")
     private boolean hasUserCommentReaction;
 
+    @ApiModelProperty(value = "내가 쓴 댓글인지", example = "")
+    private boolean isMine;
+
     public CommentResponseDto(Comment comment, Long loginUserId) {
         User writer = comment.getUser();
         this.commentId = comment.getId();
@@ -47,6 +50,7 @@ public class CommentResponseDto {
         this.createdAt = TimeConvertor.convertToString(comment.getCreatedAt());
         this.commentReactionCount = comment.getCommentReactionCount();
         this.hasUserCommentReaction = comment.hasUserCommentReaction(loginUserId);
+        this.isMine = comment.getUser().getId().equals(loginUserId);
     }
 
     public static List<CommentResponseDto> toListFrom(Post post, Long loginUserId){
