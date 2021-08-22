@@ -5,5 +5,5 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PushNotificationRepository extends JpaRepository<PushNotification, Long> {
-  List<PushNotification> findAllByUserId(Long userId);
+  List<PushNotification> findAllByUserIdOrderByCreatedAtDesc(Long userId);
 }

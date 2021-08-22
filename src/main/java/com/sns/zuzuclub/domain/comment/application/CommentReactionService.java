@@ -39,6 +39,11 @@ public class CommentReactionService {
     Comment comment = CommentHelper.findCommentById(commentRepository, commentId);
 
     CommentReaction commentReaction = new CommentReaction(user, comment, commentReactionType);
+    commentReactionRepository.save(commentReaction);
+
+    if (userId.equals(comment.getUser().getId())) {
+      return new CreateCommentReactionResponseDto(commentReaction);
+    }
 
     PushNotification pushNotification = commentReaction.createPushNotification();
     pushNotificationRepository.save(pushNotification);
@@ -46,8 +51,7 @@ public class CommentReactionService {
     FcmNotificationDto fcmNotificationDto = pushNotification.createFcmNotificationDto(comment.getUser());
     fcmSender.sendMessage(fcmNotificationDto);
 
-
-    return new CreateCommentReactionResponseDto(commentReactionRepository.save(commentReaction));
+    return new CreateCommentReactionResponseDto(commentReaction);
   }
 
   @Transactional

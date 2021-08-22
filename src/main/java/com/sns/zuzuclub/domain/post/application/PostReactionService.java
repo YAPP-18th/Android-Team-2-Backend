@@ -1,5 +1,6 @@
 package com.sns.zuzuclub.domain.post.application;
 
+import com.sns.zuzuclub.domain.comment.dto.CreateCommentResponseDto;
 import com.sns.zuzuclub.domain.notification.dto.FcmNotificationDto;
 import com.sns.zuzuclub.domain.notification.model.PushNotification;
 import com.sns.zuzuclub.domain.notification.repository.PushNotificationRepository;
@@ -40,6 +41,10 @@ public class PostReactionService {
 
     PostReaction postReaction = new PostReaction(user, post, postReactionType);
     postReactionRepository.save(postReaction);
+
+    if (userId.equals(post.getUser().getId())) {
+      return new CreatePostReactionResponseDto(postReaction);
+    }
 
     PushNotification pushNotification = postReaction.createPushNotification();
     pushNotificationRepository.save(pushNotification);
