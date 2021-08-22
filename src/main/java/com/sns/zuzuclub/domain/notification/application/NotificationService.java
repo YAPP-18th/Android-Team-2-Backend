@@ -22,7 +22,7 @@ public class NotificationService {
 
   @Transactional
   public List<PushNotificationDto> getNotifications(Long userId) {
-    List<PushNotification> pushNotificationList = pushNotificationRepository.findAllByUserId(userId);
+    List<PushNotification> pushNotificationList = pushNotificationRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
     List<PushNotificationDto> pushNotificationDtoList = pushNotificationList.stream()
                                                             .map(this::getPushNotificationDto)
                                                             .collect(Collectors.toList());
@@ -31,7 +31,7 @@ public class NotificationService {
   }
 
   private PushNotificationDto getPushNotificationDto(PushNotification pushNotification) {
-    User sender = UserHelper.findUserById(userRepository, pushNotification.getUserId());
+    User sender = UserHelper.findUserById(userRepository, pushNotification.getSenderId());
     return new PushNotificationDto(sender.getProfileImageUrl(), pushNotification);
   }
 }

@@ -40,7 +40,9 @@ public class CommentService {
     Comment newComment = createCommentRequestDto.toEntity(commentRepository, userEntity,
         postEntity);
     commentRepository.save(newComment);
-
+    if (userId.equals(postEntity.getUser().getId())) {
+      return new CreateCommentResponseDto(newComment);
+    }
     PushNotification pushNotification = newComment.createPushNotification();
     pushNotificationRepository.save(pushNotification);
 

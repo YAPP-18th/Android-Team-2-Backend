@@ -86,7 +86,7 @@ public class UserFollow extends AuditEntity {
 
     return PushNotification.builder()
                            .userId(toUserId)
-                           .senderId(fromUser.getId())
+                           .senderId(targetId)
                            .notificationType(NotificationType.FOLLOW)
                            .redirectTargetId(targetId)
                            .alarmMessage(message)
