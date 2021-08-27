@@ -15,6 +15,7 @@ import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 
+import com.sns.zuzuclub.domain.user.service.UserService;
 import com.sns.zuzuclub.infra.fcm.FcmSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
   private final FcmSender fcmSender;
+  private final UserService userService;
 
   private final UserRepository userRepository;
   private final PostRepository postRepository;
@@ -34,6 +36,9 @@ public class CommentService {
 
   @Transactional
   public CreateCommentResponseDto createComment(Long userId, Long postId, CreateCommentRequestDto createCommentRequestDto) {
+
+    userService.validateSuspension(userId);
+
     User userEntity = UserHelper.findUserById(userRepository, userId);
     Post postEntity = PostHelper.findPostById(postRepository, postId);
 

@@ -9,6 +9,7 @@ import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,10 +19,12 @@ public class ReportService {
   private final UserRepository userRepository;
   private final ReportRepository reportRepository;
 
+  @Transactional
   public void report(Long userId, String targetNickname) {
-    User target = userRepository.findByNickname(targetNickname)
-                                .orElseThrow(() -> new CustomException(UserErrorCodeType.INVALID_USER));
-    Report report = new Report(userId, target.getId());
+
+    User targetUser = userRepository.findByNickname(targetNickname)
+                                    .orElseThrow(() -> new CustomException(UserErrorCodeType.INVALID_USER));
+    Report report = new Report(userId, targetUser);
     reportRepository.save(report);
   }
 }

@@ -5,7 +5,6 @@ import com.sns.zuzuclub.domain.post.dto.CreatePostRequestDto;
 import com.sns.zuzuclub.domain.post.dto.CreatePostResponseDto;
 import com.sns.zuzuclub.domain.post.dto.ModifyPostRequestDto;
 import com.sns.zuzuclub.domain.post.dto.PostDetailResponseDto;
-import com.sns.zuzuclub.domain.post.dto.PostResponseDto;
 import com.sns.zuzuclub.domain.post.helper.PostHelper;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.post.repository.PostRepository;
@@ -17,6 +16,7 @@ import com.sns.zuzuclub.domain.user.helper.UserHelper;
 import com.sns.zuzuclub.domain.user.model.User;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 
+import com.sns.zuzuclub.domain.user.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostService {
 
+  private final UserService userService;
+
   private final UserRepository userRepository;
   private final PostedStockRepository postedStockRepository;
   private final PostRepository postRepository;
@@ -35,6 +37,8 @@ public class PostService {
 
   @Transactional
   public CreatePostResponseDto createPost(Long userId, CreatePostRequestDto createPostRequestDto) {
+
+    userService.validateSuspension(userId);
 
     User userEntity = UserHelper.findUserById(userRepository, userId);
     Post newPostEntity = createPostRequestDto.toPostEntity(userEntity);
