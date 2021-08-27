@@ -76,6 +76,7 @@ public class User extends AuditEntity {
   private int userStockScrapCount = 0;
   private int followerCount = 0;
   private int followingCount = 0;
+  private int reportCount = 0;
 
   public void registerNickname(UserService userService,  String nickname){
     if(nickname.isEmpty()){
@@ -169,6 +170,10 @@ public class User extends AuditEntity {
 
   public void updateFcmToken(String fcmToken){
     this.fcmToken = fcmToken;
+  }
+
+  public void increaseReportCount(){
+    this.reportCount += 1;
   }
 
 }
