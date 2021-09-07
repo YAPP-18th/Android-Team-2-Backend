@@ -33,4 +33,12 @@ public class ResponseForm {
     result.setMsg(msg);
     return result;
   }
+
+  public static<T> SingleResult<T> getFailDataResult(T data, int errorCode, String msg){
+    SingleResult<T> result = new SingleResult<>();
+    result.setData(data);
+    result.setCode(errorCode);
+    result.setMsg(msg);
+    return result;
+  }
 }

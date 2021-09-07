@@ -1,4 +1,4 @@
-package com.sns.zuzuclub.util;
+package com.sns.zuzuclub.infra.s3;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

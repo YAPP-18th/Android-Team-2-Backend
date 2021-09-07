@@ -1,6 +1,5 @@
 package com.sns.zuzuclub.domain.user.model;
 
-import com.sns.zuzuclub.domain.notification.model.Notification;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.stock.model.Stock;
@@ -68,17 +67,16 @@ public class User extends AuditEntity {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy
-  private List<Notification> notificationList = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderBy
   private List<UserStockScrap> userStockScrapList = new ArrayList<>();
+
+  private String fcmToken = "";
 
   private int postCount = 0;
   private int commentCount = 0;
   private int userStockScrapCount = 0;
   private int followerCount = 0;
   private int followingCount = 0;
+  private int reportCount = 0;
 
   public void registerNickname(UserService userService,  String nickname){
     if(nickname.isEmpty()){
@@ -170,6 +168,12 @@ public class User extends AuditEntity {
                     .anyMatch(userFollow -> userFollow.isFromUserById(userId));
   }
 
+  public void updateFcmToken(String fcmToken){
+    this.fcmToken = fcmToken;
+  }
 
+  public void increaseReportCount(){
+    this.reportCount += 1;
+  }
 
 }

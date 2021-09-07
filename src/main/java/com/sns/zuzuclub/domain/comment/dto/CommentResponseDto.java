@@ -3,7 +3,7 @@ package com.sns.zuzuclub.domain.comment.dto;
 import com.sns.zuzuclub.domain.comment.model.Comment;
 import com.sns.zuzuclub.domain.post.model.Post;
 import com.sns.zuzuclub.domain.user.model.User;
-import com.sns.zuzuclub.util.TimeConvertor;
+import com.sns.zuzuclub.global.util.TimeConvertor;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +37,9 @@ public class CommentResponseDto {
     @ApiModelProperty(value = "내가 댓글 반응 작성했는지", example = "")
     private boolean hasUserCommentReaction;
 
+    @ApiModelProperty(value = "내가 쓴 댓글인지", example = "")
+    private boolean isMine;
+
     public CommentResponseDto(Comment comment, Long loginUserId) {
         User writer = comment.getUser();
         this.commentId = comment.getId();
@@ -47,6 +50,7 @@ public class CommentResponseDto {
         this.createdAt = TimeConvertor.convertToString(comment.getCreatedAt());
         this.commentReactionCount = comment.getCommentReactionCount();
         this.hasUserCommentReaction = comment.hasUserCommentReaction(loginUserId);
+        this.isMine = comment.getUser().getId().equals(loginUserId);
     }
 
     public static List<CommentResponseDto> toListFrom(Post post, Long loginUserId){

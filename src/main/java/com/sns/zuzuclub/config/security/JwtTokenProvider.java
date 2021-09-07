@@ -4,16 +4,12 @@ package com.sns.zuzuclub.config.security;
 import com.sns.zuzuclub.domain.user.model.UserRoleType;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.JwtErrorCodeType;
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Base64;
 import java.util.Date;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,10 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class JwtTokenProvider {
-
-  private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
   private final UserDetailsService userDetailsService;
 
@@ -83,26 +78,6 @@ public class JwtTokenProvider {
                .getAudience();
   }
 
-  public boolean isValidatedToken(String jwtToken) {
-
-    if(jwtToken == null){
-      return false;
-    }
-
-    // ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException;
-    try {
-      Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken);
-        return true;
-    } catch (ExpiredJwtException e) {
-      logger.info(JwtErrorCodeType.EXPIRED_JWT_TOKEN.getMessage(), new CustomException(JwtErrorCodeType.EXPIRED_JWT_TOKEN));
-    } catch (UnsupportedJwtException e) {
-      logger.info(JwtErrorCodeType.UNSUPPORTED_JWT_TOKEN.getMessage(), new CustomException(JwtErrorCodeType.UNSUPPORTED_JWT_TOKEN));
-    } catch (MalformedJwtException | SignatureException | IllegalArgumentException e) {
-      logger.info(JwtErrorCodeType.MALFORMED_JWT_TOKEN.getMessage(), new CustomException(JwtErrorCodeType.MALFORMED_JWT_TOKEN));
-    }
-    return false;
-  }
-
   public long calculateDaysLeft(String jwtRefreshToken){
 
     Date exp = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtRefreshToken).getBody().getExpiration();
@@ -111,5 +86,28 @@ public class JwtTokenProvider {
     long calDate = exp.getTime() - now.getTime();
 
     return calDate / (24 * 60 * 60 * 1000);
+  }
+
+  public void validateAccessToken(String accessToken) {
+    validateToken("ACCESS_TOKEN", accessToken);
+  }
+
+  public void validateRefreshToken(String refreshToken) {
+    validateToken("REFRESH_TOKEN", refreshToken);
+  }
+
+  private void validateToken(String tokenType, String token){
+    String subject = getSubject(token);
+    if (!tokenType.equals(subject)){
+      throw new CustomException(JwtErrorCodeType.NOT_VALID_TOKEN);
+    }
+  }
+
+  private String getSubject(String jwtToken) {
+    return Jwts.parser()
+               .setSigningKey(SECRET_KEY)
+               .parseClaimsJws(jwtToken)
+               .getBody()
+               .getSubject();
   }
 }

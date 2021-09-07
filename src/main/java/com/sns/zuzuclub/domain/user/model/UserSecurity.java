@@ -108,10 +108,4 @@ public class UserSecurity extends AuditEntity implements UserDetails {
   public void updateJwtRefreshToken(String reissuedJwtRefreshToken){
     this.jwtRefreshToken = reissuedJwtRefreshToken;
   }
-
-  public void isSameToken(String targetJwtRefreshToken){
-    if(!this.jwtRefreshToken.equals(targetJwtRefreshToken)){
-      throw new CustomException(JwtErrorCodeType.NOT_MATCH_FROM_USER_ID);
-    }
-  }
 }

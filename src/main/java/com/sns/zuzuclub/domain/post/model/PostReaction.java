@@ -1,5 +1,7 @@
 package com.sns.zuzuclub.domain.post.model;
 
+import com.sns.zuzuclub.domain.notification.model.NotificationType;
+import com.sns.zuzuclub.domain.notification.model.PushNotification;
 import com.sns.zuzuclub.domain.user.model.User;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -54,4 +56,20 @@ public class PostReaction extends AuditEntity {
     return user.getId().equals(userId);
   }
 
+  public PushNotification createPushNotification() {
+
+    Long userId = post.getUser().getId();
+    Long targetId = post.getId();
+
+    String message = user.getNickname() + " 님이 내 게시물에 \"" + reactionType.getContent() + "\" 반응했습니다.";
+
+
+    return PushNotification.builder()
+                           .userId(userId)
+                           .senderId(user.getId())
+                           .notificationType(NotificationType.POST_REACTION)
+                           .redirectTargetId(targetId)
+                           .alarmMessage(message)
+                           .build();
+  }
 }

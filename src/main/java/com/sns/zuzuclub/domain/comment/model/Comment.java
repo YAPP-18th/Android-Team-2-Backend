@@ -1,6 +1,8 @@
 package com.sns.zuzuclub.domain.comment.model;
 
 
+import com.sns.zuzuclub.domain.notification.model.NotificationType;
+import com.sns.zuzuclub.domain.notification.model.PushNotification;
 import com.sns.zuzuclub.domain.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,5 +119,21 @@ public class Comment extends AuditEntity {
 
   public void deleteContent(){
     this.content = "삭제된 댓글 입니다.";
+  }
+
+  public PushNotification createPushNotification(){
+
+    Long postWriterId = post.getUser().getId();
+    Long targetId = post.getId();
+
+    String message = user.getNickname() + " 님이 내 게시물에 댓글을 남겼습니다.";
+
+    return PushNotification.builder()
+                           .userId(postWriterId)
+                           .senderId(user.getId())
+                           .notificationType(NotificationType.COMMENT)
+                           .redirectTargetId(targetId)
+                           .alarmMessage(message)
+                           .build();
   }
 }

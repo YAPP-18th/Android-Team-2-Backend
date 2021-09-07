@@ -3,7 +3,7 @@ package com.sns.zuzuclub.domain.common.controller;
 import com.sns.zuzuclub.config.security.JwtTokenProvider;
 import com.sns.zuzuclub.global.response.ResponseForm;
 import com.sns.zuzuclub.global.response.SingleResult;
-import com.sns.zuzuclub.util.S3Uploader;
+import com.sns.zuzuclub.infra.s3.S3Uploader;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

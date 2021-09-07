@@ -16,7 +16,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final JwtTokenProvider jwtTokenProvider;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
   private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-  private final JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
