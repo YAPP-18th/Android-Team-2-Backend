@@ -19,4 +19,11 @@ public class ExceptionAdvice {
     return ResponseForm.getFailResult(e.getErrorCode(), e.getMessage());
   }
 
+  @ExceptionHandler(SuspendException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public CommonResult CustomException(SuspendException e) {
+    log.error("{} : {}", e.getErrorCode(), e.getMessage());
+    return ResponseForm.getFailDataResult(e.getReportDto(), e.getErrorCode(), e.getMessage());
+  }
+
 }

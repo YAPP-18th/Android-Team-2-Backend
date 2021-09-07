@@ -35,7 +35,7 @@ public class ReportService {
 
   private void sendSuspensionEmail(User targetUser) {
     int reportCount = targetUser.getReportCount();
-    if(reportCount > 5){
+    if(reportCount >= 5){
       SimpleMailMessage message = new SimpleMailMessage();
       message.setTo("zuzuclub.official@gmail.com");
       message.setFrom("zuzuclub.official@gmail.com");
