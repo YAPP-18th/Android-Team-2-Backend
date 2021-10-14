@@ -51,6 +51,7 @@ public class UserStockScrap {
   }
 
   public void deleteUser(){
+    user.decreaseUserStockScrapCount();
     this.user.getUserStockScrapList().remove(this);
     this.user = null;
   }
