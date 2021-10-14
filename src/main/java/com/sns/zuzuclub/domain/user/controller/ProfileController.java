@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -40,22 +41,36 @@ public class ProfileController {
   @GetMapping("/profile")
   public SingleResult<ProfileResponseDto> getUserProfile(@RequestHeader(value = "Authorization") String jwtToken){
     Long userId = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-    ProfileResponseDto profileResponseDto = profileService.getUserProfile(userId, userId);
+    ProfileResponseDto profileResponseDto = profileService.getUserProfileByUserId(userId, userId);
     log.info(profileResponseDto.toString());
     return ResponseForm.getSingleResult(profileResponseDto, "프로필 페이지");
   }
 
 
   @ApiOperation(
-      value = "임의의 사용자 프로필",
+      value = "임의의 사용자 프로필(userId)",
       notes = "<h3>\n"
           + "PathVariable 로 전달되는 userId를 갖는 유저의 프로필을 반환합니다."
           + "</h3>"
   )
   @GetMapping("/profile/{userId}")
-  public SingleResult<ProfileResponseDto> getUserProfile(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long userId){
+  public SingleResult<ProfileResponseDto> getUserProfileByUserId(@RequestHeader(value = "Authorization") String jwtToken, @PathVariable Long userId){
     Long loginUser = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
-    ProfileResponseDto profileResponseDto = profileService.getUserProfile(loginUser, userId);
+    ProfileResponseDto profileResponseDto = profileService.getUserProfileByUserId(loginUser, userId);
+    log.info(profileResponseDto.toString());
+    return ResponseForm.getSingleResult(profileResponseDto, "프로필 페이지");
+  }
+
+  @ApiOperation(
+      value = "임의의 사용자 프로필(nickname)",
+      notes = "<h3>\n"
+          + "QueryParameter 로 전달되는 닉네임을 갖는 유저의 프로필을 반환합니다."
+          + "</h3>"
+  )
+  @GetMapping("/profile/nickname")
+  public SingleResult<ProfileResponseDto> getUserProfileByNickname(@RequestHeader(value = "Authorization") String jwtToken, @RequestParam String nickname){
+    Long loginUser = Long.valueOf(jwtTokenProvider.resolveUserPk(jwtToken));
+    ProfileResponseDto profileResponseDto = profileService.getUserProfileByNickname(loginUser, nickname);
     log.info(profileResponseDto.toString());
     return ResponseForm.getSingleResult(profileResponseDto, "프로필 페이지");
   }
