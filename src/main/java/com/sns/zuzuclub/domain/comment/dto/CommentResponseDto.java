@@ -16,6 +16,9 @@ public class CommentResponseDto {
     @ApiModelProperty(value = "댓글id", example = "")
     private Long commentId;
 
+    @ApiModelProperty(value = "댓글 작성자 id", example = "")
+    private Long commentWriterId;
+
     @ApiModelProperty(value = "작성자 닉네임", example = "")
     private String nickname;
 
@@ -42,6 +45,7 @@ public class CommentResponseDto {
 
     public CommentResponseDto(Comment comment, Long loginUserId) {
         User writer = comment.getUser();
+        this.commentWriterId = writer.getId();
         this.commentId = comment.getId();
         this.nickname = writer.getNickname();
         this.profileImageUrl = writer.getProfileImageUrl();

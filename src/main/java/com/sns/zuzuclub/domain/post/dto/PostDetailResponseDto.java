@@ -17,6 +17,9 @@ public class PostDetailResponseDto {
   @ApiModelProperty(value = "게시글id", example = "")
   private Long postId;
 
+  @ApiModelProperty(value = "게시글 작성자 id", example = "")
+  private Long postWriterId;
+
   @ApiModelProperty(value = "작성자 프사", example = "")
   private String profileImageUrl;
 
@@ -64,6 +67,7 @@ public class PostDetailResponseDto {
     this.isFollowdByLoginUser = writer.hasFollower(loginUserId);
     this.postReaction = post.getPostReactionByUser(loginUserId);
 
+    this.postWriterId = writer.getId();
     this.profileImageUrl = writer.getProfileImageUrl();
     this.nickname = writer.getNickname();
 
