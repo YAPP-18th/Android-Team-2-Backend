@@ -2,10 +2,12 @@ package com.sns.zuzuclub.domain.user.application;
 
 import com.sns.zuzuclub.domain.user.model.Report;
 import com.sns.zuzuclub.domain.user.model.User;
+import com.sns.zuzuclub.domain.user.model.UserBlock;
 import com.sns.zuzuclub.domain.user.repository.ReportRepository;
 import com.sns.zuzuclub.domain.user.repository.UserRepository;
 import com.sns.zuzuclub.global.exception.CustomException;
 import com.sns.zuzuclub.global.exception.errorCodeType.UserErrorCodeType;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,7 +28,8 @@ public class ReportService {
   public void report(Long userId, String targetNickname) {
 
     User targetUser = userRepository.findByNickname(targetNickname)
-                                    .orElseThrow(() -> new CustomException(UserErrorCodeType.INVALID_USER));
+                                    .orElseThrow(
+                                        () -> new CustomException(UserErrorCodeType.INVALID_USER));
     Report report = new Report(userId, targetUser);
     reportRepository.save(report);
     log.info("메일 전송 시작");
@@ -35,7 +38,7 @@ public class ReportService {
 
   private void sendSuspensionEmail(User targetUser) {
     int reportCount = targetUser.getReportCount();
-    if(reportCount >= 5){
+    if (reportCount >= 5) {
       SimpleMailMessage message = new SimpleMailMessage();
       message.setTo("zuzuclub.official@gmail.com");
       message.setFrom("zuzuclub.official@gmail.com");
@@ -44,5 +47,18 @@ public class ReportService {
       javaMailSender.send(message);
       log.info("메일 전송 완료");
     }
+  }
+
+  public Boolean isBlockedByNickname(Long loginUserId, String targetNickname) {
+    User targetUser = userRepository.findByNickname(targetNickname)
+                                    .orElseThrow(() -> new CustomException(UserErrorCodeType.INVALID_USER));
+    Long targetUserId = targetUser.getId();
+    boolean isBlocked = reportRepository.existsByUserIdAndTargetUserId(targetUserId, loginUserId);
+    return isBlocked;
+  }
+
+  public Boolean isBlockedByUserId(Long loginUserId, Long targetUserId) {
+    boolean isBlocked = reportRepository.existsByUserIdAndTargetUserId(targetUserId, loginUserId);
+    return isBlocked;
   }
 }
